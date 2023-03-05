@@ -1,5 +1,6 @@
-package controllers.main;
+package app;
 
+import app.gui.background.BackgroundController;
 import engine.assets.Assets;
 import engine.assets.font.Font;
 import engine.display.Display;
@@ -34,6 +35,7 @@ public class Initializer {
         initializeFonts();
         initializeScenes();
         initializeControllers();
+        scene.switchCollection("gui");
         scene.update();
     }
 
@@ -43,7 +45,9 @@ public class Initializer {
         assets.addColor("green", 0xFF007D00);
         assets.addColor("darkGreen", 0xFF0E4C05);
         assets.addColor("red", 0xFFAA0707);
-        assets.addColor("lightBlue", 0xFF01BAEF);
+        assets.addColor("lighterBlue", 0xFF01BAEF);
+        assets.addColor("lightBlue", 0xFF559FFF);
+        assets.addColor("lighterGray", 0xFF4F93FF);
         assets.addColor("yellow", 0xFFFFFF00);
         assets.addColor("lightGray", 0xFFA8A8A8);
         assets.addColor("gray", 0xFF4378FF);
@@ -64,10 +68,12 @@ public class Initializer {
     }
 
     private void initializeScenes() {
+        scene.addCollection("gui");
+        scene.switchCollection("gui");
     }
 
     private void initializeControllers() {
-
+        BackgroundController.getBackgroundController();
     }
 
     public static void main(String[] args) {

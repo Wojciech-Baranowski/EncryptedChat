@@ -17,8 +17,8 @@ public class Window {
     private final Graphics2D graphics2D;
     private static final int x = 0;
     private static final int y = 0;
-    static final int w = 1200;
-    static final int h = 675;
+    static final int w = 800;
+    static final int h = 616;
 
     Window() {
         canvas = createCanvas();
@@ -48,7 +48,7 @@ public class Window {
     }
 
     private void createWindow() {
-        JFrame jFrame = new JFrame("BridgeSandbox2");
+        JFrame jFrame = new JFrame("BSK");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrame.setLayout(new BorderLayout());
         jFrame.add(canvas, BorderLayout.CENTER);
