@@ -1,6 +1,10 @@
+import controllers.main.Initializer;
+import engine.main.Engine;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        Engine.getEngine().initializeEngine();
+        Initializer.getInitializer().initialize();
+        Engine.getEngine().initializeListeners();
     }
 }
