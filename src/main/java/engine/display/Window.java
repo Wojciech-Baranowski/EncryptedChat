@@ -18,7 +18,7 @@ public class Window {
     private static final int x = 0;
     private static final int y = 0;
     static final int w = 800;
-    static final int h = 616;
+    static final int h = 640;
 
     Window() {
         canvas = createCanvas();
@@ -62,7 +62,6 @@ public class Window {
         Canvas canvas = new Canvas();
         Dimension s = new Dimension(w, h);
         canvas.setPreferredSize(s);
-
         canvas.setMaximumSize(s);
         canvas.setMinimumSize(s);
         canvas.createBufferStrategy(1);

@@ -1,6 +1,7 @@
 package app;
 
 import app.gui.background.BackgroundController;
+import app.gui.texts.TextController;
 import engine.assets.Assets;
 import engine.assets.font.Font;
 import engine.display.Display;
@@ -42,13 +43,14 @@ public class Initializer {
     private void initializeColors() {
         assets.addColor("black", 0xFF000000);
         assets.addColor("white", 0xFFFFFFFF);
-        assets.addColor("green", 0xFF007D00);
+        assets.addColor("green", 0xFF00FF00);
         assets.addColor("darkGreen", 0xFF0E4C05);
         assets.addColor("red", 0xFFAA0707);
         assets.addColor("lighterBlue", 0xFF01BAEF);
         assets.addColor("lightBlue", 0xFF559FFF);
         assets.addColor("lighterGray", 0xFF4F93FF);
         assets.addColor("yellow", 0xFFFFFF00);
+        assets.addColor("darkYellow", 0xFFA08F2D);
         assets.addColor("lightGray", 0xFFA8A8A8);
         assets.addColor("gray", 0xFF4378FF);
         assets.addColor("darkGray", 0xFF898989);
@@ -74,6 +76,7 @@ public class Initializer {
 
     private void initializeControllers() {
         BackgroundController.getBackgroundController();
+        TextController.getTextController();
     }
 
     public static void main(String[] args) {
