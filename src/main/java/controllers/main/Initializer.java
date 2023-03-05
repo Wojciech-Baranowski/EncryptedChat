@@ -34,7 +34,6 @@ public class Initializer {
         initializeFonts();
         initializeScenes();
         initializeControllers();
-        scene.switchCollection("program");
         scene.update();
     }
 
@@ -65,7 +64,6 @@ public class Initializer {
     }
 
     private void initializeScenes() {
-        scene.addCollection("program");
     }
 
     private void initializeControllers() {
