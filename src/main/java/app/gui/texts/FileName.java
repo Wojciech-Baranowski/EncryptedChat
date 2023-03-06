@@ -21,8 +21,8 @@ public class FileName {
         getScene().addObjectHigherThan(this.fileName, background);
     }
 
-    public void setFileName(String text) {
-        this.fileName.setText(text);
+    public void setFileName(String fileName) {
+        this.fileName.setText(fileName);
     }
 
     public void resetFileName() {

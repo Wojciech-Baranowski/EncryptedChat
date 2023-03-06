@@ -25,4 +25,8 @@ public class FileSize {
         this.fileSize.setText(text);
     }
 
+    public void resetFileSize() {
+        this.fileSize.setText("Size:");
+    }
+
 }

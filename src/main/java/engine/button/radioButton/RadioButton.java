@@ -11,9 +11,9 @@ public class RadioButton implements Visual, Interactive {
 
     private final Drawable offDrawable;
     private final Drawable onDrawable;
-    private final InputCombination activationCombination;
+    protected final InputCombination activationCombination;
     @Setter
-    private RadioButtonBundle radioButtonBundle;
+    protected RadioButtonBundle radioButtonBundle;
     @Getter
     @Setter
     private boolean selected;

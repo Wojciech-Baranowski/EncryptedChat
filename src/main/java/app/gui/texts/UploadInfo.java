@@ -47,20 +47,20 @@ public class UploadInfo {
         getScene().addObjectHigherThan(this.currentInfo, background);
     }
 
-    public void setCurrentInfoAsProgress(double percentage) {
+    public void setCurrentUploadInfoAsProgress(double percentage) {
         this.progress.setText("Progress: " + (((double) ((int) (percentage * 100))) / 100.0) + "%");
         getScene().removeObject(this.currentInfo);
         this.currentInfo = this.progress;
         getScene().addObjectHigherThan(this.currentInfo, background);
     }
 
-    public void setCurrentInfoAsSuccess() {
+    public void setCurrentUploadInfoAsSuccess() {
         getScene().removeObject(this.currentInfo);
         this.currentInfo = this.success;
         getScene().addObjectHigherThan(this.currentInfo, background);
     }
 
-    public void setCurrentInfoAsError() {
+    public void setCurrentUploadInfoAsError() {
         getScene().removeObject(this.currentInfo);
         this.currentInfo = this.error;
         getScene().addObjectHigherThan(this.currentInfo, background);

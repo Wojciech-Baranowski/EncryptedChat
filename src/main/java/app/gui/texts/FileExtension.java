@@ -21,8 +21,12 @@ public class FileExtension {
         getScene().addObjectHigherThan(this.fileExtension, background);
     }
 
-    public void setFileExtension(String text) {
-        this.fileExtension.setText(text);
+    public void setFileExtension(String fileExtension) {
+        this.fileExtension.setText(fileExtension);
+    }
+
+    public void resetFileExtension() {
+        this.fileExtension.setText("Extension:");
     }
 
 }

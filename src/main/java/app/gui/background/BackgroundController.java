@@ -35,6 +35,10 @@ public class BackgroundController {
         return this.userName.getUserNameBackground();
     }
 
+    public Drawable getReceiversBackground() {
+        return this.receivers.getReceiversAllBackground();
+    }
+
     public Drawable getFileToSendHeaderBackground() {
         return this.fileToSend.getFileToSendHeaderBackground();
     }
@@ -45,6 +49,10 @@ public class BackgroundController {
 
     public Drawable getReceivedFilesHeaderBackground() {
         return this.receivedFiles.getReceivedFilesHeaderBackground();
+    }
+
+    public Drawable getReceivedFilesBodyAllBackground() {
+        return this.receivedFiles.getReceivedFilesBodyAllBackground();
     }
 
 }

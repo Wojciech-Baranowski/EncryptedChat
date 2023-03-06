@@ -1,6 +1,7 @@
 package app;
 
 import app.gui.background.BackgroundController;
+import app.gui.buttons.ButtonController;
 import app.gui.texts.TextController;
 import engine.assets.Assets;
 import engine.assets.font.Font;
@@ -77,6 +78,7 @@ public class Initializer {
     private void initializeControllers() {
         BackgroundController.getBackgroundController();
         TextController.getTextController();
+        ButtonController.getButtonController();
     }
 
     public static void main(String[] args) {

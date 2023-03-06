@@ -22,11 +22,21 @@ public class RadioButtonBundle {
         }
     }
 
+    public RadioButtonBundle(List<RadioButton> radioButtons, int selectedRadioButtonIndex) {
+        this.radioButtons = radioButtons;
+        for (RadioButton radioButton : radioButtons) {
+            radioButton.setRadioButtonBundle(this);
+        }
+        if (selectedRadioButtonIndex != -1) {
+            this.selectedRadioButton = radioButtons.get(selectedRadioButtonIndex);
+        }
+    }
+
     public void update(RadioButton currentlySelected) {
-        if(selectedRadioButton != null && selectedRadioButton != currentlySelected) {
+        if (selectedRadioButton != null && selectedRadioButton != currentlySelected) {
             selectedRadioButton.setSelected(false);
         }
-        if(currentlySelected.isSelected()) {
+        if (currentlySelected.isSelected()) {
             currentlySelected.setSelected(false);
             selectedRadioButton = null;
         } else {
