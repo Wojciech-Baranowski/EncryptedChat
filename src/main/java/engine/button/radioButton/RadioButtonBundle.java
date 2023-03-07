@@ -10,13 +10,16 @@ public class RadioButtonBundle {
     private final List<RadioButton> radioButtons;
     @Getter
     private RadioButton selectedRadioButton;
+    private boolean unselectable;
 
-    public RadioButtonBundle() {
+    public RadioButtonBundle(boolean unselectable) {
         this.radioButtons = new LinkedList<>();
+        this.unselectable = false;
     }
 
-    public RadioButtonBundle(List<RadioButton> radioButtons) {
+    public RadioButtonBundle(List<RadioButton> radioButtons, boolean unselectable) {
         this.radioButtons = radioButtons;
+        this.unselectable = false;
         for (RadioButton radioButton : radioButtons) {
             radioButton.setRadioButtonBundle(this);
         }
@@ -36,7 +39,7 @@ public class RadioButtonBundle {
         if (selectedRadioButton != null && selectedRadioButton != currentlySelected) {
             selectedRadioButton.setSelected(false);
         }
-        if (currentlySelected.isSelected()) {
+        if (currentlySelected.isSelected() && unselectable) {
             currentlySelected.setSelected(false);
             selectedRadioButton = null;
         } else {

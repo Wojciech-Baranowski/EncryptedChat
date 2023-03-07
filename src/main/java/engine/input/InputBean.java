@@ -78,4 +78,14 @@ public class InputBean implements Input {
         display.addWindowListener(keyboardListener);
         display.addWindowListener(mouseListener);
     }
+
+    @Override
+    public void resetMouseListener() {
+        mouseListener.reset();
+    }
+
+    @Override
+    public void resetKeyboardListener() {
+        keyboardListener.reset();
+    }
 }

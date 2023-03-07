@@ -13,7 +13,7 @@ import java.util.*;
 public class MouseListener implements engine.common.Observable, java.awt.event.MouseListener, MouseMotionListener {
 
     private static final int BUTTONS_NUMBER = 5;
-    private final boolean[] pressed;
+    private boolean[] pressed;
     private final List<Observer> observers;
     @Getter
     private int x;
@@ -43,6 +43,11 @@ public class MouseListener implements engine.common.Observable, java.awt.event.M
             case UP -> !pressed[buttonCode];
             case DOWN -> pressed[buttonCode];
         };
+    }
+
+    public void reset() {
+        pressed = new boolean[BUTTONS_NUMBER];
+        Arrays.fill(pressed, false);
     }
 
     @Override

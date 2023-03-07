@@ -15,7 +15,7 @@ import static engine.input.inputCombination.ActionType.UP;
 public class KeyboardListener implements Observable, KeyListener {
 
     private static final int KEY_NUMBER = 256;
-    private final boolean[] pressed;
+    private boolean[] pressed;
     private final List<Observer> observers;
 
     KeyboardListener() {
@@ -39,6 +39,11 @@ public class KeyboardListener implements Observable, KeyListener {
             case UP -> !pressed[keyCode];
             case DOWN -> pressed[keyCode];
         };
+    }
+
+    public void reset() {
+        pressed = new boolean[KEY_NUMBER];
+        Arrays.fill(pressed, false);
     }
 
     @Override

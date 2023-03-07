@@ -20,11 +20,6 @@ public class TextController {
         this.fileExtension = new FileExtension(getBackgroundController().getFileToSendBodyBackground());
         this.uploadInfo = new UploadInfo(getBackgroundController().getFileToSendBodyBackground());
         this.yourFiles = new YourFiles(getBackgroundController().getReceivedFilesHeaderBackground());
-        setUserName("User 1");
-        setFileName("Papaj");
-        setFileSize("2137B");
-        setFileExtension(".webp");
-        setCurrentUploadInfoAsProgress(21.37);
     }
 
     public static TextController getTextController() {
@@ -34,8 +29,8 @@ public class TextController {
         return textController;
     }
 
-    public void setUserName(String text) {
-        this.userName.setText(text);
+    public void setUserName(int text) {
+        this.userName.setUserName(text);
     }
 
     public void setFileName(String fileName) {
@@ -62,6 +57,10 @@ public class TextController {
         this.fileExtension.resetFileExtension();
     }
 
+    public void setCurrentUploadInfoAsReadyToUpload() {
+        this.uploadInfo.setCurrentUploadInfoAsReadyToUpload();
+    }
+
     public void setCurrentUploadInfoAsProgress(double percentage) {
         this.uploadInfo.setCurrentUploadInfoAsProgress(percentage);
     }
@@ -72,6 +71,10 @@ public class TextController {
 
     public void setCurrentUploadInfoAsError() {
         this.uploadInfo.setCurrentUploadInfoAsError();
+    }
+
+    public void setCurrentUploadInfoAsBlank() {
+        this.uploadInfo.setCurrentUploadInfoAsBlank();
     }
 
 }

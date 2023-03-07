@@ -1,5 +1,7 @@
 package app.gui.buttons;
 
+import app.CipherType;
+
 import static app.gui.background.BackgroundController.getBackgroundController;
 
 public class ButtonController {
@@ -8,20 +10,18 @@ public class ButtonController {
 
     private Receivers receivers;
     private ReceivedFiles receivedFiles;
-    private AddFile addFile;
+    private AttachFile attachFile;
+    private DetachFile detachFile;
     private SendFile sendFile;
+    private Cipher cipher;
 
     private ButtonController() {
         this.receivers = new Receivers(getBackgroundController().getReceiversBackground());
         this.receivedFiles = new ReceivedFiles(getBackgroundController().getReceivedFilesBodyAllBackground());
-        this.addFile = new AddFile(getBackgroundController().getFileToSendHeaderBackground());
+        this.attachFile = new AttachFile(getBackgroundController().getFileToSendHeaderBackground());
+        this.detachFile = new DetachFile(getBackgroundController().getFileToSendHeaderBackground());
         this.sendFile = new SendFile(getBackgroundController().getFileToSendBodyBackground());
-        receivers.addReceiver(4);
-        receivers.addReceiver(2);
-        receivers.addReceiver(0);
-        receivedFiles.addFile("JP");
-        receivedFiles.addFile("2G");
-        receivedFiles.addFile("MD");
+        this.cipher = new Cipher(getBackgroundController().getFileToSendBodyBackground());
     }
 
     public static ButtonController getButtonController() {
@@ -29,6 +29,14 @@ public class ButtonController {
             buttonController = new ButtonController();
         }
         return buttonController;
+    }
+
+    public CipherType getCipherType() {
+        return this.cipher.getCipherType();
+    }
+
+    public Integer getSelectedReceiverId() {
+        return this.receivers.getSelectedReceiverId();
     }
 
     public void addReceiver(int receiverId) {
@@ -39,8 +47,8 @@ public class ButtonController {
         this.receivers.removeReceiver(receiverId);
     }
 
-    public void addReceivedFile(String fileName) {
-        this.receivedFiles.addFile(fileName);
+    public void addReceivedFile(String fileName, int fileHashCode) {
+        this.receivedFiles.addReceivedFile(fileName, fileHashCode);
     }
 
 }

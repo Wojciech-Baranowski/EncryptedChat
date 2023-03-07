@@ -12,7 +12,7 @@ public class FileExtension {
 
     public FileExtension(Drawable background) {
         this.fileExtension = getDisplay().getDrawableFactory().makeText(
-                "Extension:",
+                "",
                 background.getX() + 14,
                 background.getY() + 48,
                 "HBE24",
@@ -22,11 +22,11 @@ public class FileExtension {
     }
 
     public void setFileExtension(String fileExtension) {
-        this.fileExtension.setText(fileExtension);
+        this.fileExtension.setText("Extension: " + fileExtension);
     }
 
     public void resetFileExtension() {
-        this.fileExtension.setText("Extension:");
+        this.fileExtension.setText("");
     }
 
 }

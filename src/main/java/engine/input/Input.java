@@ -24,4 +24,8 @@ public interface Input {
 
     void initializeListeners();
 
+    void resetMouseListener();
+
+    void resetKeyboardListener();
+
 }

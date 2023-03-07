@@ -9,6 +9,7 @@ import static engine.scene.SceneBean.getScene;
 public class UploadInfo {
 
     private final Drawable background;
+    private final Text readyToUpload;
     private final Text success;
     private final Text error;
     private final Text progress;
@@ -16,6 +17,13 @@ public class UploadInfo {
 
     public UploadInfo(Drawable background) {
         this.background = background;
+        this.readyToUpload = getDisplay().getDrawableFactory().makeText(
+                "Ready to upload!",
+                background.getX() + 14,
+                background.getY() + 82,
+                "HBE24",
+                "green"
+        );
         this.success = getDisplay().getDrawableFactory().makeText(
                 "File uploaded successfully!",
                 background.getX() + 14,
@@ -38,12 +46,18 @@ public class UploadInfo {
                 "darkYellow"
         );
         this.currentInfo = getDisplay().getDrawableFactory().makeText(
-                "Upload info:",
+                "",
                 background.getX() + 14,
                 background.getY() + 82,
                 "HBE24",
                 "black"
         );
+        getScene().addObjectHigherThan(this.currentInfo, background);
+    }
+
+    public void setCurrentUploadInfoAsReadyToUpload() {
+        getScene().removeObject(this.currentInfo);
+        this.currentInfo = this.readyToUpload;
         getScene().addObjectHigherThan(this.currentInfo, background);
     }
 
@@ -64,6 +78,10 @@ public class UploadInfo {
         getScene().removeObject(this.currentInfo);
         this.currentInfo = this.error;
         getScene().addObjectHigherThan(this.currentInfo, background);
+    }
+
+    public void setCurrentUploadInfoAsBlank() {
+        getScene().removeObject(this.currentInfo);
     }
 
 }

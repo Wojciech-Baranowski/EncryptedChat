@@ -21,8 +21,8 @@ public class UserName {
         getScene().addObjectHigherThan(this.userName, background);
     }
 
-    public void setText(String text) {
-        this.userName.setText(text);
+    public void setUserName(int userId) {
+        this.userName.setText("User: " + userId);
     }
 
 }

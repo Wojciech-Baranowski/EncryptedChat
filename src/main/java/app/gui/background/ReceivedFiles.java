@@ -1,8 +1,8 @@
 package app.gui.background;
 
-import app.Constants;
 import engine.display.Drawable;
 
+import static app.Constants.MAX_FILES_PER_PAGE;
 import static engine.display.DisplayBean.getDisplay;
 import static engine.scene.SceneBean.getScene;
 
@@ -25,14 +25,14 @@ public class ReceivedFiles {
                 background.getX() + 20,
                 background.getY() + 380,
                 760,
-                30 * (Constants.MAX_FILES_PER_PAGE) + 2,
+                30 * (MAX_FILES_PER_PAGE) + 2,
                 2,
                 "transparent",
                 "lighterBlue"
         );
         getScene().addObjectHigherThan(this.receivedFilesBodyAll, background);
-        this.receivedFilesBody = new Drawable[Constants.MAX_FILES_PER_PAGE];
-        for (int i = 0; i < Constants.MAX_FILES_PER_PAGE; i++) {
+        this.receivedFilesBody = new Drawable[MAX_FILES_PER_PAGE];
+        for (int i = 0; i < MAX_FILES_PER_PAGE; i++) {
             this.receivedFilesBody[i] = getDisplay().getDrawableFactory().makeRectangle(
                     getReceivedFilesBodyAllBackground().getX() + 2,
                     getReceivedFilesBodyAllBackground().getY() + 30 * i,

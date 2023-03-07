@@ -1,8 +1,8 @@
 package app.gui.background;
 
-import app.Constants;
 import engine.display.Drawable;
 
+import static app.Constants.MAX_CLIENTS;
 import static engine.display.DisplayBean.getDisplay;
 import static engine.scene.SceneBean.getScene;
 
@@ -16,14 +16,14 @@ public class Receivers {
                 background.getX() + 20,
                 background.getY() + 70,
                 200,
-                30 * (Constants.MAX_CLIENTS - 1) + 4,
+                30 * (MAX_CLIENTS - 1) + 4,
                 2,
                 "transparent",
                 "lighterBlue"
         );
         getScene().addObjectHigherThan(this.receiversAll, background);
-        this.receivers = new Drawable[Constants.MAX_CLIENTS - 1];
-        for (int i = 0; i < Constants.MAX_CLIENTS - 1; i++) {
+        this.receivers = new Drawable[MAX_CLIENTS - 1];
+        for (int i = 0; i < MAX_CLIENTS - 1; i++) {
             this.receivers[i] = getDisplay().getDrawableFactory().makeRectangle(
                     getReceiversAllBackground().getX() + 2,
                     getReceiversAllBackground().getY() + 2 + 30 * i,

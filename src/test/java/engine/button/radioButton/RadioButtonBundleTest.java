@@ -43,7 +43,7 @@ public class RadioButtonBundleTest {
         List<RadioButton> inputRadioButtonList = new LinkedList<>();
         inputRadioButtonList.add(radioButton1);
         inputRadioButtonList.add(radioButton2);
-        RadioButtonBundle radioButtonBundle = new RadioButtonBundle(inputRadioButtonList);
+        RadioButtonBundle radioButtonBundle = new RadioButtonBundle(inputRadioButtonList, false);
         RadioButton radioButton3 = new RadioButton(inputOffRectangle3, inputOnRectangle3, inputCombinationFactory.makeLmbCombination());
         Scene scene = SceneBean.getScene();
         scene.addCollection("c1");

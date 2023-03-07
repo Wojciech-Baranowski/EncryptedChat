@@ -12,7 +12,7 @@ public class FileSize {
 
     public FileSize(Drawable background) {
         this.fileSize = getDisplay().getDrawableFactory().makeText(
-                "Size:",
+                "",
                 background.getX() + 14,
                 background.getY() + 14,
                 "HBE24",
@@ -22,11 +22,11 @@ public class FileSize {
     }
 
     public void setFileSize(String text) {
-        this.fileSize.setText(text);
+        this.fileSize.setText("Size: " + text + "B");
     }
 
     public void resetFileSize() {
-        this.fileSize.setText("Size:");
+        this.fileSize.setText("");
     }
 
 }

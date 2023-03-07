@@ -1,6 +1,5 @@
 package app.gui.buttons;
 
-import app.Constants;
 import app.gui.commands.InitiateHandshakeCommand;
 import engine.button.radioButton.CommandRadioButton;
 import engine.button.radioButton.RadioButton;
@@ -13,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import static app.Constants.MAX_CLIENTS;
 import static engine.display.DisplayBean.getDisplay;
 import static engine.input.InputBean.getInput;
 import static engine.scene.SceneBean.getScene;
@@ -25,15 +25,15 @@ public class Receivers {
     private final Drawable background;
 
     public Receivers(Drawable background) {
-        this.receivers = new RadioButton[Constants.MAX_CLIENTS - 1];
-        this.receiversIds = new Integer[Constants.MAX_CLIENTS - 1];
-        this.receiversBundle = new RadioButtonBundle(List.of());
+        this.receivers = new RadioButton[MAX_CLIENTS - 1];
+        this.receiversIds = new Integer[MAX_CLIENTS - 1];
+        this.receiversBundle = new RadioButtonBundle(List.of(), true);
         this.background = background;
     }
 
     public void addReceiver(int receiverId) {
         int index = 0;
-        for (int i = 0; i < Constants.MAX_CLIENTS - 1; i++) {
+        for (int i = 0; i < MAX_CLIENTS - 1; i++) {
             if (this.receiversIds[i] == null) {
                 index = i;
                 break;
@@ -77,7 +77,7 @@ public class Receivers {
 
     public void removeReceiver(int receiverId) {
         int index = 0;
-        for (int i = 0; i < Constants.MAX_CLIENTS - 1; i++) {
+        for (int i = 0; i < MAX_CLIENTS - 1; i++) {
             if (this.receiversIds[i] == receiverId) {
                 index = i;
                 break;
@@ -87,6 +87,13 @@ public class Receivers {
         this.receivers[index] = null;
         this.receiversIds[index] = null;
         buildBundle();
+    }
+
+    public Integer getSelectedReceiverId() {
+        if (this.receiversBundle.getSelectedRadioButtonIndex() >= 0) {
+            return this.receiversIds[this.receiversBundle.getSelectedRadioButtonIndex()];
+        }
+        return null;
     }
 
     private void buildBundle() {
