@@ -48,7 +48,7 @@ public class Window {
     }
 
     private void createWindow() {
-        JFrame jFrame = new JFrame("BSK");
+        JFrame jFrame = new JFrame("Kocham Palinkę <3 <3 <3");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrame.setLayout(new BorderLayout());
         jFrame.add(canvas, BorderLayout.CENTER);

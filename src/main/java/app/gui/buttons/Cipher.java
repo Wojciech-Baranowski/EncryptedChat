@@ -42,8 +42,8 @@ public class Cipher {
         );
         Drawable cbcText = getDisplay().getDrawableFactory().makeText(
                 "CBC",
-                cbcOffDrawable.getX() + 5,
-                cbcOffDrawable.getY() + 5,
+                cbcOffDrawable.getX() + 15,
+                cbcOffDrawable.getY() + 10,
                 "HBE32",
                 "black"
         );
@@ -67,8 +67,8 @@ public class Cipher {
         );
         Drawable ebcText = getDisplay().getDrawableFactory().makeText(
                 "EBC",
-                ebcOffDrawable.getX() + 5,
-                ebcOffDrawable.getY() + 5,
+                ebcOffDrawable.getX() + 15,
+                ebcOffDrawable.getY() + 10,
                 "HBE32",
                 "black"
         );
