@@ -3,8 +3,8 @@ package app;
 import app.files.FileController;
 import app.gui.background.BackgroundController;
 import app.gui.buttons.ButtonController;
+import app.gui.textFields.TextFieldController;
 import app.gui.texts.TextController;
-import app.users.UserController;
 import engine.assets.Assets;
 import engine.assets.font.Font;
 import engine.display.Display;
@@ -81,8 +81,9 @@ public class Initializer {
         BackgroundController.getBackgroundController();
         TextController.getTextController();
         ButtonController.getButtonController();
+        TextFieldController.getTextFieldController();
         FileController.getFileController();
-        UserController.getReceiversController();
+        //UserController.getReceiversController();
     }
 
     public static void main(String[] args) {

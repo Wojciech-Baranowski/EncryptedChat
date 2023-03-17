@@ -1,5 +1,6 @@
 package engine.input;
 
+import engine.common.Observable;
 import engine.common.Observer;
 import engine.input.inputCombination.ActionType;
 import engine.input.inputCombination.InputElement;
@@ -10,11 +11,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.*;
 
-public class MouseListener implements engine.common.Observable, java.awt.event.MouseListener, MouseMotionListener {
+public class MouseListener implements Observable, InputObservable, java.awt.event.MouseListener, MouseMotionListener {
 
     private static final int BUTTONS_NUMBER = 5;
     private boolean[] pressed;
     private final List<Observer> observers;
+    private final List<InputObserver> inputObservers;
     @Getter
     private int x;
     @Getter
@@ -24,6 +26,7 @@ public class MouseListener implements engine.common.Observable, java.awt.event.M
         pressed = new boolean[BUTTONS_NUMBER];
         Arrays.fill(pressed, false);
         observers = new LinkedList<>();
+        inputObservers = new LinkedList<>();
         x = 0;
         y = 0;
     }
@@ -68,6 +71,23 @@ public class MouseListener implements engine.common.Observable, java.awt.event.M
     }
 
     @Override
+    public void attach(InputObserver observer) {
+        inputObservers.add(observer);
+    }
+
+    @Override
+    public void detach(InputObserver observer) {
+        inputObservers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers(InputElement inputElement) {
+        for (InputObserver observer : inputObservers) {
+            observer.update(inputElement);
+        }
+    }
+
+    @Override
     public void mousePressed(MouseEvent e) {
         int buttonCode = e.getButton();
         pressed[buttonCode] = true;
@@ -106,5 +126,4 @@ public class MouseListener implements engine.common.Observable, java.awt.event.M
     public void mouseExited(MouseEvent e) {
 
     }
-
 }

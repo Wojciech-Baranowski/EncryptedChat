@@ -12,16 +12,18 @@ import java.util.*;
 import static engine.input.inputCombination.ActionType.DOWN;
 import static engine.input.inputCombination.ActionType.UP;
 
-public class KeyboardListener implements Observable, KeyListener {
+public class KeyboardListener implements Observable, InputObservable, KeyListener {
 
     private static final int KEY_NUMBER = 256;
     private boolean[] pressed;
     private final List<Observer> observers;
+    private final List<InputObserver> inputObservers;
 
     KeyboardListener() {
         pressed = new boolean[KEY_NUMBER];
         Arrays.fill(pressed, false);
         observers = new LinkedList<>();
+        inputObservers = new LinkedList<>();
     }
 
     public Set<InputElement> getActivatedInputElements() {
@@ -64,11 +66,29 @@ public class KeyboardListener implements Observable, KeyListener {
     }
 
     @Override
+    public void attach(InputObserver observer) {
+        inputObservers.add(observer);
+    }
+
+    @Override
+    public void detach(InputObserver observer) {
+        inputObservers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers(InputElement inputElement) {
+        for (InputObserver observer : inputObservers) {
+            observer.update(inputElement);
+        }
+    }
+
+    @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-        if(!pressed[keyCode]){
+        if (!pressed[keyCode]) {
             pressed[keyCode] = true;
             notifyObservers();
+            notifyObservers(new InputElement(DOWN, InputElement.getKeyboardInputEventByKeycode(keyCode)));
         }
     }
 
@@ -77,6 +97,7 @@ public class KeyboardListener implements Observable, KeyListener {
         int keyCode = e.getKeyCode();
         pressed[keyCode] = false;
         notifyObservers();
+        notifyObservers(new InputElement(UP, InputElement.getKeyboardInputEventByKeycode(keyCode)));
     }
 
     @Override

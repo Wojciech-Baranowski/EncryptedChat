@@ -19,6 +19,16 @@ public class InputElement {
         this.inputEvent = inputEvent;
     }
 
+    public int getKeyCode() {
+        if (inputEvent instanceof MouseEvent) {
+            return ((MouseEvent) inputEvent).getButton();
+        }
+        if (inputEvent instanceof KeyEvent) {
+            return ((KeyEvent) inputEvent).getKeyCode();
+        }
+        return 0;
+    }
+
     public static InputEvent getMouseInputEventByKeycode(int keyCode) {
         Component dummyComponent = new Button();
         return new MouseEvent(

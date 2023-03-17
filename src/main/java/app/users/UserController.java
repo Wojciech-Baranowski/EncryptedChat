@@ -16,7 +16,7 @@ public class UserController {
 
     private static UserController userController;
 
-    private final int userId;
+    private int userId;
     private final List<Integer> receiverIds;
     private final Socket socket;
     private final ObjectInputStream reader;
@@ -28,12 +28,10 @@ public class UserController {
             this.socket = new Socket(HOST, PORT);
             this.writer = new ObjectOutputStream(socket.getOutputStream());
             this.reader = new ObjectInputStream(socket.getInputStream());
-            this.userId = registerUserOnServerAndGetId();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         getTextController().setUserName(this.userId);
-        new Thread(this::handleMessages).start();
     }
 
     public static UserController getReceiversController() {
@@ -41,18 +39,6 @@ public class UserController {
             userController = new UserController();
         }
         return userController;
-    }
-
-    private int registerUserOnServerAndGetId() {
-        return 0;
-    }
-
-    private void handleMessages() {
-
-    }
-
-    private void sendMessageToServer(byte[] content, int receiverId) {
-
     }
 
     private void addReceiver(int receiverId) {

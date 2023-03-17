@@ -10,9 +10,17 @@ public interface Input {
 
     void addKeyboardListener(Observer observer);
 
+    void addInputMouseListener(InputObserver observer);
+
+    void addInputKeyboardListener(InputObserver observer);
+
     void removeMouseListener(Observer observer);
 
     void removeKeyboardListener(Observer observer);
+
+    void removeInputMouseListener(InputObserver observer);
+
+    void removeInputKeyboardListener(InputObserver observer);
 
     int getMouseX();
 

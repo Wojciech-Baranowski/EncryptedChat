@@ -41,12 +41,32 @@ public class InputBean implements Input {
     }
 
     @Override
+    public void addInputMouseListener(InputObserver observer) {
+        mouseListener.attach(observer);
+    }
+
+    @Override
+    public void addInputKeyboardListener(InputObserver observer) {
+        keyboardListener.attach(observer);
+    }
+
+    @Override
     public void removeMouseListener(Observer observer) {
         mouseListener.detach(observer);
     }
 
     @Override
     public void removeKeyboardListener(Observer observer) {
+        keyboardListener.detach(observer);
+    }
+
+    @Override
+    public void removeInputMouseListener(InputObserver observer) {
+        mouseListener.detach(observer);
+    }
+
+    @Override
+    public void removeInputKeyboardListener(InputObserver observer) {
         keyboardListener.detach(observer);
     }
 
