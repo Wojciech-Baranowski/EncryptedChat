@@ -4,6 +4,7 @@ import engine.input.KeyboardListener;
 import engine.input.MouseListener;
 
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,6 +37,12 @@ public class InputCombinationFactory {
 
     public InputCombination makeLmbCombination() {
         InputEvent inputEvent = InputElement.getMouseInputEventByKeycode(MouseEvent.BUTTON1);
+        InputElement inputElement = new InputElement(ActionType.DOWN, inputEvent);
+        return new SimpleInputCombination(keyboardListener, mouseListener, inputElement);
+    }
+
+    public InputCombination makeEscapeCombination() {
+        InputEvent inputEvent = InputElement.getKeyboardInputEventByKeycode(KeyEvent.VK_ESCAPE);
         InputElement inputElement = new InputElement(ActionType.DOWN, inputEvent);
         return new SimpleInputCombination(keyboardListener, mouseListener, inputElement);
     }

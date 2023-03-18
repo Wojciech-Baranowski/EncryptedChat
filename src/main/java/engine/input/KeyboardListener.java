@@ -14,7 +14,7 @@ import static engine.input.inputCombination.ActionType.UP;
 
 public class KeyboardListener implements Observable, InputObservable, KeyListener {
 
-    private static final int KEY_NUMBER = 256;
+    private static final int KEY_NUMBER = 1 << 16;
     private boolean[] pressed;
     private final List<Observer> observers;
     private final List<InputObserver> inputObservers;
