@@ -11,7 +11,9 @@ import java.util.List;
 import static app.Constants.MAX_ATTACHMENT_FILE_NAME_LENGTH;
 import static app.Constants.MAX_RECEIVED_FILE_NAME_LENGTH;
 import static app.gui.buttons.ButtonController.getButtonController;
+import static app.gui.textFields.TextFieldController.getTextFieldController;
 import static app.gui.texts.TextController.getTextController;
+import static engine.scene.SceneBean.getScene;
 
 public class FileController {
 
@@ -42,7 +44,7 @@ public class FileController {
             getTextController().setFileExtension(this.attachedFile.getExtension());
             getTextController().setFileSize(this.attachedFile.getSize().toString());
             getTextController().setCurrentUploadInfoAsReadyToUpload();
-            addReceivedFile(attachedFile);
+            getScene().removeObject(getTextFieldController().getMessageTextField());
         }
     }
 
@@ -52,6 +54,7 @@ public class FileController {
         getTextController().resetFileExtension();
         getTextController().resetFileSize();
         getTextController().setCurrentUploadInfoAsBlank();
+        getScene().addOnHighest(getTextFieldController().getMessageTextField());
     }
 
     public void addReceivedFile(FileData fileData) {

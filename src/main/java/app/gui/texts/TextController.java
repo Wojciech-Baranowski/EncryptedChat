@@ -1,6 +1,6 @@
 package app.gui.texts;
 
-import static app.gui.background.BackgroundController.getBackgroundController;
+import static app.gui.backgrounds.BackgroundController.getBackgroundController;
 
 public class TextController {
 

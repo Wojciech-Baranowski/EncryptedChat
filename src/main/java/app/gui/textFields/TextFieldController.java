@@ -1,12 +1,14 @@
 package app.gui.textFields;
 
-import static app.gui.background.BackgroundController.getBackgroundController;
+import engine.input.textField.TextField;
+
+import static app.gui.backgrounds.BackgroundController.getBackgroundController;
 
 public class TextFieldController {
 
     private static TextFieldController textFieldController;
 
-    private Message message;
+    private final Message message;
 
     private TextFieldController() {
         this.message = new Message(getBackgroundController().getFileToSendBodyBackground());
@@ -17,6 +19,10 @@ public class TextFieldController {
             textFieldController = new TextFieldController();
         }
         return textFieldController;
+    }
+
+    public TextField getMessageTextField() {
+        return this.message.getTextField();
     }
 
 }

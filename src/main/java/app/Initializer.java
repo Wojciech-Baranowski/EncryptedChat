@@ -1,10 +1,6 @@
 package app;
 
 import app.files.FileController;
-import app.gui.background.BackgroundController;
-import app.gui.buttons.ButtonController;
-import app.gui.textFields.TextFieldController;
-import app.gui.texts.TextController;
 import engine.assets.Assets;
 import engine.assets.font.Font;
 import engine.display.Display;
@@ -38,8 +34,9 @@ public class Initializer {
         initializeColors();
         initializeFonts();
         initializeScenes();
-        initializeControllers();
-        scene.switchCollection("gui");
+        initializeLoginControllers();
+        initializeGuiControllers();
+        scene.switchCollection("login");
         scene.update();
     }
 
@@ -74,14 +71,23 @@ public class Initializer {
 
     private void initializeScenes() {
         scene.addCollection("gui");
-        scene.switchCollection("gui");
+        scene.addCollection("login");
     }
 
-    private void initializeControllers() {
-        BackgroundController.getBackgroundController();
-        TextController.getTextController();
-        ButtonController.getButtonController();
-        TextFieldController.getTextFieldController();
+    private void initializeLoginControllers() {
+        scene.switchCollection("login");
+        app.login.backgrounds.BackgroundController.getBackgroundController();
+        app.login.texts.TextController.getTextController();
+        app.login.buttons.ButtonController.getButtonController();
+        app.login.textFields.TextFieldController.getTextFieldController();
+    }
+
+    private void initializeGuiControllers() {
+        scene.switchCollection("gui");
+        app.gui.backgrounds.BackgroundController.getBackgroundController();
+        app.gui.texts.TextController.getTextController();
+        app.gui.buttons.ButtonController.getButtonController();
+        app.gui.textFields.TextFieldController.getTextFieldController();
         FileController.getFileController();
         //UserController.getReceiversController();
     }

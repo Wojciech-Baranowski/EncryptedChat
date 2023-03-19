@@ -1,4 +1,4 @@
-package app.gui.background;
+package app.gui.backgrounds;
 
 import engine.display.Drawable;
 import lombok.Getter;
