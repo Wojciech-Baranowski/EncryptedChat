@@ -1,11 +1,11 @@
-package server;
+package server.dataBase;
 
-public class ClientIdSequence {
+public class IdSequence {
 
     private int sequence;
 
-    public ClientIdSequence() {
-        this.sequence = 0;
+    public IdSequence(int maxId) {
+        this.sequence = maxId;
     }
 
     public int getNextId() {

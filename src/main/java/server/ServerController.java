@@ -1,5 +1,7 @@
 package server;
 
+import server.dataBase.DataBase;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 
@@ -8,7 +10,7 @@ import static common.ConnectionConfig.PORT;
 public class ServerController {
 
     private final ServerSocket socket;
-    private final ClientIdSequence clientIdSequence;
+    private final DataBase dataBase;
 
     public static void main(String[] args) throws IOException {
         new ServerController();
@@ -16,7 +18,7 @@ public class ServerController {
 
     private ServerController() throws IOException {
         this.socket = new ServerSocket(PORT);
-        this.clientIdSequence = new ClientIdSequence();
+        this.dataBase = new DataBase();
         handleClients();
     }
 
@@ -33,9 +35,9 @@ public class ServerController {
     }
 
     private void addClient() throws IOException {
-        ClientHandler clientHandler = new ClientHandler(socket.accept(), clientIdSequence.getNextId());
+        /*ClientHandler clientHandler = new ClientHandler(socket.accept(), clientIdSequence.getNextId());
         Thread thread = new Thread(clientHandler);
-        thread.start();
+        thread.start();*/
     }
 
     private void closeServerSocket() {
