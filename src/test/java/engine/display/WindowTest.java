@@ -1,5 +1,7 @@
 package engine.display;
 
+import app.engine.display.Window;
+
 public class WindowTest {
 
     public static void main(String[] args) {

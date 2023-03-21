@@ -1,8 +1,9 @@
 package engine.display;
 
-import engine.assets.Assets;
-import engine.assets.AssetsBean;
-import engine.assets.color.Color;
+import app.engine.assets.Assets;
+import app.engine.assets.AssetsBean;
+import app.engine.assets.color.Color;
+import app.engine.display.*;
 import org.junit.Test;
 
 import java.util.Arrays;

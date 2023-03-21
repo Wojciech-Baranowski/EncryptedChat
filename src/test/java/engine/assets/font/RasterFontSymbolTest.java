@@ -1,5 +1,6 @@
 package engine.assets.font;
 
+import app.engine.assets.font.RasterFontSymbol;
 import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;

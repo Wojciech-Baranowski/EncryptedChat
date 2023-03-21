@@ -1,16 +1,19 @@
 package engine.display;
 
-import engine.assets.Assets;
-import engine.assets.AssetsBean;
-import engine.common.Visual;
-import engine.display.rectangle.Rectangle;
-import engine.display.text.Text;
+import app.engine.assets.Assets;
+import app.engine.assets.AssetsBean;
+import app.engine.common.Visual;
+import app.engine.display.Display;
+import app.engine.display.DisplayBean;
+import app.engine.display.DrawableFactory;
+import app.engine.display.rectangle.Rectangle;
+import app.engine.display.text.Text;
 import org.junit.Test;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import static engine.assets.font.Font.getExtendedAlphabet;
+import static app.engine.assets.font.Font.getExtendedAlphabet;
 import static org.junit.Assert.*;
 
 public class DisplayBeanTest {

@@ -1,26 +1,27 @@
 package engine.button;
 
-import engine.assets.Assets;
-import engine.assets.AssetsBean;
-import engine.display.Display;
-import engine.display.DisplayBean;
-import engine.display.Drawable;
-import engine.display.DrawableFactory;
-import engine.display.rectangle.Rectangle;
-import engine.input.Input;
-import engine.input.InputBean;
-import engine.input.inputCombination.ActionType;
-import engine.input.inputCombination.InputCombinationFactory;
-import engine.input.inputCombination.InputElement;
+import app.engine.assets.Assets;
+import app.engine.assets.AssetsBean;
+import app.engine.button.SimpleButton;
+import app.engine.display.Display;
+import app.engine.display.DisplayBean;
+import app.engine.display.Drawable;
+import app.engine.display.DrawableFactory;
+import app.engine.display.rectangle.Rectangle;
+import app.engine.input.Input;
+import app.engine.input.InputBean;
+import app.engine.input.inputCombination.ActionType;
+import app.engine.input.inputCombination.InputCombinationFactory;
+import app.engine.input.inputCombination.InputElement;
+import app.engine.scene.Scene;
+import app.engine.scene.SceneBean;
 import org.junit.Test;
-import engine.scene.Scene;
-import engine.scene.SceneBean;
 
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-import static engine.input.inputCombination.ActionType.DOWN;
+import static app.engine.input.inputCombination.ActionType.DOWN;
 import static org.junit.Assert.assertSame;
 
 public class SimpleButtonTest {

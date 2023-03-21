@@ -1,5 +1,7 @@
 package engine.input;
 
+import app.engine.input.Input;
+import app.engine.input.InputBean;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

@@ -1,16 +1,17 @@
 package engine.display.text;
 
-import engine.assets.Assets;
-import engine.assets.AssetsBean;
-import engine.assets.color.Color;
-import engine.assets.font.Font;
-import engine.common.Rasterable;
+import app.engine.assets.Assets;
+import app.engine.assets.AssetsBean;
+import app.engine.assets.color.Color;
+import app.engine.assets.font.Font;
+import app.engine.common.Rasterable;
+import app.engine.display.text.Text;
 import org.junit.Test;
 
 import java.util.Arrays;
 
-import static engine.assets.color.Color.getTransparentColorValue;
-import static engine.assets.font.Font.getExtendedAlphabet;
+import static app.engine.assets.color.Color.getTransparentColorValue;
+import static app.engine.assets.font.Font.getExtendedAlphabet;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 

@@ -1,11 +1,13 @@
 package engine.scene.priorityCollection;
 
-import engine.assets.Assets;
-import engine.assets.AssetsBean;
-import engine.display.Display;
-import engine.display.DisplayBean;
-import engine.display.DrawableFactory;
-import engine.display.rectangle.Rectangle;
+import app.engine.assets.Assets;
+import app.engine.assets.AssetsBean;
+import app.engine.display.Display;
+import app.engine.display.DisplayBean;
+import app.engine.display.DrawableFactory;
+import app.engine.display.rectangle.Rectangle;
+import app.engine.scene.priorityCollection.PriorityList;
+import app.engine.scene.priorityCollection.SceneCollection;
 import org.junit.Test;
 
 import static org.junit.Assert.assertSame;

@@ -1,12 +1,14 @@
 package engine.display.text;
 
-import engine.assets.Assets;
-import engine.assets.AssetsBean;
-import engine.assets.color.Color;
-import engine.assets.font.Font;
+import app.engine.assets.Assets;
+import app.engine.assets.AssetsBean;
+import app.engine.assets.color.Color;
+import app.engine.assets.font.Font;
+import app.engine.display.text.Text;
+import app.engine.display.text.TextFactory;
 import org.junit.Test;
 
-import static engine.assets.font.Font.getExtendedAlphabet;
+import static app.engine.assets.font.Font.getExtendedAlphabet;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 

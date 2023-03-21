@@ -1,5 +1,7 @@
 package engine.assets;
 
+import app.engine.assets.Assets;
+import app.engine.assets.AssetsBean;
 import engine.assets.font.RasterFontTest;
 import org.junit.Test;
 

@@ -9,8 +9,8 @@ import lombok.*;
 @Builder(toBuilder = true)
 public class Message {
 
-    private int senderId;
-    private int receiverId;
+    private Long senderId;
+    private Long receiverId;
     private byte[] content;
 
 }

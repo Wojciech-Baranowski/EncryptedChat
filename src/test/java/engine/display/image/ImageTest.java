@@ -1,5 +1,6 @@
 package engine.display.image;
 
+import app.engine.display.image.Image;
 import engine.assets.font.RasterFontTest;
 import org.junit.Test;
 

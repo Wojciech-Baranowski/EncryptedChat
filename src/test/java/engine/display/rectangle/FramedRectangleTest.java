@@ -1,7 +1,9 @@
 package engine.display.rectangle;
 
-import engine.assets.color.Color;
-import engine.assets.color.ColorFactory;
+import app.engine.assets.color.Color;
+import app.engine.assets.color.ColorFactory;
+import app.engine.display.rectangle.FramedRectangle;
+import app.engine.display.rectangle.Rectangle;
 import org.junit.Test;
 
 import java.util.Arrays;

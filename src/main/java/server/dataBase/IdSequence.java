@@ -2,13 +2,13 @@ package server.dataBase;
 
 public class IdSequence {
 
-    private int sequence;
+    private long sequence;
 
-    public IdSequence(int maxId) {
+    public IdSequence(long maxId) {
         this.sequence = maxId;
     }
 
-    public int getNextId() {
+    public long getNextId() {
         sequence++;
         return sequence;
     }

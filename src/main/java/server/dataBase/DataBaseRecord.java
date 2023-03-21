@@ -9,7 +9,7 @@ import lombok.*;
 @Builder(toBuilder = true)
 public class DataBaseRecord {
 
-    private Integer id;
+    private Long id;
     private String userName;
     private String password;
 

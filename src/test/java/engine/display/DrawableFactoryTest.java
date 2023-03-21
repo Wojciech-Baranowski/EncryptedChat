@@ -1,18 +1,19 @@
 package engine.display;
 
-import engine.assets.Assets;
-import engine.assets.AssetsBean;
-import engine.display.image.Image;
-import engine.display.image.ImageFactory;
-import engine.display.rectangle.Rectangle;
-import engine.display.rectangle.RectangleFactory;
-import engine.display.text.Text;
-import engine.display.text.TextFactory;
+import app.engine.assets.Assets;
+import app.engine.assets.AssetsBean;
+import app.engine.display.DrawableFactory;
+import app.engine.display.image.Image;
+import app.engine.display.image.ImageFactory;
+import app.engine.display.rectangle.Rectangle;
+import app.engine.display.rectangle.RectangleFactory;
+import app.engine.display.text.Text;
+import app.engine.display.text.TextFactory;
 import org.junit.Test;
 
 import java.util.Arrays;
 
-import static engine.assets.font.Font.getExtendedAlphabet;
+import static app.engine.assets.font.Font.getExtendedAlphabet;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 

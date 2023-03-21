@@ -1,11 +1,13 @@
 package engine.scene;
 
-import engine.assets.Assets;
-import engine.assets.AssetsBean;
-import engine.display.Display;
-import engine.display.DisplayBean;
-import engine.display.Drawable;
-import engine.display.DrawableFactory;
+import app.engine.assets.Assets;
+import app.engine.assets.AssetsBean;
+import app.engine.display.Display;
+import app.engine.display.DisplayBean;
+import app.engine.display.Drawable;
+import app.engine.display.DrawableFactory;
+import app.engine.scene.Scene;
+import app.engine.scene.SceneBean;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNull;

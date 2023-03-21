@@ -9,15 +9,17 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import static server.ServerController.getServerController;
+
 public class ClientHandler implements Runnable {
 
     private static final List<ClientHandler> clientHandlers = new ArrayList<>();
-    private final int clientId;
+    private final long clientId;
     private final Socket socket;
     private final ObjectInputStream reader;
     private final ObjectOutputStream writer;
 
-    public ClientHandler(Socket socket, int clientId) throws IOException {
+    public ClientHandler(Socket socket, long clientId) throws IOException {
         this.clientId = clientId;
         this.socket = socket;
         this.writer = new ObjectOutputStream(socket.getOutputStream());
@@ -34,7 +36,11 @@ public class ClientHandler implements Runnable {
         while (socket.isConnected()) {
             try {
                 Message message = (Message) reader.readObject();
-                sendMessageToClient(message);
+                if (message.getReceiverId() == null) {
+                    getServerController().handleMessage(message);
+                } else {
+                    sendMessageToClient(message);
+                }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             } finally {

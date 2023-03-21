@@ -1,9 +1,11 @@
 package engine.input.inputCombination;
 
+import app.engine.input.inputCombination.ActionType;
+import app.engine.input.inputCombination.InputElement;
 import org.junit.Test;
 
-import static engine.input.inputCombination.ActionType.DOWN;
-import static engine.input.inputCombination.ActionType.UP;
+import static app.engine.input.inputCombination.ActionType.DOWN;
+import static app.engine.input.inputCombination.ActionType.UP;
 import static org.junit.Assert.assertEquals;
 
 public class InputElementTest {

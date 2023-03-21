@@ -7,8 +7,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import static app.gui.buttons.ButtonController.getButtonController;
-import static app.gui.texts.TextController.getTextController;
+import static app.gui.chat.buttons.ButtonController.getButtonController;
+import static app.gui.chat.texts.TextController.getTextController;
 import static common.ConnectionConfig.HOST;
 import static common.ConnectionConfig.PORT;
 
@@ -16,7 +16,7 @@ public class UserController {
 
     private static UserController userController;
 
-    private int userId;
+    private User user;
     private final List<Integer> receiverIds;
     private final Socket socket;
     private final ObjectInputStream reader;
@@ -31,7 +31,7 @@ public class UserController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        getTextController().setUserName(this.userId);
+        getTextController().setUserName(this.user.getUserName());
     }
 
     public static UserController getReceiversController() {

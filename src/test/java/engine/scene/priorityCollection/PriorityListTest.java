@@ -1,5 +1,6 @@
 package engine.scene.priorityCollection;
 
+import app.engine.scene.priorityCollection.PriorityList;
 import org.junit.Test;
 
 import java.util.List;

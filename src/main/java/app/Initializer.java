@@ -1,14 +1,18 @@
 package app;
 
+import app.engine.assets.Assets;
+import app.engine.assets.font.Font;
+import app.engine.display.Display;
+import app.engine.scene.Scene;
 import app.files.FileController;
-import engine.assets.Assets;
-import engine.assets.font.Font;
-import engine.display.Display;
-import engine.scene.Scene;
+import app.gui.chat.backgrounds.BackgroundController;
+import app.gui.chat.buttons.ButtonController;
+import app.gui.chat.textFields.TextFieldController;
+import app.gui.chat.texts.TextController;
 
-import static engine.assets.AssetsBean.getAssets;
-import static engine.display.DisplayBean.getDisplay;
-import static engine.scene.SceneBean.getScene;
+import static app.engine.assets.AssetsBean.getAssets;
+import static app.engine.display.DisplayBean.getDisplay;
+import static app.engine.scene.SceneBean.getScene;
 
 public class Initializer {
 
@@ -76,18 +80,18 @@ public class Initializer {
 
     private void initializeLoginControllers() {
         scene.switchCollection("login");
-        app.login.backgrounds.BackgroundController.getBackgroundController();
-        app.login.texts.TextController.getTextController();
-        app.login.buttons.ButtonController.getButtonController();
-        app.login.textFields.TextFieldController.getTextFieldController();
+        app.gui.login.backgrounds.BackgroundController.getBackgroundController();
+        app.gui.login.texts.TextController.getTextController();
+        app.gui.login.buttons.ButtonController.getButtonController();
+        app.gui.login.textFields.TextFieldController.getTextFieldController();
     }
 
     private void initializeGuiControllers() {
         scene.switchCollection("gui");
-        app.gui.backgrounds.BackgroundController.getBackgroundController();
-        app.gui.texts.TextController.getTextController();
-        app.gui.buttons.ButtonController.getButtonController();
-        app.gui.textFields.TextFieldController.getTextFieldController();
+        BackgroundController.getBackgroundController();
+        TextController.getTextController();
+        ButtonController.getButtonController();
+        TextFieldController.getTextFieldController();
         FileController.getFileController();
         //UserController.getReceiversController();
     }

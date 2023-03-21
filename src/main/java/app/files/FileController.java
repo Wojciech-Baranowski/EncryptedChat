@@ -10,10 +10,10 @@ import java.util.List;
 
 import static app.Constants.MAX_ATTACHMENT_FILE_NAME_LENGTH;
 import static app.Constants.MAX_RECEIVED_FILE_NAME_LENGTH;
-import static app.gui.buttons.ButtonController.getButtonController;
-import static app.gui.textFields.TextFieldController.getTextFieldController;
-import static app.gui.texts.TextController.getTextController;
-import static engine.scene.SceneBean.getScene;
+import static app.engine.scene.SceneBean.getScene;
+import static app.gui.chat.buttons.ButtonController.getButtonController;
+import static app.gui.chat.textFields.TextFieldController.getTextFieldController;
+import static app.gui.chat.texts.TextController.getTextController;
 
 public class FileController {
 

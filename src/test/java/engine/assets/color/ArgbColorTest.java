@@ -1,5 +1,7 @@
 package engine.assets.color;
 
+import app.engine.assets.color.ArgbColor;
+import app.engine.assets.color.Color;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

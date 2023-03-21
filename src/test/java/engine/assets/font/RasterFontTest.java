@@ -1,5 +1,7 @@
 package engine.assets.font;
 
+import app.engine.assets.font.RasterFont;
+import app.engine.assets.font.RasterFontSymbol;
 import org.junit.Test;
 
 import javax.imageio.ImageIO;
