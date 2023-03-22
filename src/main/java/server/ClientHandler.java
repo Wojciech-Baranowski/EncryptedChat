@@ -37,7 +37,7 @@ public class ClientHandler implements Runnable {
     private void routeMessages() {
         while (socket.isConnected()) {
             try {
-                Message message = (Message) reader.readObject();
+                Message message = (Message) this.reader.readObject();
                 if (message.getReceiverId() == null) {
                     getServerController().handleMessage(message);
                 } else {
@@ -62,12 +62,12 @@ public class ClientHandler implements Runnable {
     private void closeSession() {
         clientHandlers.remove(this);
         try {
-            if (reader != null)
-                reader.close();
-            if (writer != null)
-                writer.close();
-            if (socket != null)
-                socket.close();
+            if (this.reader != null)
+                this.reader.close();
+            if (this.writer != null)
+                this.writer.close();
+            if (this.socket != null)
+                this.socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

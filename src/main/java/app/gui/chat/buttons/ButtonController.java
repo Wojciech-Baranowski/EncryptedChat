@@ -1,5 +1,7 @@
 package app.gui.chat.buttons;
 
+import common.CipherConfig;
+
 import static app.gui.chat.backgrounds.BackgroundController.getBackgroundController;
 
 public class ButtonController {
@@ -29,15 +31,15 @@ public class ButtonController {
         return buttonController;
     }
 
-    public CipherType getCipherType() {
+    public CipherConfig.CipherType getCipherType() {
         return this.cipherButton.getCipherType();
     }
 
-    public Integer getSelectedReceiverId() {
+    public Long getSelectedReceiverId() {
         return this.receiversButton.getSelectedReceiverId();
     }
 
-    public void addReceiver(int receiverId) {
+    public void addReceiver(Long receiverId) {
         this.receiversButton.addReceiver(receiverId);
     }
 

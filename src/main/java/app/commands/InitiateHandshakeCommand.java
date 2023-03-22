@@ -4,9 +4,9 @@ import app.engine.common.Command;
 
 public class InitiateHandshakeCommand implements Command {
 
-    private final Integer userId;
+    private final Long userId;
 
-    public InitiateHandshakeCommand(Integer userId) {
+    public InitiateHandshakeCommand(Long userId) {
         this.userId = userId;
     }
 

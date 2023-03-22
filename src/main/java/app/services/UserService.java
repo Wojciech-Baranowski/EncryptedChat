@@ -1,29 +1,30 @@
-package app.controllers;
+package app.services;
 
 import common.transportObjects.UserData;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static app.engine.scene.SceneBean.getScene;
 import static app.gui.chat.buttons.ButtonController.getButtonController;
 import static app.gui.chat.texts.TextController.getTextController;
 
-public class UserController {
+public class UserService {
 
-    private static UserController userController;
+    private static UserService userService;
 
     private UserData userData;
     private final List<Integer> receiverIds;
 
-    private UserController() {
+    private UserService() {
         this.receiverIds = new ArrayList<>();
     }
 
-    public static UserController getUserController() {
-        if (userController == null) {
-            userController = new UserController();
+    public static UserService getUserService() {
+        if (userService == null) {
+            userService = new UserService();
         }
-        return userController;
+        return userService;
     }
 
     public void registerUserRequest() {
@@ -35,6 +36,7 @@ public class UserController {
     }
 
     public void setUser(Long userId, String userName) {
+        getScene().switchCollection("chat");
         this.userData = UserData.builder()
                 .id(userId)
                 .userName(userName)

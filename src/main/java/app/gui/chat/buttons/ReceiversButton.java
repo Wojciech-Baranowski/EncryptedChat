@@ -21,17 +21,17 @@ public class ReceiversButton {
 
     private RadioButtonBundle receiversBundle;
     private final RadioButton[] receivers;
-    private final Integer[] receiversIds;
+    private final Long[] receiversIds;
     private final Drawable background;
 
     public ReceiversButton(Drawable background) {
         this.receivers = new RadioButton[MAX_CLIENTS - 1];
-        this.receiversIds = new Integer[MAX_CLIENTS - 1];
+        this.receiversIds = new Long[MAX_CLIENTS - 1];
         this.receiversBundle = new RadioButtonBundle(List.of(), true);
         this.background = background;
     }
 
-    public void addReceiver(int receiverId) {
+    public void addReceiver(Long receiverId) {
         int index = 0;
         for (int i = 0; i < MAX_CLIENTS - 1; i++) {
             if (this.receiversIds[i] == null) {
@@ -89,7 +89,7 @@ public class ReceiversButton {
         buildBundle();
     }
 
-    public Integer getSelectedReceiverId() {
+    public Long getSelectedReceiverId() {
         if (this.receiversBundle.getSelectedRadioButtonIndex() >= 0) {
             return this.receiversIds[this.receiversBundle.getSelectedRadioButtonIndex()];
         }

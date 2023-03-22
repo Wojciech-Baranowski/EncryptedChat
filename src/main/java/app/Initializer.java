@@ -1,6 +1,5 @@
 package app;
 
-import app.controllers.FileController;
 import app.engine.assets.Assets;
 import app.engine.assets.font.Font;
 import app.engine.display.Display;
@@ -9,6 +8,7 @@ import app.gui.chat.backgrounds.BackgroundController;
 import app.gui.chat.buttons.ButtonController;
 import app.gui.chat.textFields.TextFieldController;
 import app.gui.chat.texts.TextController;
+import app.services.FileService;
 
 import static app.engine.assets.AssetsBean.getAssets;
 import static app.engine.display.DisplayBean.getDisplay;
@@ -74,7 +74,7 @@ public class Initializer {
     }
 
     private void initializeScenes() {
-        scene.addCollection("gui");
+        scene.addCollection("chat");
         scene.addCollection("login");
     }
 
@@ -87,12 +87,12 @@ public class Initializer {
     }
 
     private void initializeGuiControllers() {
-        scene.switchCollection("gui");
+        scene.switchCollection("chat");
         BackgroundController.getBackgroundController();
         TextController.getTextController();
         ButtonController.getButtonController();
         TextFieldController.getTextFieldController();
-        FileController.getFileController();
+        FileService.getFileService();
         //UserController.getReceiversController();
     }
 

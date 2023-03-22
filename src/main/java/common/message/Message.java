@@ -10,7 +10,7 @@ import lombok.*;
 public class Message {
 
     private Long receiverId;
-    private CipherType cipherType;
+    private byte[] cipherType;
     private byte[] messageType;
     private byte[] content;
 

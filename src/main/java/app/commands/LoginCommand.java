@@ -2,13 +2,13 @@ package app.commands;
 
 import app.engine.common.Command;
 
-import static app.controllers.UserController.getUserController;
+import static app.services.UserService.getUserService;
 
 public class LoginCommand implements Command {
 
     @Override
     public void execute() {
-        getUserController().loginUserRequest();
+        getUserService().loginUserRequest();
     }
 
 }

@@ -1,6 +1,7 @@
-package app.controllers;
+package app.services;
 
 import app.utils.TrimmedStringFactory;
+import common.CipherConfig;
 import common.Serializer;
 import common.transportObjects.FileData;
 import lombok.Getter;
@@ -21,25 +22,25 @@ import static app.gui.chat.textFields.TextFieldController.getTextFieldController
 import static app.gui.chat.texts.TextController.getTextController;
 import static common.CipherConfig.CIPHER_BLOCK_SIZE;
 
-public class FileController {
+public class FileService {
 
-    private static FileController fileController;
+    private static FileService fileService;
 
     @Getter
     private FileData attachedFile;
     private final List<FileData> receivedFiles;
     private final Map<Long, Map<Integer, byte[]>> receivedFileFragments;
 
-    private FileController() {
+    private FileService() {
         this.receivedFiles = new ArrayList<>();
         this.receivedFileFragments = new HashMap<>();
     }
 
-    public static FileController getFileController() {
-        if (fileController == null) {
-            fileController = new FileController();
+    public static FileService getFileService() {
+        if (fileService == null) {
+            fileService = new FileService();
         }
-        return fileController;
+        return fileService;
     }
 
     public void attachFile() {
@@ -94,6 +95,10 @@ public class FileController {
         getButtonController().addReceivedFile(filenameWithExtension, fileData.hashCode());
     }
 
+    public void updateUploadInfo(double percentage) {
+        getTextController().setCurrentUploadInfoAsProgress(percentage);
+    }
+
     public void sendFileOrText() {
         if (getButtonController().getSelectedReceiverId() != null && getButtonController().getCipherType() != null) {
             updateUploadInfo(0.0);
@@ -105,15 +110,11 @@ public class FileController {
         }
     }
 
-    public void updateUploadInfo(double percentage) {
-        getTextController().setCurrentUploadInfoAsProgress(percentage);
-    }
-
     public void sendConfirmation(int fragmentNumber, Long senderId) {
 
     }
 
-    public void receiveText(byte[] binaryText, Long senderId) {
+    public void receiveText(byte[] binaryText, Long senderId, CipherConfig.CipherType cipherType) {
         try {
             //decrypt
             String text = Serializer.deserialize(binaryText);
@@ -124,36 +125,59 @@ public class FileController {
         }
     }
 
-    public void receiveFileFragment(Long senderId, int fileFragmentNumber, int numberOfFileFragments, int rawFileSize, byte[] fileFragment) {
+    public void receiveFileFragment(Long senderId, int fileFragmentNumber, int numberOfFileFragments, byte[] fileFragment, CipherConfig.CipherType cipherType) {
         if (!this.receivedFileFragments.containsKey(senderId)) {
             this.receivedFileFragments.put(senderId, new HashMap<>());
             sendConfirmation(fileFragmentNumber, senderId);
         }
         this.receivedFileFragments.get(senderId).put(fileFragmentNumber, fileFragment);
         if (this.receivedFileFragments.get(senderId).size() == numberOfFileFragments) {
-            FileData receivedFile = restoreFile(numberOfFileFragments, rawFileSize, senderId);
+            FileData receivedFile = restoreFile(numberOfFileFragments, senderId, cipherType);
             addReceivedFile(receivedFile);
         }
     }
 
-    private FileData restoreFile(int numberOfFileFragments, int rawFileSize, Long senderId) {
+    private FileData restoreFile(int numberOfFileFragments, Long senderId, CipherConfig.CipherType cipherType) {
         try {
             List<byte[]> fileFragments = new ArrayList<>();
+            int fileSize = 0;
             for (int i = 0; i < numberOfFileFragments; i++) {
-                fileFragments.add(this.receivedFileFragments.get(senderId).get(i));
+                byte[] fileFragment;
+                //decrypt
+                fileFragment = trimFileFragment(this.receivedFileFragments.get(senderId).get(i));
+                fileSize += fileFragment.length;
+                fileFragments.add(fileFragment);
             }
             this.receivedFileFragments.remove(senderId);
-            byte[] binaryFile = new byte[rawFileSize];
-            for (int i = 0; i < numberOfFileFragments; i++) {
-                for (int j = 0; j < CIPHER_BLOCK_SIZE && i * CIPHER_BLOCK_SIZE + j < rawFileSize; j++) {
-                    //decrypt
-                    binaryFile[i * CIPHER_BLOCK_SIZE] = fileFragments.get(i)[j];
-                }
-            }
-            return Serializer.deserialize(binaryFile);
+            byte[] mergedFile = mergeFileFragments(fileFragments, fileSize);
+            return Serializer.deserialize(mergedFile);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private byte[] mergeFileFragments(List<byte[]> fileFragments, int fileSize) {
+        byte[] binaryFile = new byte[fileSize];
+        for (int iterator = 0, i = 0; i < fileFragments.size(); i++) {
+            System.arraycopy(fileFragments.get(i), 0, binaryFile, iterator, fileFragments.get(i).length);
+            iterator += fileFragments.get(i).length;
+        }
+        return binaryFile;
+    }
+
+    private byte[] trimFileFragment(byte[] fileFragment) {
+        int size = getFragmentSize(fileFragment);
+        byte[] trimmedBinaryFile = new byte[size];
+        System.arraycopy(fileFragment, 0, trimmedBinaryFile, 0, size);
+        return trimmedBinaryFile;
+    }
+
+    private int getFragmentSize(byte[] fileFragment) {
+        int fragmentSize = CIPHER_BLOCK_SIZE;
+        while (fileFragment[fragmentSize - 1] == 0) {
+            fragmentSize--;
+        }
+        return fragmentSize - 1;
     }
 
 }

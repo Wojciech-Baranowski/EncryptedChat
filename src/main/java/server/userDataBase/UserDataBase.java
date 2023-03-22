@@ -9,9 +9,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import static server.userDataBase.UserDatabaseConfig.PATH_TO_USER_DATABASE;
+
 public class UserDataBase {
 
-    public static final String PATH_TO_USER_DATABASE = "userDatabase.json";
     private final ObjectMapper objectMapper;
     private final File dataBase;
     private final UserIdSequence userIdSequence;

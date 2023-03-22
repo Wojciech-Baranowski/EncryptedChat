@@ -2,7 +2,7 @@ package app.commands;
 
 import app.engine.common.Command;
 
-import static app.controllers.FileController.getFileController;
+import static app.services.FileService.getFileService;
 
 public class DownloadFileCommand implements Command {
 
@@ -14,7 +14,7 @@ public class DownloadFileCommand implements Command {
 
     @Override
     public void execute() {
-        getFileController().downloadReceivedFile(fileHashCode);
+        getFileService().downloadReceivedFile(fileHashCode);
     }
 
 }
