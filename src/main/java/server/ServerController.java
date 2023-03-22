@@ -1,9 +1,7 @@
 package server;
 
-import app.utils.Serializer;
-import common.Message;
-import server.dataBase.DataBase;
-import server.dataBase.DataBaseRecord;
+import common.message.Message;
+import server.userDataBase.UserDataBase;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -18,7 +16,7 @@ public class ServerController {
     private static ServerController serverController;
 
     private final ServerSocket socket;
-    private final DataBase dataBase;
+    private final UserDataBase userDataBase;
     private final Map<Long, Integer> clientToUserMap;
 
     public static void main(String[] args) {
@@ -28,7 +26,7 @@ public class ServerController {
     private ServerController() {
         try {
             this.socket = new ServerSocket(PORT);
-            this.dataBase = new DataBase();
+            this.userDataBase = new UserDataBase();
             this.clientToUserMap = new HashMap<>();
             handleClients();
         } catch (IOException e) {
@@ -44,7 +42,7 @@ public class ServerController {
     }
 
     public void handleMessage(Message message) {
-        DataBaseRecord dataBaseRecord = Serializer.deserialize(message.getContent());
+
     }
 
     private void handleClients() {

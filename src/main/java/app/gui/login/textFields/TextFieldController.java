@@ -6,12 +6,12 @@ public class TextFieldController {
 
     private static TextFieldController textFieldController;
 
-    private final Login login;
-    private final Register register;
+    private final LoginTextField loginTextField;
+    private final RegisterTextField registerTextField;
 
     private TextFieldController() {
-        this.login = new Login(getBackgroundController().getLoginBackground());
-        this.register = new Register(getBackgroundController().getRegisterBackground());
+        this.loginTextField = new LoginTextField(getBackgroundController().getLoginBackground());
+        this.registerTextField = new RegisterTextField(getBackgroundController().getRegisterBackground());
     }
 
     public static TextFieldController getTextFieldController() {
@@ -22,23 +22,23 @@ public class TextFieldController {
     }
 
     public String getLoginUserName() {
-        return this.login.getUserName();
+        return this.loginTextField.getUserName();
     }
 
     public String getLoginPassword() {
-        return this.login.getPassword();
+        return this.loginTextField.getPassword();
     }
 
     public String getRegisterUserName() {
-        return this.register.getUserName();
+        return this.registerTextField.getUserName();
     }
 
     public String getRegisterPassword() {
-        return this.register.getPassword();
+        return this.registerTextField.getPassword();
     }
 
     public String getRegisterRepeatedPassword() {
-        return this.register.getRepeatedPassword();
+        return this.registerTextField.getRepeatedPassword();
     }
 
 }

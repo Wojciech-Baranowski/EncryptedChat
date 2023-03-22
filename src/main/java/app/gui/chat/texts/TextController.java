@@ -6,20 +6,20 @@ public class TextController {
 
     private static TextController textController;
 
-    private final UserName userName;
-    private final FileName fileName;
-    private final FileSize fileSize;
-    private final FileExtension fileExtension;
-    private final UploadInfo uploadInfo;
-    private final YourFiles yourFiles;
+    private final UserNameText userNameText;
+    private final FileNameText fileNameText;
+    private final FileSizeText fileSizeText;
+    private final FileExtensionText fileExtensionText;
+    private final UploadInfoText uploadInfoText;
+    private final YourFilesText yourFilesText;
 
     private TextController() {
-        this.userName = new UserName(getBackgroundController().getUserNameBackground());
-        this.fileName = new FileName(getBackgroundController().getFileToSendHeaderBackground());
-        this.fileSize = new FileSize(getBackgroundController().getFileToSendBodyBackground());
-        this.fileExtension = new FileExtension(getBackgroundController().getFileToSendBodyBackground());
-        this.uploadInfo = new UploadInfo(getBackgroundController().getFileToSendBodyBackground());
-        this.yourFiles = new YourFiles(getBackgroundController().getReceivedFilesHeaderBackground());
+        this.userNameText = new UserNameText(getBackgroundController().getUserNameBackground());
+        this.fileNameText = new FileNameText(getBackgroundController().getFileToSendHeaderBackground());
+        this.fileSizeText = new FileSizeText(getBackgroundController().getFileToSendBodyBackground());
+        this.fileExtensionText = new FileExtensionText(getBackgroundController().getFileToSendBodyBackground());
+        this.uploadInfoText = new UploadInfoText(getBackgroundController().getFileToSendBodyBackground());
+        this.yourFilesText = new YourFilesText(getBackgroundController().getReceivedFilesHeaderBackground());
     }
 
     public static TextController getTextController() {
@@ -30,51 +30,51 @@ public class TextController {
     }
 
     public void setUserName(String userName) {
-        this.userName.setUserName(userName);
+        this.userNameText.setUserName(userName);
     }
 
     public void setFileName(String fileName) {
-        this.fileName.setFileName(fileName);
+        this.fileNameText.setFileName(fileName);
     }
 
     public void resetFileName() {
-        this.fileName.resetFileName();
+        this.fileNameText.resetFileName();
     }
 
     public void setFileSize(String fileSize) {
-        this.fileSize.setFileSize(fileSize);
+        this.fileSizeText.setFileSize(fileSize);
     }
 
     public void resetFileSize() {
-        this.fileSize.resetFileSize();
+        this.fileSizeText.resetFileSize();
     }
 
     public void setFileExtension(String fileExtension) {
-        this.fileExtension.setFileExtension(fileExtension);
+        this.fileExtensionText.setFileExtension(fileExtension);
     }
 
     public void resetFileExtension() {
-        this.fileExtension.resetFileExtension();
+        this.fileExtensionText.resetFileExtension();
     }
 
     public void setCurrentUploadInfoAsReadyToUpload() {
-        this.uploadInfo.setCurrentUploadInfoAsReadyToUpload();
+        this.uploadInfoText.setCurrentUploadInfoAsReadyToUpload();
     }
 
     public void setCurrentUploadInfoAsProgress(double percentage) {
-        this.uploadInfo.setCurrentUploadInfoAsProgress(percentage);
+        this.uploadInfoText.setCurrentUploadInfoAsProgress(percentage);
     }
 
     public void setCurrentUploadInfoAsSuccess() {
-        this.uploadInfo.setCurrentUploadInfoAsSuccess();
+        this.uploadInfoText.setCurrentUploadInfoAsSuccess();
     }
 
     public void setCurrentUploadInfoAsError() {
-        this.uploadInfo.setCurrentUploadInfoAsError();
+        this.uploadInfoText.setCurrentUploadInfoAsError();
     }
 
     public void setCurrentUploadInfoAsBlank() {
-        this.uploadInfo.setCurrentUploadInfoAsBlank();
+        this.uploadInfoText.setCurrentUploadInfoAsBlank();
     }
 
 }

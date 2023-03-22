@@ -8,10 +8,10 @@ public class TextFieldController {
 
     private static TextFieldController textFieldController;
 
-    private final Message message;
+    private final MessageTextField messageTextField;
 
     private TextFieldController() {
-        this.message = new Message(getBackgroundController().getFileToSendBodyBackground());
+        this.messageTextField = new MessageTextField(getBackgroundController().getFileToSendBodyBackground());
     }
 
     public static TextFieldController getTextFieldController() {
@@ -22,7 +22,7 @@ public class TextFieldController {
     }
 
     public TextField getMessageTextField() {
-        return this.message.getTextField();
+        return this.messageTextField.getTextField();
     }
 
 }

@@ -1,6 +1,6 @@
 package server;
 
-import common.Message;
+import common.message.Message;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -8,18 +8,20 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static server.ServerController.getServerController;
 
 public class ClientHandler implements Runnable {
 
     private static final List<ClientHandler> clientHandlers = new ArrayList<>();
-    private final long clientId;
+    private final Long clientId;
+    private Long userId;
     private final Socket socket;
     private final ObjectInputStream reader;
     private final ObjectOutputStream writer;
 
-    public ClientHandler(Socket socket, long clientId) throws IOException {
+    public ClientHandler(Socket socket, Long clientId) throws IOException {
         this.clientId = clientId;
         this.socket = socket;
         this.writer = new ObjectOutputStream(socket.getOutputStream());
@@ -51,7 +53,7 @@ public class ClientHandler implements Runnable {
 
     private void sendMessageToClient(Message message) throws IOException {
         ClientHandler receiver = clientHandlers.stream()
-                .filter(c -> c.clientId == message.getReceiverId())
+                .filter(c -> Objects.equals(c.clientId, message.getReceiverId()))
                 .findFirst()
                 .orElseThrow();
         receiver.writer.writeObject(message);

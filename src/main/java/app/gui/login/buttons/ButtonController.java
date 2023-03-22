@@ -6,12 +6,12 @@ public class ButtonController {
 
     private static ButtonController buttonController;
 
-    private final Login login;
-    private final Register register;
+    private final LoginButton loginButton;
+    private final RegisterButton registerButton;
 
     private ButtonController() {
-        this.login = new Login(getBackgroundController().getLoginBackground());
-        this.register = new Register(getBackgroundController().getRegisterBackground());
+        this.loginButton = new LoginButton(getBackgroundController().getLoginBackground());
+        this.registerButton = new RegisterButton(getBackgroundController().getRegisterBackground());
     }
 
     public static ButtonController getButtonController() {

@@ -6,14 +6,14 @@ public class TextController {
 
     private static TextController textController;
 
-    private final Login login;
-    private final Register register;
-    private final Info info;
+    private final LoginText loginText;
+    private final RegisterText registerText;
+    private final InfoText infoText;
 
     private TextController() {
-        this.login = new Login(BackgroundController.getBackgroundController().getLoginBackground());
-        this.register = new Register(BackgroundController.getBackgroundController().getRegisterBackground());
-        this.info = new Info(BackgroundController.getBackgroundController().getInfoBackground());
+        this.loginText = new LoginText(BackgroundController.getBackgroundController().getLoginBackground());
+        this.registerText = new RegisterText(BackgroundController.getBackgroundController().getRegisterBackground());
+        this.infoText = new InfoText(BackgroundController.getBackgroundController().getInfoBackground());
     }
 
     public static TextController getTextController() {
@@ -24,23 +24,23 @@ public class TextController {
     }
 
     public void setRegistrationSuccess() {
-        this.info.setRegistrationSuccess();
+        this.infoText.setRegistrationSuccess();
     }
 
     public void setUserNameIsEmptyError() {
-        this.info.setUserNameDoesNotExistError();
+        this.infoText.setUserNameDoesNotExistError();
     }
 
     public void setUserNameDoesNotExistError() {
-        this.info.setUserNameDoesNotExistError();
+        this.infoText.setUserNameDoesNotExistError();
     }
 
     public void setUserNameAlreadyExistsError() {
-        this.info.setUserNameAlreadyExistsError();
+        this.infoText.setUserNameAlreadyExistsError();
     }
 
     public void setIncorrectPasswordError() {
-        this.info.setIncorrectPasswordError();
+        this.infoText.setIncorrectPasswordError();
     }
 
 }

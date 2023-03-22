@@ -1,10 +1,10 @@
 package app;
 
+import app.controllers.FileController;
 import app.engine.assets.Assets;
 import app.engine.assets.font.Font;
 import app.engine.display.Display;
 import app.engine.scene.Scene;
-import app.files.FileController;
 import app.gui.chat.backgrounds.BackgroundController;
 import app.gui.chat.buttons.ButtonController;
 import app.gui.chat.textFields.TextFieldController;
