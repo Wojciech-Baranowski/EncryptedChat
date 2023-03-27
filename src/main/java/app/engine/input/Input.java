@@ -6,21 +6,13 @@ import app.engine.input.inputCombination.InputCombinationFactory;
 
 public interface Input {
 
-    void addMouseListener(Observer observer);
+    void addInputListener(Observer observer);
 
-    void addKeyboardListener(Observer observer);
+    void addInputContentListener(InputObserver observer);
 
-    void addInputMouseListener(InputObserver observer);
+    void removeInputListener(Observer observer);
 
-    void addInputKeyboardListener(InputObserver observer);
-
-    void removeMouseListener(Observer observer);
-
-    void removeKeyboardListener(Observer observer);
-
-    void removeInputMouseListener(InputObserver observer);
-
-    void removeInputKeyboardListener(InputObserver observer);
+    void removeInputContentListener(InputObserver observer);
 
     int getMouseX();
 
@@ -30,10 +22,8 @@ public interface Input {
 
     InputCombinationFactory getInputCombinationFactory();
 
-    void initializeListeners();
+    void initializeInputListener();
 
-    void resetMouseListener();
-
-    void resetKeyboardListener();
+    void resetInputListener();
 
 }

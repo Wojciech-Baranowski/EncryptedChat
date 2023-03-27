@@ -1,36 +1,26 @@
 package app.engine.input.inputCombination;
 
-import app.engine.input.KeyboardListener;
-import app.engine.input.MouseListener;
+import app.engine.input.InputHandler;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.util.Set;
 
 public class ComplexInputCombination implements InputCombination {
 
-    private final KeyboardListener keyboardListener;
-    private final MouseListener mouseListener;
+    private final InputHandler inputHandler;
     private final Set<InputElement> elements;
 
-    public ComplexInputCombination(
-            KeyboardListener keyboardListener, MouseListener mouseListener, Set<InputElement> elements) {
-        this.keyboardListener = keyboardListener;
-        this.mouseListener = mouseListener;
+    public ComplexInputCombination(InputHandler inputHandler, Set<InputElement> elements) {
+        this.inputHandler = inputHandler;
         this.elements = elements;
     }
 
     @Override
     public boolean isActive() {
-        boolean result = true;
         for (InputElement element : elements) {
-            if (element.getInputEvent() instanceof MouseEvent) {
-                result &= mouseListener.isActivated(element);
-            }
-            if (element.getInputEvent() instanceof KeyEvent) {
-                result &= keyboardListener.isActivated(element);
+            if (!inputHandler.isActivated(element)) {
+                return false;
             }
         }
-        return result;
+        return true;
     }
 }

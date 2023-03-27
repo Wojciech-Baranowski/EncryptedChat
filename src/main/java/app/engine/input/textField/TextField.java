@@ -57,17 +57,10 @@ public class TextField implements Visual, Interactive, InputObserver {
     @Override
     public void update() {
         if (getInput().getInputCombinationFactory().makeLmbCombination().isActive()) {
-            if (currentlyActive != null) {
-                getInput().removeInputKeyboardListener(currentlyActive);
-            }
-            currentlyActive = this;
-            getInput().addInputKeyboardListener(this);
+            focus();
         }
         if (getInput().getInputCombinationFactory().makeEscapeCombination().isActive()) {
-            if (currentlyActive != null) {
-                getInput().removeInputKeyboardListener(currentlyActive);
-            }
-            currentlyActive = null;
+            unfocus();
         }
     }
 
@@ -93,6 +86,21 @@ public class TextField implements Visual, Interactive, InputObserver {
 
     public String getContent() {
         return this.content.replaceAll("\\s+", " ").trim();
+    }
+
+    private void focus() {
+        if (currentlyActive != null) {
+            getInput().removeInputContentListener(currentlyActive);
+        }
+        currentlyActive = this;
+        getInput().addInputContentListener(this);
+    }
+
+    private void unfocus() {
+        if (currentlyActive != null) {
+            getInput().removeInputContentListener(currentlyActive);
+        }
+        currentlyActive = null;
     }
 
     private void updateContent(InputElement inputElement) {

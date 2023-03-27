@@ -53,8 +53,7 @@ public class FileService {
             getChatTextController().setFileSize(this.attachedFile.getSize().toString());
             getChatTextController().setCurrentUploadInfoAsReadyToUpload();
             getScene().removeObject(getChatTextFieldController().getMessageTextField());
-            getInput().resetMouseListener();
-            getInput().resetKeyboardListener();
+            getInput().resetInputListener();
         }
     }
 
@@ -83,8 +82,7 @@ public class FileService {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            getInput().resetMouseListener();
-            getInput().resetKeyboardListener();
+            getInput().resetInputListener();
         }
     }
 

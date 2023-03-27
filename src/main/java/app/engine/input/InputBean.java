@@ -13,14 +13,12 @@ import java.util.Set;
 public class InputBean implements Input {
 
     private static InputBean input;
-    private final MouseListener mouseListener;
-    private final KeyboardListener keyboardListener;
+    private final InputHandler inputHandler;
     private final InputCombinationFactory inputCombinationFactory;
 
     private InputBean() {
-        this.mouseListener = new MouseListener();
-        this.keyboardListener = new KeyboardListener();
-        this.inputCombinationFactory = new InputCombinationFactory(mouseListener, keyboardListener);
+        this.inputHandler = new InputHandler();
+        this.inputCombinationFactory = new InputCombinationFactory(inputHandler);
     }
 
     public static Input getInput() {
@@ -31,60 +29,39 @@ public class InputBean implements Input {
     }
 
     @Override
-    public void addMouseListener(Observer observer) {
-        mouseListener.attach(observer);
+    public void addInputListener(Observer observer) {
+        inputHandler.attach(observer);
     }
 
     @Override
-    public void addKeyboardListener(Observer observer) {
-        keyboardListener.attach(observer);
+    public void addInputContentListener(InputObserver observer) {
+        inputHandler.attach(observer);
     }
 
     @Override
-    public void addInputMouseListener(InputObserver observer) {
-        mouseListener.attach(observer);
+    public void removeInputListener(Observer observer) {
+        inputHandler.detach(observer);
     }
 
     @Override
-    public void addInputKeyboardListener(InputObserver observer) {
-        keyboardListener.attach(observer);
-    }
-
-    @Override
-    public void removeMouseListener(Observer observer) {
-        mouseListener.detach(observer);
-    }
-
-    @Override
-    public void removeKeyboardListener(Observer observer) {
-        keyboardListener.detach(observer);
-    }
-
-    @Override
-    public void removeInputMouseListener(InputObserver observer) {
-        mouseListener.detach(observer);
-    }
-
-    @Override
-    public void removeInputKeyboardListener(InputObserver observer) {
-        keyboardListener.detach(observer);
+    public void removeInputContentListener(InputObserver observer) {
+        inputHandler.detach(observer);
     }
 
     @Override
     public int getMouseX() {
-        return mouseListener.getX();
+        return inputHandler.getX();
     }
 
     @Override
     public int getMouseY() {
-        return mouseListener.getY();
+        return inputHandler.getY();
     }
 
     @Override
     public InputCombination getCurrentInputCombination() {
-        Set<InputElement> inputElements = mouseListener.getActivatedInputElements();
-        inputElements.addAll(keyboardListener.getActivatedInputElements());
-        return new ComplexInputCombination(keyboardListener, mouseListener, inputElements);
+        Set<InputElement> inputElements = inputHandler.getActivatedInputElements();
+        return new ComplexInputCombination(inputHandler, inputElements);
     }
 
     @Override
@@ -93,19 +70,13 @@ public class InputBean implements Input {
     }
 
     @Override
-    public void initializeListeners() {
+    public void initializeInputListener() {
         Display display = DisplayBean.getDisplay();
-        display.addWindowListener(keyboardListener);
-        display.addWindowListener(mouseListener);
+        display.addWindowListener(inputHandler.getInputEventListener());
     }
 
     @Override
-    public void resetMouseListener() {
-        mouseListener.reset();
-    }
-
-    @Override
-    public void resetKeyboardListener() {
-        keyboardListener.reset();
+    public void resetInputListener() {
+        inputHandler.reset();
     }
 }

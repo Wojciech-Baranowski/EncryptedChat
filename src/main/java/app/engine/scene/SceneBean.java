@@ -60,8 +60,7 @@ public class SceneBean implements Scene {
 
     @Override
     public void initializeListeners() {
-        input.addMouseListener(this);
-        input.addKeyboardListener(this);
+        input.addInputListener(this);
     }
 
     @Override

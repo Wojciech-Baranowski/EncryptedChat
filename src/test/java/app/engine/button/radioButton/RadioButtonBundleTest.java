@@ -64,7 +64,7 @@ public class RadioButtonBundleTest {
         });
         scene.addOnHighest(button);
         //when
-        InputBean.getInput().initializeListeners();
+        InputBean.getInput().initializeInputListener();
         SceneBean.getScene().initializeListeners();
         scene.update();
         //then

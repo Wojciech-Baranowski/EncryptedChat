@@ -58,7 +58,7 @@ public class CheckboxTest {
         scene.addOnHighest(checkbox);
         //when
         scene.initializeListeners();
-        input.initializeListeners();
+        input.initializeInputListener();
         scene.update();
         //then
         //after each left click on square it should alternate between red and blue colors, starting from red

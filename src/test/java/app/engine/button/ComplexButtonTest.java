@@ -66,7 +66,7 @@ public class ComplexButtonTest {
         scene.addOnHighest(complexButton);
         //when
         scene.initializeListeners();
-        input.initializeListeners();
+        input.initializeInputListener();
         scene.update();
         //then
         //"Hellothere!" should appear in console logs after pressing 'E' and

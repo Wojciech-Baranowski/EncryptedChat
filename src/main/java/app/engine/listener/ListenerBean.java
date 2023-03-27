@@ -6,19 +6,18 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 public class ListenerBean implements Listener {
 
     private static Listener listener;
 
-    private final List<ParallelThread<?>> parallelThreads;
+    private final List<ThreadedConsumer> threadedConsumers;
     @Getter
-    private final CountDownLatch countDownLatch;
+    private CountLatch countLatch;
 
     private ListenerBean() {
-        this.parallelThreads = new ArrayList<>();
-        this.countDownLatch = new CountDownLatch(1);
+        this.threadedConsumers = new ArrayList<>();
+        this.countLatch = new CountLatch();
     }
 
     public static Listener getListener() {
@@ -34,28 +33,25 @@ public class ListenerBean implements Listener {
     }
 
     @Override
-    public void addParallelThread(ParallelThread<?> parallelThread) {
-        this.parallelThreads.add(parallelThread);
+    public void addConsumer(ThreadedConsumer threadedConsumer) {
+        this.threadedConsumers.add(threadedConsumer);
     }
 
     @Override
-    public void removeParallelThread(ParallelThread<?> parallelThread) {
-        this.parallelThreads.remove(parallelThread);
+    public void removeThreadedConsumer(ThreadedConsumer threadedConsumer) {
+        this.threadedConsumers.remove(threadedConsumer);
     }
 
     private void initializeListeners() {
-        InputBean.getInput().initializeListeners();
+        InputBean.getInput().initializeInputListener();
         SceneBean.getScene().initializeListeners();
     }
 
     private synchronized void listen() {
         while (true) {
-            try {
-                this.parallelThreads.forEach(ParallelThread::consume);
-                this.countDownLatch.await();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            this.threadedConsumers.forEach(ThreadedConsumer::consume);
+            this.countLatch.await();
+            this.countLatch.countUp();
         }
     }
 

@@ -12,7 +12,7 @@ public class UserNameText {
 
     public UserNameText(Drawable background) {
         this.userName = getDisplay().getDrawableFactory().makeText(
-                "User:",
+                "",
                 background.getX() + 6,
                 background.getY() + 3,
                 "HBE24",
@@ -22,7 +22,7 @@ public class UserNameText {
     }
 
     public void setUserName(String userName) {
-        this.userName.setText("User: " + userName);
+        this.userName.setText(userName);
     }
 
 }

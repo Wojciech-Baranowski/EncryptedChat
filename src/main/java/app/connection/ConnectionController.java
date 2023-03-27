@@ -49,7 +49,6 @@ public class ConnectionController {
     }
 
     private void receiveMessages(SynchronizedCollection<Message> messageBuffer) {
-        System.out.println("Test");
         while (socket.isConnected()) {
             try {
                 Message message = (Message) this.reader.readObject();
