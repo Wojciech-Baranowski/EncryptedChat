@@ -23,8 +23,7 @@ public class DrawableFactory {
         return rectangleFactory.makeRectangle(x, y, w, h, colorName);
     }
 
-    public Rectangle makeFramedRectangle(int x, int y, int w, int h, int frameThickness,
-                                         String colorName, String frameColorName) {
+    public Rectangle makeFramedRectangle(int x, int y, int w, int h, int frameThickness, String colorName, String frameColorName) {
         return rectangleFactory.makeFramedRectangle(x, y, w, h, frameThickness, colorName, frameColorName);
     }
 

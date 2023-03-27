@@ -24,8 +24,9 @@ public interface Drawable extends Visual {
     }
 
     default boolean isPixelOnPositionTransparent(int x, int y) {
-        if (!inBorders(x, y))
+        if (!inBorders(x, y)) {
             return true;
+        }
         int xPos = x - getX();
         int yPos = y - getY();
         return getP()[xPos + yPos * getW()] == Color.getTransparentColorValue();

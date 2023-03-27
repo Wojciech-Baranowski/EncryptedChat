@@ -28,13 +28,13 @@ public class RadioButton implements Visual, Interactive {
 
     @Override
     public void update() {
-        if (activationCombination == null || activationCombination.isActive()) {
-            radioButtonBundle.update(this);
+        if (this.activationCombination == null || this.activationCombination.isActive()) {
+            this.radioButtonBundle.update(this);
         }
     }
 
     @Override
     public Drawable getDrawable() {
-        return selected ? onDrawable : offDrawable;
+        return this.selected ? this.onDrawable : this.offDrawable;
     }
 }

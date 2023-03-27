@@ -20,19 +20,18 @@ public class InputElement {
     }
 
     public int getKeyCode() {
-        if (inputEvent instanceof MouseEvent) {
-            return ((MouseEvent) inputEvent).getButton();
+        if (this.inputEvent instanceof MouseEvent) {
+            return ((MouseEvent) this.inputEvent).getButton();
         }
-        if (inputEvent instanceof KeyEvent) {
-            return ((KeyEvent) inputEvent).getKeyCode();
+        if (this.inputEvent instanceof KeyEvent) {
+            return ((KeyEvent) this.inputEvent).getKeyCode();
         }
         return 0;
     }
 
     public static InputEvent getMouseInputEventByKeycode(int keyCode) {
         Component dummyComponent = new Button();
-        return new MouseEvent(
-                dummyComponent, 0, 0, 0, 0, 0, 0, false, keyCode);
+        return new MouseEvent(dummyComponent, 0, 0, 0, 0, 0, 0, false, keyCode);
     }
 
     public static InputEvent getKeyboardInputEventByKeycode(int keyCode) {

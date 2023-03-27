@@ -17,10 +17,10 @@ public class AssetsBean implements Assets {
     private final Map<String, Font> fonts;
 
     private AssetsBean() {
-        colorFactory = new ColorFactory();
-        fontFactory = new FontFactory();
-        colors = new HashMap<>();
-        fonts = new HashMap<>();
+        this.colorFactory = new ColorFactory();
+        this.fontFactory = new FontFactory();
+        this.colors = new HashMap<>();
+        this.fonts = new HashMap<>();
     }
 
     public static Assets getAssets() {
@@ -32,23 +32,23 @@ public class AssetsBean implements Assets {
 
     @Override
     public Color getColor(String name) {
-        return colors.get(name);
+        return this.colors.get(name);
     }
 
     @Override
     public void addColor(String name, int value) {
-        Color color = colorFactory.makeArgbColor(value);
-        colors.put(name, color);
+        Color color = this.colorFactory.makeArgbColor(value);
+        this.colors.put(name, color);
     }
 
     @Override
     public Font getFont(String name) {
-        return fonts.get(name);
+        return this.fonts.get(name);
     }
 
     @Override
     public void addFont(String name, String path, String symbols) {
-        Font font = fontFactory.makeRasterFont(path, symbols);
-        fonts.put(name, font);
+        Font font = this.fontFactory.makeRasterFont(path, symbols);
+        this.fonts.put(name, font);
     }
 }

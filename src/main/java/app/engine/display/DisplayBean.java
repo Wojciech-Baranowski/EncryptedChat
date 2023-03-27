@@ -24,11 +24,11 @@ public class DisplayBean implements Display {
     private Collection<Visual> objectsToDraw;
 
     private DisplayBean() {
-        window = new Window();
-        drawableFactory = new DrawableFactory();
-        pixels = new int[Window.w * Window.h];
-        Arrays.fill(pixels, 0);
-        objectsToDraw = new LinkedList<>();
+        this.window = new Window();
+        this.drawableFactory = new DrawableFactory();
+        this.pixels = new int[Window.w * Window.h];
+        Arrays.fill(this.pixels, 0);
+        this.objectsToDraw = new LinkedList<>();
     }
 
     public static Display getDisplay() {
@@ -40,15 +40,15 @@ public class DisplayBean implements Display {
 
     @Override
     public void addWindowListener(EventListener listener) {
-        window.addListener(listener);
+        this.window.addListener(listener);
     }
 
     @Override
     public void draw() {
-        if (objectsToDraw == null) {
+        if (this.objectsToDraw == null) {
             return;
         }
-        for (Visual visual : objectsToDraw) {
+        for (Visual visual : this.objectsToDraw) {
             Drawable drawable = visual.getDrawable();
             int startX = max(drawable.getX(), 0);
             int startY = max(drawable.getY(), 0);
@@ -57,7 +57,7 @@ public class DisplayBean implements Display {
             int height = min(drawable.getY() + drawable.getH(), Window.h - 1) - startY;
             merge(drawable.getP(), startX, startY, width, height, pWidth);
         }
-        window.draw(pixels);
+        this.window.draw(this.pixels);
     }
 
     private void merge(int[] p, int startX, int startY, int width, int height, int pWidth) {
@@ -67,9 +67,9 @@ public class DisplayBean implements Display {
                 int pixelId = startX + x + (startY + y) * Window.w;
                 if (p[x + y * pWidth] != transparentColorValue) {
                     int newColor = (Color.isTransparent(p[x + y * pWidth])
-                            ? Color.blend(pixels[pixelId], p[x + y * pWidth])
+                            ? Color.blend(this.pixels[pixelId], p[x + y * pWidth])
                             : p[x + y * pWidth]);
-                    pixels[pixelId] = newColor;
+                    this.pixels[pixelId] = newColor;
                 }
             }
         }

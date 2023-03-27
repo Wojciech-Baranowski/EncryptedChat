@@ -16,8 +16,8 @@ public class ComplexInputCombination implements InputCombination {
 
     @Override
     public boolean isActive() {
-        for (InputElement element : elements) {
-            if (!inputHandler.isActivated(element)) {
+        for (InputElement element : this.elements) {
+            if (!this.inputHandler.isActivated(element)) {
                 return false;
             }
         }

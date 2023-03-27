@@ -30,14 +30,14 @@ public class InputHandler implements Observable, InputObservable {
 
     public InputHandler() {
         this.inputEventListener = new InputEventListener();
-        buttonsPressed = new boolean[BUTTONS_NUMBER];
-        keysPressed = new boolean[KEYS_NUMBER];
-        Arrays.fill(buttonsPressed, false);
-        Arrays.fill(keysPressed, false);
-        observers = new LinkedList<>();
-        inputObservers = new LinkedList<>();
-        x = 0;
-        y = 0;
+        this.buttonsPressed = new boolean[BUTTONS_NUMBER];
+        this.keysPressed = new boolean[KEYS_NUMBER];
+        Arrays.fill(this.buttonsPressed, false);
+        Arrays.fill(this.keysPressed, false);
+        this.observers = new LinkedList<>();
+        this.inputObservers = new LinkedList<>();
+        this.x = 0;
+        this.y = 0;
         new ParallelThread<>(this.inputEventListener::listen, this::handleInputEvent);
     }
 
@@ -45,11 +45,11 @@ public class InputHandler implements Observable, InputObservable {
         Set<InputElement> currentCombination = new HashSet<>();
         for (int i = 0; i < BUTTONS_NUMBER; i++) {
             InputEvent inputEvent = InputElement.getMouseInputEventByKeycode(i);
-            currentCombination.add(new InputElement(buttonsPressed[i] ? ActionType.DOWN : ActionType.UP, inputEvent));
+            currentCombination.add(new InputElement(this.buttonsPressed[i] ? ActionType.DOWN : ActionType.UP, inputEvent));
         }
         for (int i = 0; i < KEYS_NUMBER; i++) {
             InputEvent inputEvent = InputElement.getKeyboardInputEventByKeycode(i);
-            currentCombination.add(new InputElement(keysPressed[i] ? ActionType.DOWN : ActionType.UP, inputEvent));
+            currentCombination.add(new InputElement(this.keysPressed[i] ? ActionType.DOWN : ActionType.UP, inputEvent));
         }
         return currentCombination;
     }
@@ -59,57 +59,57 @@ public class InputHandler implements Observable, InputObservable {
         if (inputElement.getInputEvent() instanceof MouseEvent) {
             int buttonCode = ((MouseEvent) inputElement.getInputEvent()).getButton();
             activated = switch (inputElement.getActionType()) {
-                case UP -> !buttonsPressed[buttonCode];
-                case DOWN -> buttonsPressed[buttonCode];
+                case UP -> !this.buttonsPressed[buttonCode];
+                case DOWN -> this.buttonsPressed[buttonCode];
             };
         }
         if (inputElement.getInputEvent() instanceof KeyEvent) {
             int keyCode = ((KeyEvent) inputElement.getInputEvent()).getKeyCode();
             activated = switch (inputElement.getActionType()) {
-                case UP -> !keysPressed[keyCode];
-                case DOWN -> keysPressed[keyCode];
+                case UP -> !this.keysPressed[keyCode];
+                case DOWN -> this.keysPressed[keyCode];
             };
         }
         return activated;
     }
 
     public void reset() {
-        buttonsPressed = new boolean[BUTTONS_NUMBER];
-        keysPressed = new boolean[KEYS_NUMBER];
-        Arrays.fill(buttonsPressed, false);
-        Arrays.fill(keysPressed, false);
+        this.buttonsPressed = new boolean[BUTTONS_NUMBER];
+        this.keysPressed = new boolean[KEYS_NUMBER];
+        Arrays.fill(this.buttonsPressed, false);
+        Arrays.fill(this.keysPressed, false);
     }
 
     @Override
     public void attach(Observer observer) {
-        observers.add(observer);
+        this.observers.add(observer);
     }
 
     @Override
     public void detach(Observer observer) {
-        observers.remove(observer);
+        this.observers.remove(observer);
     }
 
     @Override
     public void notifyObservers() {
-        for (Observer observer : observers) {
+        for (Observer observer : this.observers) {
             observer.update();
         }
     }
 
     @Override
     public void attach(InputObserver observer) {
-        inputObservers.add(observer);
+        this.inputObservers.add(observer);
     }
 
     @Override
     public void detach(InputObserver observer) {
-        inputObservers.remove(observer);
+        this.inputObservers.remove(observer);
     }
 
     @Override
     public void notifyObservers(InputElement inputElement) {
-        for (InputObserver observer : inputObservers) {
+        for (InputObserver observer : this.inputObservers) {
             observer.update(inputElement);
         }
     }
@@ -126,8 +126,8 @@ public class InputHandler implements Observable, InputObservable {
 
     private void handleKeyPressedInput(KeyEvent keyEvent) {
         int keyCode = keyEvent.getKeyCode();
-        if (!keysPressed[keyCode]) {
-            keysPressed[keyCode] = true;
+        if (!this.keysPressed[keyCode]) {
+            this.keysPressed[keyCode] = true;
             notifyObservers();
             notifyObservers(new InputElement(ActionType.DOWN, InputElement.getKeyboardInputEventByKeycode(keyCode)));
         }
@@ -135,26 +135,26 @@ public class InputHandler implements Observable, InputObservable {
 
     private void handleKeyReleasedInput(KeyEvent keyEvent) {
         int keyCode = keyEvent.getKeyCode();
-        keysPressed[keyCode] = false;
+        this.keysPressed[keyCode] = false;
         notifyObservers();
         notifyObservers(new InputElement(ActionType.UP, InputElement.getKeyboardInputEventByKeycode(keyCode)));
     }
 
     private void handleButtonPressedInput(MouseEvent mouseEvent) {
         int buttonCode = mouseEvent.getButton();
-        buttonsPressed[buttonCode] = true;
+        this.buttonsPressed[buttonCode] = true;
         notifyObservers();
     }
 
     private void handleButtonReleasedInput(MouseEvent mouseEvent) {
         int buttonCode = mouseEvent.getButton();
-        buttonsPressed[buttonCode] = false;
+        this.buttonsPressed[buttonCode] = false;
         notifyObservers();
     }
 
     private void handleMouseMovedInput(MouseEvent mouseEvent) {
-        x = mouseEvent.getX();
-        y = mouseEvent.getY();
+        this.x = mouseEvent.getX();
+        this.y = mouseEvent.getY();
         notifyObservers();
     }
 

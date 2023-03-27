@@ -8,7 +8,7 @@ public class CheckboxBundle {
     private final List<Checkbox> checkboxes;
 
     public CheckboxBundle() {
-        checkboxes = new LinkedList<>();
+        this.checkboxes = new LinkedList<>();
     }
 
     public CheckboxBundle(List<Checkbox> checkboxes) {
@@ -16,20 +16,20 @@ public class CheckboxBundle {
     }
 
     public List<Boolean> getBundleState() {
-        return checkboxes.stream()
+        return this.checkboxes.stream()
                 .map(Checkbox::isSelected)
                 .toList();
     }
 
     public void addCheckbox(Checkbox checkbox) {
-        if (checkboxes.contains(checkbox)) {
+        if (this.checkboxes.contains(checkbox)) {
             return;
         }
-        checkboxes.add(checkbox);
+        this.checkboxes.add(checkbox);
     }
 
     public void removeCheckbox(Checkbox checkbox) {
-        checkboxes.remove(checkbox);
+        this.checkboxes.remove(checkbox);
     }
 
 }

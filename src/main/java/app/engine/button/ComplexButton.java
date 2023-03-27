@@ -27,15 +27,15 @@ public class ComplexButton implements Visual, Interactive {
 
     @Override
     public void update() {
-        for (InputCombination inputCombination : actions.keySet()) {
+        for (InputCombination inputCombination : this.actions.keySet()) {
             if (inputCombination.isActive()) {
-                actions.get(inputCombination).execute();
+                this.actions.get(inputCombination).execute();
             }
         }
     }
 
     @Override
     public Drawable getDrawable() {
-        return drawable;
+        return this.drawable;
     }
 }

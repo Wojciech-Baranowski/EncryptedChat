@@ -36,15 +36,15 @@ public class RadioButtonBundle {
     }
 
     public void update(RadioButton currentlySelected) {
-        if (selectedRadioButton != null && selectedRadioButton != currentlySelected) {
-            selectedRadioButton.setSelected(false);
+        if (this.selectedRadioButton != null && this.selectedRadioButton != currentlySelected) {
+            this.selectedRadioButton.setSelected(false);
         }
-        if (currentlySelected.isSelected() && unselectable) {
+        if (currentlySelected.isSelected() && this.unselectable) {
             currentlySelected.setSelected(false);
-            selectedRadioButton = null;
+            this.selectedRadioButton = null;
         } else {
             currentlySelected.setSelected(true);
-            selectedRadioButton = currentlySelected;
+            this.selectedRadioButton = currentlySelected;
         }
     }
 

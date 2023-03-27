@@ -9,17 +9,17 @@ public class PriorityList implements PriorityCollection {
     private final List<Object> objects;
 
     public PriorityList() {
-        objects = new LinkedList<>();
+        this.objects = new LinkedList<>();
     }
 
     @Override
     public void setLowerThan(Object inserted, Object contained) {
-        if (objects.contains(inserted)) {
+        if (this.objects.contains(inserted)) {
             return;
         }
-        for (int i = 0; i < objects.size(); i++) {
-            if (objects.get(i).equals(contained)) {
-                objects.add(i, inserted);
+        for (int i = 0; i < this.objects.size(); i++) {
+            if (this.objects.get(i).equals(contained)) {
+                this.objects.add(i, inserted);
                 return;
             }
         }
@@ -27,12 +27,12 @@ public class PriorityList implements PriorityCollection {
 
     @Override
     public void setHigherThan(Object inserted, Object contained) {
-        if (objects.contains(inserted)) {
+        if (this.objects.contains(inserted)) {
             return;
         }
-        for (int i = 0; i < objects.size(); i++) {
-            if (objects.get(i).equals(contained)) {
-                objects.add(i + 1, inserted);
+        for (int i = 0; i < this.objects.size(); i++) {
+            if (this.objects.get(i).equals(contained)) {
+                this.objects.add(i + 1, inserted);
                 return;
             }
         }
@@ -40,42 +40,42 @@ public class PriorityList implements PriorityCollection {
 
     @Override
     public void setOnLowest(Object inserted) {
-        if (objects.contains(inserted)) {
+        if (this.objects.contains(inserted)) {
             return;
         }
-        objects.add(0, inserted);
+        this.objects.add(0, inserted);
     }
 
     @Override
     public void setOnHighest(Object inserted) {
-        if (objects.contains(inserted)) {
+        if (this.objects.contains(inserted)) {
             return;
         }
-        objects.add(objects.size(), inserted);
+        this.objects.add(this.objects.size(), inserted);
     }
 
     @Override
     public void clear() {
-        objects.clear();
+        this.objects.clear();
     }
 
     @Override
     public void remove(Object removed) {
-        objects.remove(removed);
+        this.objects.remove(removed);
     }
 
     @Override
     public Collection<Object> getObjectCollection() {
-        return objects;
+        return this.objects;
     }
 
     @Override
     public Object getLowest() {
-        return objects.get(0);
+        return this.objects.get(0);
     }
 
     @Override
     public Object getHighest() {
-        return objects.get(objects.size() - 1);
+        return this.objects.get(this.objects.size() - 1);
     }
 }

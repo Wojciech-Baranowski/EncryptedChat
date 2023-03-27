@@ -30,53 +30,53 @@ public class InputBean implements Input {
 
     @Override
     public void addInputListener(Observer observer) {
-        inputHandler.attach(observer);
+        this.inputHandler.attach(observer);
     }
 
     @Override
     public void addInputContentListener(InputObserver observer) {
-        inputHandler.attach(observer);
+        this.inputHandler.attach(observer);
     }
 
     @Override
     public void removeInputListener(Observer observer) {
-        inputHandler.detach(observer);
+        this.inputHandler.detach(observer);
     }
 
     @Override
     public void removeInputContentListener(InputObserver observer) {
-        inputHandler.detach(observer);
+        this.inputHandler.detach(observer);
     }
 
     @Override
     public int getMouseX() {
-        return inputHandler.getX();
+        return this.inputHandler.getX();
     }
 
     @Override
     public int getMouseY() {
-        return inputHandler.getY();
+        return this.inputHandler.getY();
     }
 
     @Override
     public InputCombination getCurrentInputCombination() {
-        Set<InputElement> inputElements = inputHandler.getActivatedInputElements();
-        return new ComplexInputCombination(inputHandler, inputElements);
+        Set<InputElement> inputElements = this.inputHandler.getActivatedInputElements();
+        return new ComplexInputCombination(this.inputHandler, inputElements);
     }
 
     @Override
     public InputCombinationFactory getInputCombinationFactory() {
-        return inputCombinationFactory;
+        return this.inputCombinationFactory;
     }
 
     @Override
     public void initializeInputListener() {
         Display display = DisplayBean.getDisplay();
-        display.addWindowListener(inputHandler.getInputEventListener());
+        display.addWindowListener(this.inputHandler.getInputEventListener());
     }
 
     @Override
     public void resetInputListener() {
-        inputHandler.reset();
+        this.inputHandler.reset();
     }
 }

@@ -52,8 +52,8 @@ public class Text implements Drawable {
     private int recalculateWidth() {
         int maxW = 0;
         int currentW = 0;
-        int symbolsHeight = font.getSymbolRasterable('0').getH();
-        for (char symbol : text.toCharArray()) {
+        int symbolsHeight = this.font.getSymbolRasterable('0').getH();
+        for (char symbol : this.text.toCharArray()) {
             if (symbol == '\n') {
                 maxW = max(maxW, currentW);
                 currentW = 0;
@@ -63,15 +63,15 @@ public class Text implements Drawable {
                 currentW += symbolsHeight / 2;
                 continue;
             }
-            currentW += font.getSymbolRasterable(symbol).getW();
+            currentW += this.font.getSymbolRasterable(symbol).getW();
         }
         return max(maxW, currentW);
     }
 
     private int recalculateHeight() {
         int numberOfLines = 1;
-        int symbolHeight = font.getSymbolRasterable('0').getH();
-        for (char symbol : text.toCharArray()) {
+        int symbolHeight = this.font.getSymbolRasterable('0').getH();
+        for (char symbol : this.text.toCharArray()) {
             if (symbol == '\n') {
                 numberOfLines++;
             }
@@ -80,12 +80,12 @@ public class Text implements Drawable {
     }
 
     private int[] recalculatePixels() {
-        int[] pixels = new int[w * h];
+        int[] pixels = new int[this.w * this.h];
         Arrays.fill(pixels, getTransparentColorValue());
         int currentX = 0;
         int currentY = 0;
-        int symbolsHeight = font.getSymbolRasterable('0').getH();
-        for (char symbol : text.toCharArray()) {
+        int symbolsHeight = this.font.getSymbolRasterable('0').getH();
+        for (char symbol : this.text.toCharArray()) {
             if (symbol == ' ') {
                 currentX += symbolsHeight / 2;
                 continue;
@@ -95,7 +95,7 @@ public class Text implements Drawable {
                 currentY += symbolsHeight;
                 continue;
             }
-            Rasterable symbolRasterable = font.getSymbolRasterable(symbol);
+            Rasterable symbolRasterable = this.font.getSymbolRasterable(symbol);
             mergeSymbolIntoPixelArray(pixels, symbolRasterable, currentX, currentY);
             currentX += symbolRasterable.getW();
         }
@@ -108,7 +108,7 @@ public class Text implements Drawable {
         for (int x = 0; x < symbol.getW(); x++) {
             for (int y = 0; y < symbol.getH(); y++) {
                 int pixel = symbolPixels[x + y * symbol.getW()];
-                pixels[currentX + x + (currentY + y) * w] = (pixel != getTransparentColorValue() ? color.getValue() : pixel);
+                pixels[currentX + x + (currentY + y) * this.w] = (pixel != getTransparentColorValue() ? this.color.getValue() : pixel);
             }
         }
     }

@@ -26,7 +26,7 @@ public class SceneBean implements Scene {
     private SceneBean() {
         this.display = DisplayBean.getDisplay();
         this.input = InputBean.getInput();
-        objectCollections = new HashMap<>();
+        this.objectCollections = new HashMap<>();
     }
 
     public static Scene getScene() {
@@ -38,59 +38,59 @@ public class SceneBean implements Scene {
 
     @Override
     public void update() {
-        if(currentObjectCollection != null) {
+        if (this.currentObjectCollection != null) {
             updateTopObject();
-            currentObjectCollection.updateGloballyActivatedObjects();
-            display.setObjectsToDraw(scene.getCurrentObjectCollection());
-            display.draw();
+            this.currentObjectCollection.updateGloballyActivatedObjects();
+            this.display.setObjectsToDraw(this.scene.getCurrentObjectCollection());
+            this.display.draw();
         }
     }
 
     private void updateTopObject() {
-        if(currentObjectCollection != null) {
-            currentObjectCollection.remove(HoverMark.getHoverMark());
+        if (this.currentObjectCollection != null) {
+            this.currentObjectCollection.remove(HoverMark.getHoverMark());
         }
         Visual topObject = getTopObject();
         if (topObject instanceof Interactive) {
             ((Interactive) topObject).update();
             HoverMark.getHoverMark().fitHoverMarkToDrawable(topObject.getDrawable());
-            currentObjectCollection.setHigherThan(HoverMark.getHoverMark(), topObject);
+            this.currentObjectCollection.setHigherThan(HoverMark.getHoverMark(), topObject);
         }
     }
 
     @Override
     public void initializeListeners() {
-        input.addInputListener(this);
+        this.input.addInputListener(this);
     }
 
     @Override
     public void addObjectLowerThan(Visual inserted, Visual contained) {
-        currentObjectCollection.setLowerThan(inserted, contained);
+        this.currentObjectCollection.setLowerThan(inserted, contained);
     }
 
     @Override
     public void addObjectHigherThan(Visual inserted, Visual contained) {
-        currentObjectCollection.setHigherThan(inserted, contained);
+        this.currentObjectCollection.setHigherThan(inserted, contained);
     }
 
     @Override
     public void addOnHighest(Visual inserted) {
-        currentObjectCollection.setOnHighest(inserted);
+        this.currentObjectCollection.setOnHighest(inserted);
     }
 
     @Override
     public void addOnLowest(Visual inserted) {
-        currentObjectCollection.setOnLowest(inserted);
+        this.currentObjectCollection.setOnLowest(inserted);
     }
 
     @Override
     public void clear() {
-        currentObjectCollection.clear();
+        this.currentObjectCollection.clear();
     }
 
     @Override
     public void removeObject(Visual removed) {
-        currentObjectCollection.remove(removed);
+        this.currentObjectCollection.remove(removed);
     }
 
     @Override
@@ -105,43 +105,43 @@ public class SceneBean implements Scene {
     public Visual getTopObject() {
         int x = input.getMouseX();
         int y = input.getMouseY();
-        if (currentObjectCollection != null) {
-            return currentObjectCollection.getTopObjectOnPosition(x, y);
+        if (this.currentObjectCollection != null) {
+            return this.currentObjectCollection.getTopObjectOnPosition(x, y);
         }
         return null;
     }
 
     @Override
     public void switchCollection(String collectionName) {
-        currentObjectCollection = objectCollections.get(collectionName);
+        this.currentObjectCollection = this.objectCollections.get(collectionName);
     }
 
     @Override
     public void addCollection(String collectionName) {
-        objectCollections.put(collectionName, new SceneCollection(new PriorityList()));
+        this.objectCollections.put(collectionName, new SceneCollection(new PriorityList()));
     }
 
     @Override
     public void removeCollection(String collectionName) {
-        if (!objectCollections.containsKey(collectionName)) {
+        if (!this.objectCollections.containsKey(collectionName)) {
             return;
         }
-        if (currentObjectCollection != null && currentObjectCollection.equals(objectCollections.get(collectionName))) {
-            currentObjectCollection.clear();
-            currentObjectCollection = null;
+        if (this.currentObjectCollection != null && currentObjectCollection.equals(this.objectCollections.get(collectionName))) {
+            this.currentObjectCollection.clear();
+            this.currentObjectCollection = null;
         }
-        objectCollections.get(collectionName).clear();
-        objectCollections.remove(collectionName);
+        this.objectCollections.get(collectionName).clear();
+        this.objectCollections.remove(collectionName);
     }
 
     @Override
     public void addGloballyActivatedObject(InputCombination activationCombination, Interactive object) {
-        currentObjectCollection.addGloballyActivatedObject(activationCombination, object);
+        this.currentObjectCollection.addGloballyActivatedObject(activationCombination, object);
     }
 
     @Override
     public void removeGloballyActivatedObject(Interactive object) {
-        currentObjectCollection.removeGloballyActivatedObject(object);
+        this.currentObjectCollection.removeGloballyActivatedObject(object);
     }
 
 }

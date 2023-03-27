@@ -25,13 +25,13 @@ public class Checkbox implements Visual, Interactive {
 
     @Override
     public void update() {
-        if (activationCombination == null || activationCombination.isActive()) {
-            selected = !selected;
+        if (this.activationCombination == null || this.activationCombination.isActive()) {
+            this.selected = !this.selected;
         }
     }
 
     @Override
     public Drawable getDrawable() {
-        return selected ? onDrawable : offDrawable;
+        return this.selected ? this.onDrawable : this.offDrawable;
     }
 }

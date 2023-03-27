@@ -21,12 +21,12 @@ public class DrawableComposition implements Drawable {
     private int h;
 
     public DrawableComposition(Drawable bottom, Drawable top) {
-        x = min(top.getX(), bottom.getX());
-        y = min(top.getY(), bottom.getY());
-        w = max(top.getX() + top.getW(), bottom.getX() + bottom.getW()) - x;
-        h = max(top.getY() + top.getH(), bottom.getY() + bottom.getH()) - y;
-        p = new int[w * h];
-        Arrays.fill(p, Color.getTransparentColorValue());
+        this.x = min(top.getX(), bottom.getX());
+        this.y = min(top.getY(), bottom.getY());
+        this.w = max(top.getX() + top.getW(), bottom.getX() + bottom.getW()) - this.x;
+        this.h = max(top.getY() + top.getH(), bottom.getY() + bottom.getH()) - this.y;
+        this.p = new int[this.w * this.h];
+        Arrays.fill(this.p, Color.getTransparentColorValue());
         mergePixels(bottom);
         mergePixels(top);
     }
@@ -40,16 +40,16 @@ public class DrawableComposition implements Drawable {
     }
 
     private void mergePixels(Drawable drawable) {
-        int startX = drawable.getX() - x;
-        int startY = drawable.getY() - y;
+        int startX = drawable.getX() - this.x;
+        int startY = drawable.getY() - this.y;
         int endX = startX + drawable.getW();
         int endY = startY + drawable.getH();
         for (int x = startX; x < endX; x++) {
             for (int y = startY; y < endY; y++) {
                 int pixelValue = drawable.getP()[x - startX + (y - startY) * drawable.getW()];
                 if (pixelValue != Color.getTransparentColorValue()) {
-                    p[x + y * w] = (Color.isTransparent(pixelValue))
-                            ? Color.blend(p[x + y * w], pixelValue)
+                    this.p[x + y * this.w] = (Color.isTransparent(pixelValue))
+                            ? Color.blend(this.p[x + y * this.w], pixelValue)
                             : pixelValue;
                 }
             }

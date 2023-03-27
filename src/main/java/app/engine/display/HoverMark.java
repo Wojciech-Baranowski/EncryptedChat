@@ -32,12 +32,12 @@ public class HoverMark implements Drawable {
     }
 
     public void fitHoverMarkToDrawable(Drawable drawable) {
-        x = drawable.getX();
-        y = drawable.getY();
-        w = drawable.getW();
-        h = drawable.getH();
-        p = new int[w * h];
-        Arrays.fill(p, Color.getHoverMarkColorValue());
+        this.x = drawable.getX();
+        this.y = drawable.getY();
+        this.w = drawable.getW();
+        this.h = drawable.getH();
+        this.p = new int[this.w * this.h];
+        Arrays.fill(this.p, Color.getHoverMarkColorValue());
     }
 
 }

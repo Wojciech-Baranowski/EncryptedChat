@@ -24,28 +24,28 @@ public class InputCombinationFactory {
             InputElement inputElement = new InputElement(actionTypes[i], inputEvents[i]);
             inputElements.add(inputElement);
         }
-        return new ComplexInputCombination(inputHandler, inputElements);
+        return new ComplexInputCombination(this.inputHandler, inputElements);
     }
 
     public InputCombination makeSimpleInputCombination(ActionType actionType, InputEvent inputEvent) {
         InputElement inputElement = new InputElement(actionType, inputEvent);
-        return new SimpleInputCombination(inputHandler, inputElement);
+        return new SimpleInputCombination(this.inputHandler, inputElement);
     }
 
     public InputCombination makeLmbCombination() {
         InputEvent inputEvent = InputElement.getMouseInputEventByKeycode(MouseEvent.BUTTON1);
         InputElement inputElement = new InputElement(ActionType.DOWN, inputEvent);
-        return new SimpleInputCombination(inputHandler, inputElement);
+        return new SimpleInputCombination(this.inputHandler, inputElement);
     }
 
     public InputCombination makeEscapeCombination() {
         InputEvent inputEvent = InputElement.getKeyboardInputEventByKeycode(KeyEvent.VK_ESCAPE);
         InputElement inputElement = new InputElement(ActionType.DOWN, inputEvent);
-        return new SimpleInputCombination(inputHandler, inputElement);
+        return new SimpleInputCombination(this.inputHandler, inputElement);
     }
 
     public InputCombination makeNullCombination() {
-        return new SimpleInputCombination(inputHandler, null);
+        return new SimpleInputCombination(this.inputHandler, null);
     }
 
 }
