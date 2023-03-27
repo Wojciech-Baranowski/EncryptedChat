@@ -2,27 +2,27 @@ package app.gui.login.backgrounds;
 
 import app.engine.display.Drawable;
 
-public class BackgroundController {
+public class LoginBackgroundController {
 
-    private static BackgroundController backgroundController;
+    private static LoginBackgroundController loginBackgroundController;
 
     private final Background background;
     private final LoginBackground loginBackground;
     private final RegisterBackground registerBackground;
     private final InfoBackground infoBackground;
 
-    private BackgroundController() {
+    private LoginBackgroundController() {
         this.background = new Background();
         this.loginBackground = new LoginBackground(getBackground());
         this.registerBackground = new RegisterBackground(getBackground());
         this.infoBackground = new InfoBackground(getBackground());
     }
 
-    public static BackgroundController getBackgroundController() {
-        if (backgroundController == null) {
-            backgroundController = new BackgroundController();
+    public static LoginBackgroundController getLoginBackgroundController() {
+        if (loginBackgroundController == null) {
+            loginBackgroundController = new LoginBackgroundController();
         }
-        return backgroundController;
+        return loginBackgroundController;
     }
 
     public Drawable getBackground() {

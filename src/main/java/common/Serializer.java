@@ -6,6 +6,9 @@ public class Serializer {
 
     public static <T> byte[] serialize(T object) {
         try {
+            if (object == null) {
+                return new byte[0];
+            }
             ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteOutputStream);
             objectOutputStream.writeObject(object);
@@ -17,6 +20,9 @@ public class Serializer {
 
     public static <T> T deserialize(byte[] data) {
         try {
+            if (data == null) {
+                return null;
+            }
             ByteArrayInputStream byteInputStream = new ByteArrayInputStream(data);
             ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
             return (T) objectInputStream.readObject();

@@ -2,9 +2,9 @@ package app.gui.chat.backgrounds;
 
 import app.engine.display.Drawable;
 
-public class BackgroundController {
+public class ChatBackgroundController {
 
-    private static BackgroundController backgroundController;
+    private static ChatBackgroundController chatBackgroundController;
 
     private final Background background;
     private final UserNameBackground userNameBackground;
@@ -12,7 +12,7 @@ public class BackgroundController {
     private final FileToSendBackground fileToSendBackground;
     private final ReceivedFilesBackground receivedFilesBackground;
 
-    private BackgroundController() {
+    private ChatBackgroundController() {
         this.background = new Background();
         this.userNameBackground = new UserNameBackground(this.getBackground());
         this.receiversBackground = new ReceiversBackground(this.getBackground());
@@ -20,11 +20,11 @@ public class BackgroundController {
         this.receivedFilesBackground = new ReceivedFilesBackground(this.getBackground());
     }
 
-    public static BackgroundController getBackgroundController() {
-        if (backgroundController == null) {
-            backgroundController = new BackgroundController();
+    public static ChatBackgroundController getChatBackgroundController() {
+        if (chatBackgroundController == null) {
+            chatBackgroundController = new ChatBackgroundController();
         }
-        return backgroundController;
+        return chatBackgroundController;
     }
 
     public Drawable getBackground() {

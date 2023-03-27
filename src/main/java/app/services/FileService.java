@@ -17,9 +17,9 @@ import static app.Constants.MAX_ATTACHMENT_FILE_NAME_LENGTH;
 import static app.Constants.MAX_RECEIVED_FILE_NAME_LENGTH;
 import static app.engine.input.InputBean.getInput;
 import static app.engine.scene.SceneBean.getScene;
-import static app.gui.chat.buttons.ButtonController.getButtonController;
-import static app.gui.chat.textFields.TextFieldController.getTextFieldController;
-import static app.gui.chat.texts.TextController.getTextController;
+import static app.gui.chat.buttons.ChatButtonController.getChatButtonController;
+import static app.gui.chat.textFields.ChatTextFieldController.getChatTextFieldController;
+import static app.gui.chat.texts.ChatTextController.getChatTextController;
 import static common.CipherConfig.CIPHER_BLOCK_SIZE;
 
 public class FileService {
@@ -48,11 +48,11 @@ public class FileService {
         if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             this.attachedFile = new FileData(chooser.getSelectedFile());
             String trimmedFileName = TrimmedStringFactory.trimString(this.attachedFile.getName(), MAX_ATTACHMENT_FILE_NAME_LENGTH);
-            getTextController().setFileName(trimmedFileName);
-            getTextController().setFileExtension(this.attachedFile.getExtension());
-            getTextController().setFileSize(this.attachedFile.getSize().toString());
-            getTextController().setCurrentUploadInfoAsReadyToUpload();
-            getScene().removeObject(getTextFieldController().getMessageTextField());
+            getChatTextController().setFileName(trimmedFileName);
+            getChatTextController().setFileExtension(this.attachedFile.getExtension());
+            getChatTextController().setFileSize(this.attachedFile.getSize().toString());
+            getChatTextController().setCurrentUploadInfoAsReadyToUpload();
+            getScene().removeObject(getChatTextFieldController().getMessageTextField());
             getInput().resetMouseListener();
             getInput().resetKeyboardListener();
         }
@@ -60,11 +60,11 @@ public class FileService {
 
     public void detachFile() {
         this.attachedFile = null;
-        getTextController().resetFileName();
-        getTextController().resetFileExtension();
-        getTextController().resetFileSize();
-        getTextController().setCurrentUploadInfoAsBlank();
-        getScene().addOnHighest(getTextFieldController().getMessageTextField());
+        getChatTextController().resetFileName();
+        getChatTextController().resetFileExtension();
+        getChatTextController().resetFileSize();
+        getChatTextController().setCurrentUploadInfoAsBlank();
+        getScene().addOnHighest(getChatTextFieldController().getMessageTextField());
     }
 
     public void downloadReceivedFile(int fileHashCode) {
@@ -92,15 +92,15 @@ public class FileService {
         this.receivedFiles.add(fileData);
         String trimmedFileName = TrimmedStringFactory.trimString(fileData.getName(), MAX_RECEIVED_FILE_NAME_LENGTH);
         String filenameWithExtension = trimmedFileName + " (" + fileData.getExtension() + ")";
-        getButtonController().addReceivedFile(filenameWithExtension, fileData.hashCode());
+        getChatButtonController().addReceivedFile(filenameWithExtension, fileData.hashCode());
     }
 
     public void updateUploadInfo(double percentage) {
-        getTextController().setCurrentUploadInfoAsProgress(percentage);
+        getChatTextController().setCurrentUploadInfoAsProgress(percentage);
     }
 
     public void sendFileOrText() {
-        if (getButtonController().getSelectedReceiverId() != null && getButtonController().getCipherType() != null) {
+        if (getChatButtonController().getSelectedReceiverId() != null && getChatButtonController().getCipherType() != null) {
             updateUploadInfo(0.0);
             if (attachedFile != null) {
 
@@ -118,7 +118,7 @@ public class FileService {
         try {
             //decrypt
             String text = Serializer.deserialize(binaryText);
-            getButtonController().addReceivedText(text);
+            getChatButtonController().addReceivedText(text);
             sendConfirmation(0, senderId);
         } catch (Exception e) {
             throw new RuntimeException(e);

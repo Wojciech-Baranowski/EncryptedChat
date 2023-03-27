@@ -1,14 +1,20 @@
 package app;
 
+import app.connection.ConnectionController;
 import app.engine.assets.Assets;
 import app.engine.assets.font.Font;
 import app.engine.display.Display;
 import app.engine.scene.Scene;
-import app.gui.chat.backgrounds.BackgroundController;
-import app.gui.chat.buttons.ButtonController;
-import app.gui.chat.textFields.TextFieldController;
-import app.gui.chat.texts.TextController;
+import app.gui.chat.backgrounds.ChatBackgroundController;
+import app.gui.chat.buttons.ChatButtonController;
+import app.gui.chat.textFields.ChatTextFieldController;
+import app.gui.chat.texts.ChatTextController;
+import app.gui.login.backgrounds.LoginBackgroundController;
+import app.gui.login.buttons.LoginButtonController;
+import app.gui.login.textFields.LoginTextFieldController;
+import app.gui.login.texts.LoginTextController;
 import app.services.FileService;
+import app.services.UserService;
 
 import static app.engine.assets.AssetsBean.getAssets;
 import static app.engine.display.DisplayBean.getDisplay;
@@ -38,6 +44,7 @@ public class Initializer {
         initializeColors();
         initializeFonts();
         initializeScenes();
+        initializeGlobalControllers();
         initializeLoginControllers();
         initializeGuiControllers();
         scene.switchCollection("login");
@@ -78,22 +85,26 @@ public class Initializer {
         scene.addCollection("login");
     }
 
+    private void initializeGlobalControllers() {
+        ConnectionController.getConnectionController();
+    }
+
     private void initializeLoginControllers() {
         scene.switchCollection("login");
-        app.gui.login.backgrounds.BackgroundController.getBackgroundController();
-        app.gui.login.texts.TextController.getTextController();
-        app.gui.login.buttons.ButtonController.getButtonController();
-        app.gui.login.textFields.TextFieldController.getTextFieldController();
+        LoginBackgroundController.getLoginBackgroundController();
+        LoginTextController.getLoginTextController();
+        LoginButtonController.getLoginButtonController();
+        LoginTextFieldController.getLoginTextFieldController();
     }
 
     private void initializeGuiControllers() {
         scene.switchCollection("chat");
-        BackgroundController.getBackgroundController();
-        TextController.getTextController();
-        ButtonController.getButtonController();
-        TextFieldController.getTextFieldController();
+        ChatBackgroundController.getChatBackgroundController();
+        ChatTextController.getChatTextController();
+        ChatButtonController.getChatButtonController();
+        ChatTextFieldController.getChatTextFieldController();
         FileService.getFileService();
-        //UserController.getReceiversController();
+        UserService.getUserService();
     }
 
     public static void main(String[] args) {

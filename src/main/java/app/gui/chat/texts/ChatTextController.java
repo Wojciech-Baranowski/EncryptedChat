@@ -1,10 +1,10 @@
 package app.gui.chat.texts;
 
-import static app.gui.chat.backgrounds.BackgroundController.getBackgroundController;
+import static app.gui.chat.backgrounds.ChatBackgroundController.getChatBackgroundController;
 
-public class TextController {
+public class ChatTextController {
 
-    private static TextController textController;
+    private static ChatTextController chatTextController;
 
     private final UserNameText userNameText;
     private final FileNameText fileNameText;
@@ -13,20 +13,20 @@ public class TextController {
     private final UploadInfoText uploadInfoText;
     private final YourFilesText yourFilesText;
 
-    private TextController() {
-        this.userNameText = new UserNameText(getBackgroundController().getUserNameBackground());
-        this.fileNameText = new FileNameText(getBackgroundController().getFileToSendHeaderBackground());
-        this.fileSizeText = new FileSizeText(getBackgroundController().getFileToSendBodyBackground());
-        this.fileExtensionText = new FileExtensionText(getBackgroundController().getFileToSendBodyBackground());
-        this.uploadInfoText = new UploadInfoText(getBackgroundController().getFileToSendBodyBackground());
-        this.yourFilesText = new YourFilesText(getBackgroundController().getReceivedFilesHeaderBackground());
+    private ChatTextController() {
+        this.userNameText = new UserNameText(getChatBackgroundController().getUserNameBackground());
+        this.fileNameText = new FileNameText(getChatBackgroundController().getFileToSendHeaderBackground());
+        this.fileSizeText = new FileSizeText(getChatBackgroundController().getFileToSendBodyBackground());
+        this.fileExtensionText = new FileExtensionText(getChatBackgroundController().getFileToSendBodyBackground());
+        this.uploadInfoText = new UploadInfoText(getChatBackgroundController().getFileToSendBodyBackground());
+        this.yourFilesText = new YourFilesText(getChatBackgroundController().getReceivedFilesHeaderBackground());
     }
 
-    public static TextController getTextController() {
-        if (textController == null) {
-            textController = new TextController();
+    public static ChatTextController getChatTextController() {
+        if (chatTextController == null) {
+            chatTextController = new ChatTextController();
         }
-        return textController;
+        return chatTextController;
     }
 
     public void setUserName(String userName) {

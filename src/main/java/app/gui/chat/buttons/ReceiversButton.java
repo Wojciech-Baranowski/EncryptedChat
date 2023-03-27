@@ -75,7 +75,7 @@ public class ReceiversButton {
         buildBundle();
     }
 
-    public void removeReceiver(int receiverId) {
+    public void removeReceiver(Long receiverId) {
         int index = 0;
         for (int i = 0; i < MAX_CLIENTS - 1; i++) {
             if (this.receiversIds[i] == receiverId) {

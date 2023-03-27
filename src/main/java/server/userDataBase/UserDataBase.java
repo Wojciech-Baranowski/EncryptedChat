@@ -1,7 +1,6 @@
 package server.userDataBase;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Getter;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,29 +15,34 @@ public class UserDataBase {
     private final ObjectMapper objectMapper;
     private final File dataBase;
     private final UserIdSequence userIdSequence;
-    @Getter
-    private List<UserDataBaseRecord> userDataBaseRecords;
+    private final List<UserDataBaseRecord> userDataBaseRecords;
 
     public UserDataBase() {
         try {
             this.dataBase = Paths.get(PATH_TO_USER_DATABASE).toFile();
             this.objectMapper = new ObjectMapper();
             this.userDataBaseRecords = new ArrayList<>(List.of(this.objectMapper.readValue(this.dataBase, UserDataBaseRecord[].class)));
-            this.userIdSequence = new UserIdSequence(userDataBaseRecords.stream().map(UserDataBaseRecord::getId).max(Long::compare).orElseThrow());
+            this.userIdSequence = new UserIdSequence(userDataBaseRecords.stream().map(UserDataBaseRecord::getId).max(Long::compare).orElse(1L));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void addRecord(UserDataBaseRecord userDataBaseRecord) {
+    public void addRecord(String userName, String password) {
         try {
-            this.userDataBaseRecords.add(userDataBaseRecord.toBuilder()
-                    .id(this.userIdSequence.getNextId())
-                    .build());
+            UserDataBaseRecord userDataBaseRecord = new UserDataBaseRecord(this.userIdSequence.getNextId(), userName, password);
+            this.userDataBaseRecords.add(userDataBaseRecord);
             this.objectMapper.writeValue(this.dataBase, this.userDataBaseRecords);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public UserDataBaseRecord findUserDataBaseRecordByUserName(String userName) {
+        return this.userDataBaseRecords.stream()
+                .filter(user -> user.getUserName().equals(userName))
+                .findFirst()
+                .orElse(null);
     }
 
 }

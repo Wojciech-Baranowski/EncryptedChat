@@ -1,32 +1,33 @@
 package server;
 
 import common.message.Message;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static server.ServerController.getServerController;
-
 public class ClientHandler implements Runnable {
 
-    private static final List<ClientHandler> clientHandlers = new ArrayList<>();
-    private final Long clientId;
-    private Long userId;
+    private final ServerController serverController;
     private final Socket socket;
     private final ObjectInputStream reader;
     private final ObjectOutputStream writer;
+    @Getter
+    @Setter
+    private Long clientId;
 
-    public ClientHandler(Socket socket, Long clientId) throws IOException {
-        this.clientId = clientId;
+    public ClientHandler(ServerController serverController, Socket socket, Long clientId) throws IOException {
+        this.serverController = serverController;
         this.socket = socket;
         this.writer = new ObjectOutputStream(socket.getOutputStream());
         this.reader = new ObjectInputStream(socket.getInputStream());
-        clientHandlers.add(this);
+        this.clientId = clientId;
+        getClientHandlers().add(this);
     }
 
     @Override
@@ -38,29 +39,37 @@ public class ClientHandler implements Runnable {
         while (socket.isConnected()) {
             try {
                 Message message = (Message) this.reader.readObject();
+                message.setReceiverId(mapUserIdToClientId(message.getReceiverId()));
                 if (message.getReceiverId() == null) {
-                    getServerController().handleMessage(message);
+                    this.serverController.handleMessage(this, message);
                 } else {
                     sendMessageToClient(message);
                 }
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            } finally {
                 closeSession();
+                throw new RuntimeException(e);
             }
+        }
+        closeSession();
+    }
+
+    public void sendMessageToClient(Message message) {
+        try {
+            ClientHandler receiver = getClientHandlers().stream()
+                    .filter(c -> Objects.equals(c.getClientId(), message.getReceiverId()))
+                    .findFirst()
+                    .orElse(null);
+            if (receiver != null) {
+                receiver.writer.writeObject(message);
+            }
+        } catch (Exception e) {
+            closeSession();
+            throw new RuntimeException(e);
         }
     }
 
-    private void sendMessageToClient(Message message) throws IOException {
-        ClientHandler receiver = clientHandlers.stream()
-                .filter(c -> Objects.equals(c.clientId, message.getReceiverId()))
-                .findFirst()
-                .orElseThrow();
-        receiver.writer.writeObject(message);
-    }
-
     private void closeSession() {
-        clientHandlers.remove(this);
+        getClientHandlers().remove(this);
         try {
             if (this.reader != null)
                 this.reader.close();
@@ -69,8 +78,16 @@ public class ClientHandler implements Runnable {
             if (this.socket != null)
                 this.socket.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
+    }
+
+    private List<ClientHandler> getClientHandlers() {
+        return this.serverController.getClientHandlers();
+    }
+
+    private Long mapUserIdToClientId(Long userId) {
+        return this.serverController.mapUserIdToClientId(userId);
     }
 
 }

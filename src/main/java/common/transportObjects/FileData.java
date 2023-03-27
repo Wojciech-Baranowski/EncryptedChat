@@ -4,12 +4,13 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.io.File;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Getter
 @EqualsAndHashCode
-public class FileData {
+public class FileData implements Serializable {
 
     private final String extension;
     private final String name;

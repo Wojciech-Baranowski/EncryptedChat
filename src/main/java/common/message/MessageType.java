@@ -3,7 +3,9 @@ package common.message;
 
 import lombok.Getter;
 
-public enum MessageType {
+import java.io.Serializable;
+
+public enum MessageType implements Serializable {
 
     LOGIN(false),
     REGISTRATION(false),
