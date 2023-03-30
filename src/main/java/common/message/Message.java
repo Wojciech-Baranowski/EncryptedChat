@@ -12,7 +12,6 @@ import java.io.Serializable;
 public class Message implements Serializable {
 
     private Long receiverId;
-    private byte[] cipherType;
     private byte[] messageType;
     private byte[] content;
 

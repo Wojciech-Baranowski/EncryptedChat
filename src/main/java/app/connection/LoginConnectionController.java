@@ -7,8 +7,8 @@ import common.message.MessageType;
 import common.message.RegistrationMessage;
 
 import static app.services.UserService.getUserService;
-import static common.message.MessageType.LOGIN;
-import static common.message.MessageType.REGISTRATION;
+import static common.message.MessageType.LOGIN_REQUEST;
+import static common.message.MessageType.REGISTRATION_REQUEST;
 
 public class LoginConnectionController {
 
@@ -24,14 +24,14 @@ public class LoginConnectionController {
         }
     }
 
-    public void prepareAndSendRegisterMessage(String userName, String passwordHash) {
+    public void prepareAndSendRegisterRequestMessage(String userName, String passwordHash) {
         RegistrationMessage registrationMessage = new RegistrationMessage(userName, passwordHash);
-        this.connectionController.sendMessage(REGISTRATION, registrationMessage, null);
+        this.connectionController.sendMessage(REGISTRATION_REQUEST, registrationMessage, null);
     }
 
-    public void prepareAndSendLoginMessage(String userName, String passwordHash) {
+    public void prepareAndSendLoginRequestMessage(String userName, String passwordHash) {
         LoginMessage loginMessage = new LoginMessage(userName, passwordHash);
-        this.connectionController.sendMessage(LOGIN, loginMessage, null);
+        this.connectionController.sendMessage(LOGIN_REQUEST, loginMessage, null);
     }
 
     private void processAuthorizationMessage(byte[] content) {

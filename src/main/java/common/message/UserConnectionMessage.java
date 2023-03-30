@@ -1,5 +1,6 @@
 package common.message;
 
+import common.transportObjects.UserData;
 import lombok.*;
 
 import java.io.Serializable;
@@ -9,9 +10,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class ConnectionMessage implements Serializable {
+public class UserConnectionMessage implements Serializable {
 
-    private int userId;
-    private String userName;
+    private UserData userData;
 
 }

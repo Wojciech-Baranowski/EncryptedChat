@@ -28,9 +28,9 @@ public class Initializer {
     private final Scene scene;
 
     private Initializer() {
-        assets = getAssets();
-        display = getDisplay();
-        scene = getScene();
+        this.assets = getAssets();
+        this.display = getDisplay();
+        this.scene = getScene();
     }
 
     public static Initializer getInitializer() {
@@ -47,42 +47,43 @@ public class Initializer {
         initializeGlobalControllers();
         initializeLoginControllers();
         initializeGuiControllers();
-        scene.switchCollection("login");
-        scene.update();
+        this.scene.switchCollection("login");
+        this.scene.update();
     }
 
     private void initializeColors() {
-        assets.addColor("black", 0xFF000000);
-        assets.addColor("white", 0xFFFFFFFF);
-        assets.addColor("green", 0xFF00FF00);
-        assets.addColor("darkGreen", 0xFF0E4C05);
-        assets.addColor("red", 0xFFAA0707);
-        assets.addColor("lighterBlue", 0xFF01BAEF);
-        assets.addColor("lightBlue", 0xFF559FFF);
-        assets.addColor("lighterGray", 0xFF4F93FF);
-        assets.addColor("yellow", 0xFFFFFF00);
-        assets.addColor("darkYellow", 0xFFA08F2D);
-        assets.addColor("lightGray", 0xFFA8A8A8);
-        assets.addColor("gray", 0xFF4378FF);
-        assets.addColor("darkGray", 0xFF898989);
-        assets.addColor("transparentGray", 0x44444444);
-        assets.addColor("transparentBlue", 0x554378FF);
-        assets.addColor("transparent", 0xFFFF00FF);
-        assets.addColor("blue", 0xFF1F57FF);
-        assets.addColor("violet", 0xFF8042FF);
-        assets.addColor("pink", 0xFFB477FF);
-        assets.addColor("orange", 0xFFFFA82C);
+        this.assets.addColor("black", 0xFF000000);
+        this.assets.addColor("white", 0xFFFFFFFF);
+        this.assets.addColor("green", 0xFF00FF00);
+        this.assets.addColor("darkGreen", 0xFF0E4C05);
+        this.assets.addColor("red", 0xFFAA0707);
+        this.assets.addColor("lighterBlue", 0xFF01BAEF);
+        this.assets.addColor("lightBlue", 0xFF559FFF);
+        this.assets.addColor("lighterGray", 0xFF4F93FF);
+        this.assets.addColor("yellow", 0xFFFFFF00);
+        this.assets.addColor("darkYellow", 0xFFA08F2D);
+        this.assets.addColor("lightGray", 0xFFA8A8A8);
+        this.assets.addColor("gray", 0xFF4378FF);
+        this.assets.addColor("darkGray", 0xFF898989);
+        this.assets.addColor("transparentGray", 0x44444444);
+        this.assets.addColor("transparentBlue", 0x554378FF);
+        this.assets.addColor("transparent", 0xFFFF00FF);
+        this.assets.addColor("blue", 0xFF1F57FF);
+        this.assets.addColor("violet", 0xFF8042FF);
+        this.assets.addColor("pink", 0xFFB477FF);
+        this.assets.addColor("orange", 0xFFFFA82C);
     }
 
     private void initializeFonts() {
-        assets.addFont("HBE24", "/HelveticaBoldExtended24.png", Font.getExtendedAlphabet());
-        assets.addFont("HBE32", "/HelveticaBoldExtended32.png", Font.getExtendedAlphabet());
-        assets.addFont("HBE48", "/HelveticaBoldExtended48.png", Font.getExtendedAlphabet());
+        this.assets.addFont("HBE24", "/HelveticaBoldExtended24.png", Font.getExtendedAlphabet());
+        this.assets.addFont("HBE32", "/HelveticaBoldExtended32.png", Font.getExtendedAlphabet());
+        this.assets.addFont("HBE48", "/HelveticaBoldExtended48.png", Font.getExtendedAlphabet());
     }
 
     private void initializeScenes() {
-        scene.addCollection("chat");
-        scene.addCollection("login");
+        this.scene.addCollection("chat");
+        this.scene.addCollection("login");
+        this.scene.addCollection("noConnection");
     }
 
     private void initializeGlobalControllers() {
@@ -90,7 +91,7 @@ public class Initializer {
     }
 
     private void initializeLoginControllers() {
-        scene.switchCollection("login");
+        this.scene.switchCollection("login");
         LoginBackgroundController.getLoginBackgroundController();
         LoginTextController.getLoginTextController();
         LoginButtonController.getLoginButtonController();
@@ -98,7 +99,7 @@ public class Initializer {
     }
 
     private void initializeGuiControllers() {
-        scene.switchCollection("chat");
+        this.scene.switchCollection("chat");
         ChatBackgroundController.getChatBackgroundController();
         ChatTextController.getChatTextController();
         ChatButtonController.getChatButtonController();

@@ -1,5 +1,6 @@
 package common.message;
 
+import common.transportObjects.UserData;
 import lombok.*;
 
 import java.io.Serializable;
@@ -9,8 +10,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class DisconnectionMessage implements Serializable {
+public class UserDisconnectionMessage implements Serializable {
 
-    private int userId;
+    private UserData userData;
 
 }

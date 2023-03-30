@@ -7,6 +7,8 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static app.engine.display.DisplayBean.getDisplay;
+
 public class ListenerBean implements Listener {
 
     private static Listener listener;
@@ -50,6 +52,7 @@ public class ListenerBean implements Listener {
     private synchronized void listen() {
         while (true) {
             this.threadedConsumers.forEach(ThreadedConsumer::consume);
+            getDisplay().draw();
             this.countLatch.await();
             this.countLatch.countUp();
         }

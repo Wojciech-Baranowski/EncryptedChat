@@ -37,7 +37,7 @@ public class UserService {
         String repeatedPassword = getLoginTextFieldController().getRegisterRepeatedPassword();
         if (isRegistrationUserDataValid(userName, password, repeatedPassword)) {
             //hash
-            ConnectionController.getLoginConnectionController().prepareAndSendRegisterMessage(userName, password);
+            ConnectionController.getLoginConnectionController().prepareAndSendRegisterRequestMessage(userName, password);
         }
     }
 
@@ -46,13 +46,13 @@ public class UserService {
         String password = getLoginTextFieldController().getLoginPassword();
         if (isLoginUserDataValid(userName)) {
             //hash
-            ConnectionController.getLoginConnectionController().prepareAndSendLoginMessage(userName, password);
+            ConnectionController.getLoginConnectionController().prepareAndSendLoginRequestMessage(userName, password);
         }
     }
 
     public void processResponse(UserDataProcessResponseType userDataProcessResponseType, UserData userData) {
         switch (userDataProcessResponseType) {
-            case LOGIN_SUCCESS -> setUser(userData);
+            case LOGIN_SUCCESS -> setUserAndAskForAllUserConnections(userData);
             case REGISTRATION_SUCCESS -> getLoginTextController().setRegistrationSuccess();
             case LOGIN_FAILED_USERNAME_DOES_NOT_EXIST -> getLoginTextController().setUserNameDoesNotExistError();
             case LOGIN_FAILED_INCORRECT_PASSWORD -> getLoginTextController().setIncorrectPasswordError();
@@ -60,9 +60,9 @@ public class UserService {
         }
     }
 
-    public void addReceiver(Long receiverId) {
+    public void addReceiver(Long receiverId, String receiverUserName) {
         this.receiverIds.add(receiverId);
-        getChatButtonController().addReceiver(receiverId);
+        getChatButtonController().addReceiver(receiverId, receiverUserName);
     }
 
     public void removeReceiver(Long receiverId) {
@@ -70,10 +70,11 @@ public class UserService {
         this.receiverIds.remove(receiverId);
     }
 
-    private void setUser(UserData userData) {
+    private void setUserAndAskForAllUserConnections(UserData userData) {
         getScene().switchCollection("chat");
         this.userData = userData;
         getChatTextController().setUserName(this.userData.getUserName());
+        ConnectionController.getChatConnectionController().prepareAndSendAllUserConnectionRequestMessage();
     }
 
     private boolean isRegistrationUserDataValid(String userName, String password, String repeatedPassword) {

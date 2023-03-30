@@ -7,14 +7,15 @@ import java.io.Serializable;
 
 public enum MessageType implements Serializable {
 
-    LOGIN(false),
-    REGISTRATION(false),
+    LOGIN_REQUEST(false),
+    REGISTRATION_REQUEST(false),
     AUTHORIZATION(false),
     FILE(true),
     TEXT(true),
     CONFIRMATION(true),
-    CONNECTION(true),
-    DISCONNECTION(true);
+    USER_CONNECTION(true),
+    ALL_USER_CONNECTION_REQUEST(true),
+    USER_DISCONNECTION(true);
 
     @Getter
     private final boolean authorizedConnection;

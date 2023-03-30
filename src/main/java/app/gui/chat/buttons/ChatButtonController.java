@@ -39,8 +39,8 @@ public class ChatButtonController {
         return this.receiversButton.getSelectedReceiverId();
     }
 
-    public void addReceiver(Long receiverId) {
-        this.receiversButton.addReceiver(receiverId);
+    public void addReceiver(Long receiverId, String receiverUserName) {
+        this.receiversButton.addReceiver(receiverId, receiverUserName);
     }
 
     public void removeReceiver(Long receiverId) {

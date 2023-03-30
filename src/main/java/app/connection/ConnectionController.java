@@ -2,7 +2,7 @@ package app.connection;
 
 import app.engine.listener.ParallelThread;
 import app.engine.listener.SynchronizedCollection;
-import common.CipherConfig;
+import app.engine.scene.SceneBean;
 import common.ConnectionConfig;
 import common.Serializer;
 import common.message.Message;
@@ -13,8 +13,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-
-import static app.gui.chat.buttons.ChatButtonController.getChatButtonController;
 
 public class ConnectionController {
 
@@ -49,13 +47,13 @@ public class ConnectionController {
     }
 
     private void receiveMessages(SynchronizedCollection<Message> messageBuffer) {
-        while (socket.isConnected()) {
+        while (this.socket.isConnected()) {
             try {
                 Message message = (Message) this.reader.readObject();
                 messageBuffer.put(message);
             } catch (IOException | ClassNotFoundException e) {
                 closeSession();
-                throw new RuntimeException(e);
+                SceneBean.getScene().switchCollection("noConnection");
             }
         }
     }
@@ -63,12 +61,10 @@ public class ConnectionController {
     private void routeMessages(Message message) {
         //decrypt
         byte[] decryptedMessageType = message.getMessageType();
-        byte[] decryptedCipherType = message.getCipherType();
         byte[] decryptedContent = message.getContent();
         MessageType messageType = Serializer.deserialize(decryptedMessageType);
-        CipherConfig.CipherType cipherType = Serializer.deserialize(decryptedCipherType);
         if (messageType.isAuthorizedConnection()) {
-            chatConnectionController.routeMessage(messageType, cipherType, decryptedContent);
+            chatConnectionController.routeMessage(messageType, decryptedContent);
         } else {
             loginConnectionController.routeMessage(messageType, decryptedContent);
         }
@@ -78,18 +74,20 @@ public class ConnectionController {
         try {
             //encrypt
             byte[] encryptedMessageType = Serializer.serialize(messageType);
-            byte[] encryptedCipherType = Serializer.serialize(getChatButtonController().getCipherType());
             byte[] encryptedContent = Serializer.serialize(content);
             Message message = Message.builder()
                     .receiverId(receiverId)
                     .messageType(encryptedMessageType)
-                    .cipherType(encryptedCipherType)
                     .content(encryptedContent)
                     .build();
             this.writer.writeObject(message);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void sendMessage(MessageType messageType, Long receiverId) {
+        sendMessage(messageType, new byte[0], receiverId);
     }
 
     private void closeSession() {

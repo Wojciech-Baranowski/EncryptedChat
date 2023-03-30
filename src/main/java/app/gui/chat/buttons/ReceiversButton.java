@@ -31,7 +31,7 @@ public class ReceiversButton {
         this.background = background;
     }
 
-    public void addReceiver(Long receiverId) {
+    public void addReceiver(Long receiverId, String receiverUserName) {
         int index = 0;
         for (int i = 0; i < MAX_CLIENTS - 1; i++) {
             if (this.receiversIds[i] == null) {
@@ -58,7 +58,7 @@ public class ReceiversButton {
                 "yellow"
         );
         Drawable userName = getDisplay().getDrawableFactory().makeText(
-                "User " + receiverId,
+                receiverUserName + " (" + receiverId + ")",
                 this.background.getX() + 5,
                 this.background.getY() + 5 + (30 * index),
                 "HBE24",
@@ -76,17 +76,19 @@ public class ReceiversButton {
     }
 
     public void removeReceiver(Long receiverId) {
-        int index = 0;
+        int index = -1;
         for (int i = 0; i < MAX_CLIENTS - 1; i++) {
-            if (this.receiversIds[i] == receiverId) {
+            if (Objects.equals(this.receiversIds[i], receiverId)) {
                 index = i;
                 break;
             }
         }
-        getScene().removeObject(this.receivers[index]);
-        this.receivers[index] = null;
-        this.receiversIds[index] = null;
-        buildBundle();
+        if (index != -1) {
+            getScene().removeObject(this.receivers[index]);
+            this.receivers[index] = null;
+            this.receiversIds[index] = null;
+            buildBundle();
+        }
     }
 
     public Long getSelectedReceiverId() {

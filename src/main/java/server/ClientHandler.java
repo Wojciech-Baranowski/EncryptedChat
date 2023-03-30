@@ -1,8 +1,11 @@
 package server;
 
 import common.message.Message;
+import common.message.UserDisconnectionMessage;
+import common.transportObjects.UserData;
 import lombok.Getter;
 import lombok.Setter;
+import server.userDataBase.UserDataBaseRecord;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -10,6 +13,8 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.List;
 import java.util.Objects;
+
+import static common.message.MessageType.USER_DISCONNECTION;
 
 public class ClientHandler implements Runnable {
 
@@ -36,21 +41,19 @@ public class ClientHandler implements Runnable {
     }
 
     private void routeMessages() {
-        while (socket.isConnected()) {
+        while (this.socket != null && this.socket.isConnected() && !this.socket.isClosed()) {
             try {
                 Message message = (Message) this.reader.readObject();
-                message.setReceiverId(mapUserIdToClientId(message.getReceiverId()));
                 if (message.getReceiverId() == null) {
                     this.serverController.handleMessage(this, message);
                 } else {
                     sendMessageToClient(message);
                 }
             } catch (IOException | ClassNotFoundException e) {
+                disconnectUser();
                 closeSession();
-                throw new RuntimeException(e);
             }
         }
-        closeSession();
     }
 
     public void sendMessageToClient(Message message) {
@@ -63,13 +66,24 @@ public class ClientHandler implements Runnable {
                 receiver.writer.writeObject(message);
             }
         } catch (Exception e) {
+            disconnectUser();
             closeSession();
-            throw new RuntimeException(e);
+        }
+    }
+
+    private void disconnectUser() {
+        if (getClientHandlers().contains(this)) {
+            getClientHandlers().remove(this);
+            Long userId = this.serverController.mapClientIdToUserId(this.clientId);
+            this.serverController.removeClientIdFromMap(this.clientId);
+            UserDataBaseRecord userDataBaseRecord = this.serverController.getUserDataBase().findUserDataBaseRecordByUserId(userId);
+            UserData userData = new UserData(userDataBaseRecord.getId(), userDataBaseRecord.getUserName());
+            UserDisconnectionMessage userDisconnectionMessage = new UserDisconnectionMessage(userData);
+            this.serverController.broadcastMessage(this, USER_DISCONNECTION, userDisconnectionMessage, true);
         }
     }
 
     private void closeSession() {
-        getClientHandlers().remove(this);
         try {
             if (this.reader != null)
                 this.reader.close();
@@ -84,10 +98,6 @@ public class ClientHandler implements Runnable {
 
     private List<ClientHandler> getClientHandlers() {
         return this.serverController.getClientHandlers();
-    }
-
-    private Long mapUserIdToClientId(Long userId) {
-        return this.serverController.mapUserIdToClientId(userId);
     }
 
 }

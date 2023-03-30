@@ -38,6 +38,13 @@ public class UserDataBase {
         }
     }
 
+    public UserDataBaseRecord findUserDataBaseRecordByUserId(Long userId) {
+        return this.userDataBaseRecords.stream()
+                .filter(user -> user.getId().equals(userId))
+                .findFirst()
+                .orElse(null);
+    }
+
     public UserDataBaseRecord findUserDataBaseRecordByUserName(String userName) {
         return this.userDataBaseRecords.stream()
                 .filter(user -> user.getUserName().equals(userName))
