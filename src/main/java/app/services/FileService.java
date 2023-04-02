@@ -108,9 +108,7 @@ public class FileService {
             if (this.attachedFile != null) {
                 List<byte[]> fragmentedFile = fragmentFile();
                 this.numberOfConfirmationsToReceive = fragmentedFile.size();
-                for (int i = 0; i < fragmentedFile.size(); i++) {
-                    ConnectionController.getChatConnectionController().prepareAndSendFileMessage(senderId, i, this.numberOfConfirmationsToReceive, fragmentedFile.get(i), receiverId);
-                }
+                ConnectionController.getChatConnectionController().prepareAndSendFileMessage(senderId, fragmentedFile, receiverId);
             } else {
                 this.numberOfConfirmationsToReceive = 1;
                 String text = ChatTextFieldController.getChatTextFieldController().getMessageTextFieldContent();

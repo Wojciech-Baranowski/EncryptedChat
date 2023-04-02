@@ -3,6 +3,9 @@ package app.connection;
 import common.Serializer;
 import common.message.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static app.services.FileService.getFileService;
 import static app.services.UserService.getUserService;
 import static common.message.MessageType.*;
@@ -39,9 +42,13 @@ public class ChatConnectionController {
         this.connectionController.sendMessage(TEXT, textMessage, receiverId);
     }
 
-    public void prepareAndSendFileMessage(Long senderId, int fileFragmentNumber, int numberOfFileFragments, byte[] fileFragment, Long receiverId) {
-        FileMessage fileMessage = new FileMessage(senderId, fileFragmentNumber, numberOfFileFragments, fileFragment);
-        this.connectionController.sendMessage(FILE, fileMessage, receiverId);
+    public void prepareAndSendFileMessage(Long senderId, List<byte[]> fileFragments, Long receiverId) {
+        List<Object> fileMessageList = new ArrayList<>();
+        for (int i = 0; i < fileFragments.size(); i++) {
+            FileMessage fileMessage = new FileMessage(senderId, i, fileFragments.size(), fileFragments.get(i));
+            fileMessageList.add(fileMessage);
+        }
+        this.connectionController.sendMessages(FILE, fileMessageList, receiverId);
     }
 
     private void processConnectionMessage(byte[] content) {

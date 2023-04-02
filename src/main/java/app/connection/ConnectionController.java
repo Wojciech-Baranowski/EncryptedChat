@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 import static app.gui.chat.buttons.ChatButtonController.getChatButtonController;
 import static common.CipherConfig.CipherType.EBC;
@@ -93,6 +95,39 @@ public class ConnectionController {
             //encryptServ
             byte[] encryptedMessage = Serializer.serialize(message);
             this.writer.writeObject(encryptedMessage);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void sendMessages(MessageType messageType, List<Object> contentList, Long receiverId) {
+        try {
+            List<byte[]> encryptedMessages = new ArrayList<>();
+            for (Object content : contentList) {
+                //encrypt
+                byte[] encryptedMessageType = Serializer.serialize(messageType);
+                byte[] encryptedContent = Serializer.serialize(content);
+                Message message = Message.builder()
+                        .receiverId(receiverId)
+                        .cipherType(receiverId == null ? EBC : getChatButtonController().getCipherType())
+                        .messageType(encryptedMessageType)
+                        .content(encryptedContent)
+                        .build();
+                //encryptServ
+                byte[] encryptedMessage = Serializer.serialize(message);
+                encryptedMessages.add(encryptedMessage);
+            }
+            new Thread(() -> sendMessagesInParallel(encryptedMessages, this.writer)).start();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void sendMessagesInParallel(List<byte[]> messages, ObjectOutputStream writer) {
+        try {
+            for (byte[] message : messages) {
+                writer.writeObject(message);
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
