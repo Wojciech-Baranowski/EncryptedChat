@@ -48,34 +48,46 @@ public class ServerController {
     }
 
     public void handleMessage(ClientHandler clientHandler, Message message) {
-        //decrypt
-        byte[] decryptedMessageType = message.getMessageType();
-        byte[] decryptedContent = message.getContent();
-        MessageType messageType = Serializer.deserialize(decryptedMessageType);
-        switch (messageType) {
-            case REGISTRATION_REQUEST -> processRegistrationMessage(clientHandler, decryptedContent);
-            case LOGIN_REQUEST -> processLoginMessage(clientHandler, decryptedContent);
-            case ALL_USER_CONNECTION_REQUEST -> processAllUserConnectionMessage(clientHandler);
+        try {
+            //decrypt
+            byte[] decryptedMessageType = message.getMessageType();
+            byte[] decryptedContent = message.getContent();
+            MessageType messageType = Serializer.deserialize(decryptedMessageType);
+            switch (messageType) {
+                case REGISTRATION_REQUEST -> processRegistrationMessage(clientHandler, decryptedContent);
+                case LOGIN_REQUEST -> processLoginMessage(clientHandler, decryptedContent);
+                case ALL_USER_CONNECTION_REQUEST -> processAllUserConnectionMessage(clientHandler);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
     public synchronized void sendMessageToClient(ClientHandler clientHandler, MessageType messageType, Object content) {
-        //encrypt
-        byte[] encryptedMessageType = Serializer.serialize(messageType);
-        byte[] encryptedContent = Serializer.serialize(content);
-        Message message = new Message(clientHandler.getClientId(), encryptedMessageType, encryptedContent);
-        clientHandler.sendMessageToClient(message);
+        try {
+            //encrypt
+            byte[] encryptedMessageType = Serializer.serialize(messageType);
+            byte[] encryptedContent = Serializer.serialize(content);
+            Message message = new Message(clientHandler.getClientId(), encryptedMessageType, encryptedContent);
+            clientHandler.sendMessageToClient(message);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public synchronized void broadcastMessage(ClientHandler clientHandler, MessageType messageType, Object content, boolean authorized) {
-        //encrypt
-        byte[] encryptedMessageType = Serializer.serialize(messageType);
-        byte[] encryptedContent = Serializer.serialize(content);
-        for (ClientHandler otherClientHandler : this.clientHandlers) {
-            if (otherClientHandler != clientHandler && (!authorized || this.clientIdToUserIdMap.get(otherClientHandler.getClientId()) != null)) {
-                Message message = new Message(otherClientHandler.getClientId(), encryptedMessageType, encryptedContent);
-                otherClientHandler.sendMessageToClient(message);
+        try {
+            //encrypt
+            byte[] encryptedMessageType = Serializer.serialize(messageType);
+            byte[] encryptedContent = Serializer.serialize(content);
+            for (ClientHandler otherClientHandler : this.clientHandlers) {
+                if (otherClientHandler != clientHandler && (!authorized || this.clientIdToUserIdMap.get(otherClientHandler.getClientId()) != null)) {
+                    Message message = new Message(otherClientHandler.getClientId(), encryptedMessageType, encryptedContent);
+                    otherClientHandler.sendMessageToClient(message);
+                }
             }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -113,33 +125,41 @@ public class ServerController {
     }
 
     public void processRegistrationMessage(ClientHandler clientHandler, byte[] content) {
-        AuthorizationMessage authorizationMessage;
-        RegistrationMessage registrationMessage = Serializer.deserialize(content);
-        if (this.userDataBase.findUserDataBaseRecordByUserName(registrationMessage.getUserName()) == null) {
-            this.userDataBase.addRecord(registrationMessage.getUserName(), registrationMessage.getPassword());
-            authorizationMessage = new AuthorizationMessage(REGISTRATION_SUCCESS, null);
-        } else {
-            authorizationMessage = new AuthorizationMessage(REGISTRATION_FAILED_USERNAME_ALREADY_EXIST, null);
+        try {
+            AuthorizationMessage authorizationMessage;
+            RegistrationMessage registrationMessage = Serializer.deserialize(content);
+            if (this.userDataBase.findUserDataBaseRecordByUserName(registrationMessage.getUserName()) == null) {
+                this.userDataBase.addRecord(registrationMessage.getUserName(), registrationMessage.getPassword());
+                authorizationMessage = new AuthorizationMessage(REGISTRATION_SUCCESS, null);
+            } else {
+                authorizationMessage = new AuthorizationMessage(REGISTRATION_FAILED_USERNAME_ALREADY_EXIST, null);
+            }
+            sendMessageToClient(clientHandler, AUTHORIZATION, authorizationMessage);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        sendMessageToClient(clientHandler, AUTHORIZATION, authorizationMessage);
     }
 
     public void processLoginMessage(ClientHandler clientHandler, byte[] content) {
-        AuthorizationMessage authorizationMessage;
-        LoginMessage loginMessage = Serializer.deserialize(content);
-        if (this.userDataBase.findUserDataBaseRecordByUserName(loginMessage.getUserName()) != null) {
-            UserDataBaseRecord dataBaseRecord = this.userDataBase.findUserDataBaseRecordByUserName(loginMessage.getUserName());
-            if (loginMessage.getPassword().equals(dataBaseRecord.getPassword())) {
-                UserData userData = new UserData(dataBaseRecord.getId(), dataBaseRecord.getUserName());
-                connectUser(clientHandler, userData);
-                authorizationMessage = new AuthorizationMessage(LOGIN_SUCCESS, userData);
+        try {
+            AuthorizationMessage authorizationMessage;
+            LoginMessage loginMessage = Serializer.deserialize(content);
+            if (this.userDataBase.findUserDataBaseRecordByUserName(loginMessage.getUserName()) != null) {
+                UserDataBaseRecord dataBaseRecord = this.userDataBase.findUserDataBaseRecordByUserName(loginMessage.getUserName());
+                if (loginMessage.getPassword().equals(dataBaseRecord.getPassword())) {
+                    UserData userData = new UserData(dataBaseRecord.getId(), dataBaseRecord.getUserName());
+                    connectUser(clientHandler, userData);
+                    authorizationMessage = new AuthorizationMessage(LOGIN_SUCCESS, userData);
+                } else {
+                    authorizationMessage = new AuthorizationMessage(LOGIN_FAILED_INCORRECT_PASSWORD, null);
+                }
             } else {
-                authorizationMessage = new AuthorizationMessage(LOGIN_FAILED_INCORRECT_PASSWORD, null);
+                authorizationMessage = new AuthorizationMessage(LOGIN_FAILED_USERNAME_DOES_NOT_EXIST, null);
             }
-        } else {
-            authorizationMessage = new AuthorizationMessage(LOGIN_FAILED_USERNAME_DOES_NOT_EXIST, null);
+            sendMessageToClient(clientHandler, AUTHORIZATION, authorizationMessage);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        sendMessageToClient(clientHandler, AUTHORIZATION, authorizationMessage);
     }
 
     public void processAllUserConnectionMessage(ClientHandler clientHandler) {

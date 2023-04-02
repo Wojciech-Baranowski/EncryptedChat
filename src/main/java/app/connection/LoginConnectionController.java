@@ -35,8 +35,12 @@ public class LoginConnectionController {
     }
 
     private void processAuthorizationMessage(byte[] content) {
-        AuthorizationMessage authorizationMessage = Serializer.deserialize(content);
-        getUserService().processResponse(authorizationMessage.getUserDataProcessResponseType(), authorizationMessage.getUserData());
+        try {
+            AuthorizationMessage authorizationMessage = Serializer.deserialize(content);
+            getUserService().processResponse(authorizationMessage.getUserDataProcessResponseType(), authorizationMessage.getUserData());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

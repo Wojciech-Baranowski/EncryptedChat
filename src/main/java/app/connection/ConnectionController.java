@@ -59,14 +59,18 @@ public class ConnectionController {
     }
 
     private void routeMessages(Message message) {
-        //decrypt
-        byte[] decryptedMessageType = message.getMessageType();
-        byte[] decryptedContent = message.getContent();
-        MessageType messageType = Serializer.deserialize(decryptedMessageType);
-        if (messageType.isAuthorizedConnection()) {
-            chatConnectionController.routeMessage(messageType, decryptedContent);
-        } else {
-            loginConnectionController.routeMessage(messageType, decryptedContent);
+        try {
+            //decrypt
+            byte[] decryptedMessageType = message.getMessageType();
+            byte[] decryptedContent = message.getContent();
+            MessageType messageType = Serializer.deserialize(decryptedMessageType);
+            if (messageType.isAuthorizedConnection()) {
+                chatConnectionController.routeMessage(messageType, decryptedContent);
+            } else {
+                loginConnectionController.routeMessage(messageType, decryptedContent);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

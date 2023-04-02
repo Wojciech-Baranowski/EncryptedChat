@@ -1,5 +1,6 @@
 package app.services;
 
+import app.connection.ConnectionController;
 import app.utils.TrimmedStringFactory;
 import common.CipherConfig;
 import common.Serializer;
@@ -29,11 +30,15 @@ public class FileService {
     @Getter
     private FileData attachedFile;
     private final List<FileData> receivedFiles;
-    private final Map<Long, Map<Integer, byte[]>> receivedFileFragments;
+    private final Map<Integer, byte[]> receivedFileFragments;
+    private int numberOfFileFragmentsToReceive;
+    private final Map<Integer, Boolean> receivedConfirmations;
 
     private FileService() {
         this.receivedFiles = new ArrayList<>();
         this.receivedFileFragments = new HashMap<>();
+        this.receivedConfirmations = new HashMap<>();
+        this.numberOfFileFragmentsToReceive = 0;
     }
 
     public static FileService getFileService() {
@@ -47,6 +52,8 @@ public class FileService {
         JFileChooser chooser = new JFileChooser();
         if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             this.attachedFile = new FileData(chooser.getSelectedFile());
+            this.receivedFileFragments.clear();
+            this.receivedConfirmations.clear();
             String trimmedFileName = TrimmedStringFactory.trimString(this.attachedFile.getName(), MAX_ATTACHMENT_FILE_NAME_LENGTH);
             getChatTextController().setFileName(trimmedFileName);
             getChatTextController().setFileExtension(this.attachedFile.getExtension());
@@ -100,7 +107,7 @@ public class FileService {
     public void sendFileOrText() {
         if (getChatButtonController().getSelectedReceiverId() != null && getChatButtonController().getCipherType() != null) {
             updateUploadInfo(0.0);
-            if (attachedFile != null) {
+            if (this.attachedFile != null) {
 
             } else {
 
@@ -108,13 +115,18 @@ public class FileService {
         }
     }
 
-    public void sendConfirmation(int fragmentNumber, Long senderId) {
-
+    public void sendConfirmation(int fragmentNumber, Long receiverId) {
+        ConnectionController.getChatConnectionController().prepareAndSendConfirmationMessage(fragmentNumber, receiverId);
     }
 
-    public void receiveText(byte[] binaryText, Long senderId, CipherConfig.CipherType cipherType) {
+    public void receiveConfirmation(int fragmentNumber) {
+        this.receivedConfirmations.put(fragmentNumber, true);
+        updateUploadInfo(this.receivedConfirmations.size() / (double) this.numberOfFileFragmentsToReceive);
+    }
+
+    public void receiveText(Long senderId, CipherConfig.CipherType cipherType, byte[] binaryText) {
         try {
-            //decrypt
+            //decryptAES
             String text = Serializer.deserialize(binaryText);
             getChatButtonController().addReceivedText(text);
             sendConfirmation(0, senderId);
@@ -123,13 +135,10 @@ public class FileService {
         }
     }
 
-    public void receiveFileFragment(Long senderId, int fileFragmentNumber, int numberOfFileFragments, byte[] fileFragment, CipherConfig.CipherType cipherType) {
-        if (!this.receivedFileFragments.containsKey(senderId)) {
-            this.receivedFileFragments.put(senderId, new HashMap<>());
-            sendConfirmation(fileFragmentNumber, senderId);
-        }
-        this.receivedFileFragments.get(senderId).put(fileFragmentNumber, fileFragment);
-        if (this.receivedFileFragments.get(senderId).size() == numberOfFileFragments) {
+    public void receiveFileFragment(Long senderId, CipherConfig.CipherType cipherType, int fileFragmentNumber, int numberOfFileFragments, byte[] fileFragment) {
+        this.receivedFileFragments.put(fileFragmentNumber, fileFragment);
+        sendConfirmation(fileFragmentNumber, senderId);
+        if (this.receivedFileFragments.size() == numberOfFileFragments) {
             FileData receivedFile = restoreFile(numberOfFileFragments, senderId, cipherType);
             addReceivedFile(receivedFile);
         }
@@ -141,12 +150,12 @@ public class FileService {
             int fileSize = 0;
             for (int i = 0; i < numberOfFileFragments; i++) {
                 byte[] fileFragment;
-                //decrypt
-                fileFragment = trimFileFragment(this.receivedFileFragments.get(senderId).get(i));
+                //decryptAES
+                fileFragment = trimFileFragment(this.receivedFileFragments.get(i));
                 fileSize += fileFragment.length;
                 fileFragments.add(fileFragment);
             }
-            this.receivedFileFragments.remove(senderId);
+            this.receivedFileFragments.clear();
             byte[] mergedFile = mergeFileFragments(fileFragments, fileSize);
             return Serializer.deserialize(mergedFile);
         } catch (Exception e) {
