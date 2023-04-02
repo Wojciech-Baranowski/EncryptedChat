@@ -50,6 +50,8 @@ public class ClientHandler implements Runnable {
                 if (decryptedMessage.getReceiverId() == null) {
                     this.serverController.handleMessage(this, decryptedMessage);
                 } else {
+                    Long receiverClientId = this.serverController.mapUserIdToClientId(decryptedMessage.getReceiverId());
+                    decryptedMessage.setReceiverId(receiverClientId);
                     sendMessageToClient(decryptedMessage);
                 }
             } catch (IOException | ClassNotFoundException e) {
@@ -81,6 +83,7 @@ public class ClientHandler implements Runnable {
             getClientHandlers().remove(this);
             Long userId = this.serverController.mapClientIdToUserId(this.clientId);
             this.serverController.removeClientIdFromMap(this.clientId);
+            this.serverController.removeUserIdFromMap(userId);
             UserDataBaseRecord userDataBaseRecord = this.serverController.getUserDataBase().findUserDataBaseRecordByUserId(userId);
             UserData userData = new UserData(userDataBaseRecord.getId(), userDataBaseRecord.getUserName());
             UserDisconnectionMessage userDisconnectionMessage = new UserDisconnectionMessage(userData);

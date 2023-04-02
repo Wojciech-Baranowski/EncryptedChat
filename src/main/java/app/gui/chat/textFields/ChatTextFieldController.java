@@ -25,4 +25,8 @@ public class ChatTextFieldController {
         return this.messageTextField.getTextField();
     }
 
+    public String getMessageTextFieldContent() {
+        return this.messageTextField.getTextFieldContent();
+    }
+
 }

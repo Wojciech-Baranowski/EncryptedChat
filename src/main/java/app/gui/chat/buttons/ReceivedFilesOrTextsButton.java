@@ -2,11 +2,12 @@ package app.gui.chat.buttons;
 
 import app.commands.DownloadFileCommand;
 import app.engine.button.SimpleButton;
+import app.engine.common.Command;
 import app.engine.display.Drawable;
 import app.engine.display.DrawableComposition;
 import app.engine.input.inputCombination.InputCombination;
 
-import static app.Constants.MAX_CLIENTS;
+import static app.Constants.MAX_FILES_PER_PAGE;
 import static app.engine.display.DisplayBean.getDisplay;
 import static app.engine.input.InputBean.getInput;
 import static app.engine.scene.SceneBean.getScene;
@@ -18,7 +19,7 @@ public class ReceivedFilesOrTextsButton {
     private int numberOfReceivedFiles;
 
     public ReceivedFilesOrTextsButton(Drawable background) {
-        this.receivedFiles = new SimpleButton[MAX_CLIENTS - 1];
+        this.receivedFiles = new SimpleButton[MAX_FILES_PER_PAGE];
         this.background = background;
         this.numberOfReceivedFiles = 0;
     }
@@ -67,7 +68,8 @@ public class ReceivedFilesOrTextsButton {
                 "black"
         );
         drawable = new DrawableComposition(drawable, fileName);
-        SimpleButton receivedFile = new SimpleButton(drawable, null, null);
+        InputCombination activationCombination = getInput().getInputCombinationFactory().makeLmbCombination();
+        SimpleButton receivedFile = new SimpleButton(drawable, activationCombination, Command.BLANK);
         getScene().addOnHighest(receivedFile);
         this.receivedFiles[this.numberOfReceivedFiles] = receivedFile;
         this.numberOfReceivedFiles++;

@@ -27,4 +27,8 @@ public class MessageTextField {
         getScene().addOnHighest(textField);
     }
 
+    public String getTextFieldContent() {
+        return textField.getContent();
+    }
+
 }

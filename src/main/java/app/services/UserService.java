@@ -70,6 +70,10 @@ public class UserService {
         this.receiverIds.remove(receiverId);
     }
 
+    public Long getUserId() {
+        return this.userData.getId();
+    }
+
     private void setUserAndAskForAllUserConnections(UserData userData) {
         getScene().switchCollection("chat");
         this.userData = userData;

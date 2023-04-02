@@ -23,6 +23,7 @@ public class ServerController {
     private final List<ClientHandler> clientHandlers;
     private final ServerSocket socket;
     private final Map<Long, Long> clientIdToUserIdMap;
+    private final Map<Long, Long> userIdToCilentIdMap;
     private final UserDataBase userDataBase;
 
     public static void main(String[] args) {
@@ -33,6 +34,7 @@ public class ServerController {
         try {
             this.socket = new ServerSocket(PORT);
             this.clientIdToUserIdMap = new HashMap<>();
+            this.userIdToCilentIdMap = new HashMap<>();
             this.clientHandlers = new ArrayList<>();
             this.userDataBase = new UserDataBase();
             handleClients();
@@ -92,39 +94,6 @@ public class ServerController {
         }
     }
 
-    public synchronized Long mapClientIdToUserId(Long clientId) {
-        return this.clientIdToUserIdMap.get(clientId);
-    }
-
-    public synchronized void removeClientIdFromMap(Long clientId) {
-        this.clientIdToUserIdMap.remove(clientId);
-    }
-
-    public synchronized List<ClientHandler> getClientHandlers() {
-        return this.clientHandlers;
-    }
-
-    public synchronized UserDataBase getUserDataBase() {
-        return this.userDataBase;
-    }
-
-    private void handleClients() {
-        while (!this.socket.isClosed()) {
-            try {
-                addClient();
-            } catch (IOException e) {
-                closeServerSocket();
-                throw new RuntimeException(e);
-            }
-        }
-        closeServerSocket();
-    }
-
-    private void addClient() throws IOException {
-        ClientHandler clientHandler = new ClientHandler(this, this.socket.accept(), new Random().nextLong());
-        new Thread(clientHandler).start();
-    }
-
     public void processRegistrationMessage(ClientHandler clientHandler, byte[] content) {
         try {
             AuthorizationMessage authorizationMessage;
@@ -177,8 +146,50 @@ public class ServerController {
         }
     }
 
+    public synchronized Long mapClientIdToUserId(Long clientId) {
+        return this.clientIdToUserIdMap.get(clientId);
+    }
+
+    public synchronized void removeClientIdFromMap(Long clientId) {
+        this.clientIdToUserIdMap.remove(clientId);
+    }
+
+    public synchronized Long mapUserIdToClientId(Long userId) {
+        return this.userIdToCilentIdMap.get(userId);
+    }
+
+    public synchronized void removeUserIdFromMap(Long userId) {
+        this.userIdToCilentIdMap.remove(userId);
+    }
+
+    public synchronized List<ClientHandler> getClientHandlers() {
+        return this.clientHandlers;
+    }
+
+    public synchronized UserDataBase getUserDataBase() {
+        return this.userDataBase;
+    }
+
+    private void handleClients() {
+        while (!this.socket.isClosed()) {
+            try {
+                addClient();
+            } catch (IOException e) {
+                closeServerSocket();
+                throw new RuntimeException(e);
+            }
+        }
+        closeServerSocket();
+    }
+
+    private void addClient() throws IOException {
+        ClientHandler clientHandler = new ClientHandler(this, this.socket.accept(), new Random().nextLong());
+        new Thread(clientHandler).start();
+    }
+
     private void connectUser(ClientHandler clientHandler, UserData userData) {
         this.clientIdToUserIdMap.put(clientHandler.getClientId(), userData.getId());
+        this.userIdToCilentIdMap.put(userData.getId(), clientHandler.getClientId());
         UserConnectionMessage userConnectionMessage = new UserConnectionMessage(userData);
         broadcastMessage(clientHandler, USER_CONNECTION, userConnectionMessage, true);
     }
