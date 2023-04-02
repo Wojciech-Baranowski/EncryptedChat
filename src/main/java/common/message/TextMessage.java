@@ -1,6 +1,5 @@
 package common.message;
 
-import common.CipherConfig;
 import lombok.*;
 
 import java.io.Serializable;
@@ -13,7 +12,6 @@ import java.io.Serializable;
 public class TextMessage implements Serializable {
 
     private Long senderId;
-    private CipherConfig.CipherType cipherType;
-    private byte[] text;
+    private String text;
 
 }

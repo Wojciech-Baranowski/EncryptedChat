@@ -1,5 +1,6 @@
 package server;
 
+import common.Serializer;
 import common.message.Message;
 import common.message.UserDisconnectionMessage;
 import common.transportObjects.UserData;
@@ -43,11 +44,13 @@ public class ClientHandler implements Runnable {
     private void routeMessages() {
         while (this.socket != null && this.socket.isConnected() && !this.socket.isClosed()) {
             try {
-                Message message = (Message) this.reader.readObject();
-                if (message.getReceiverId() == null) {
-                    this.serverController.handleMessage(this, message);
+                //decryptServ
+                byte[] message = (byte[]) this.reader.readObject();
+                Message decryptedMessage = Serializer.deserialize(message);
+                if (decryptedMessage.getReceiverId() == null) {
+                    this.serverController.handleMessage(this, decryptedMessage);
                 } else {
-                    sendMessageToClient(message);
+                    sendMessageToClient(decryptedMessage);
                 }
             } catch (IOException | ClassNotFoundException e) {
                 disconnectUser();
@@ -63,7 +66,9 @@ public class ClientHandler implements Runnable {
                     .findFirst()
                     .orElse(null);
             if (receiver != null) {
-                receiver.writer.writeObject(message);
+                //encryptServ
+                byte[] encryptedMessage = Serializer.serialize(message);
+                receiver.writer.writeObject(encryptedMessage);
             }
         } catch (Exception e) {
             disconnectUser();

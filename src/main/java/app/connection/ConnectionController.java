@@ -14,6 +14,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import static app.gui.chat.buttons.ChatButtonController.getChatButtonController;
+import static common.CipherConfig.CipherType.EBC;
+
 public class ConnectionController {
 
     private static ConnectionController connectionController;
@@ -46,10 +49,10 @@ public class ConnectionController {
         return connectionController;
     }
 
-    private void receiveMessages(SynchronizedCollection<Message> messageBuffer) {
+    private void receiveMessages(SynchronizedCollection<byte[]> messageBuffer) {
         while (this.socket.isConnected()) {
             try {
-                Message message = (Message) this.reader.readObject();
+                byte[] message = (byte[]) this.reader.readObject();
                 messageBuffer.put(message);
             } catch (IOException | ClassNotFoundException e) {
                 closeSession();
@@ -58,11 +61,13 @@ public class ConnectionController {
         }
     }
 
-    private void routeMessages(Message message) {
+    private void routeMessages(byte[] message) {
         try {
-            //decrypt
-            byte[] decryptedMessageType = message.getMessageType();
-            byte[] decryptedContent = message.getContent();
+            //decryptServ
+            Message decryptedMessage = Serializer.deserialize(message);
+            //decrypt2
+            byte[] decryptedMessageType = decryptedMessage.getMessageType();
+            byte[] decryptedContent = decryptedMessage.getContent();
             MessageType messageType = Serializer.deserialize(decryptedMessageType);
             if (messageType.isAuthorizedConnection()) {
                 chatConnectionController.routeMessage(messageType, decryptedContent);
@@ -81,10 +86,13 @@ public class ConnectionController {
             byte[] encryptedContent = Serializer.serialize(content);
             Message message = Message.builder()
                     .receiverId(receiverId)
+                    .cipherType(receiverId == null ? EBC : getChatButtonController().getCipherType())
                     .messageType(encryptedMessageType)
                     .content(encryptedContent)
                     .build();
-            this.writer.writeObject(message);
+            //encryptServ
+            byte[] encryptedMessage = Serializer.serialize(message);
+            this.writer.writeObject(encryptedMessage);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
