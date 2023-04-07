@@ -29,4 +29,8 @@ public class ChatTextFieldController {
         return this.messageTextField.getTextFieldContent();
     }
 
+    public void clearMessageTextField() {
+        this.messageTextField.clear();
+    }
+
 }

@@ -73,6 +73,10 @@ public class ChatTextController {
         this.uploadInfoText.setCurrentUploadInfoAsError();
     }
 
+    public void setCurrentUploadInfoAsNoReceiver() {
+        this.uploadInfoText.setCurrentUploadInfoAsNoReceiver();
+    }
+
     public void setCurrentUploadInfoAsBlank() {
         this.uploadInfoText.setCurrentUploadInfoAsBlank();
     }

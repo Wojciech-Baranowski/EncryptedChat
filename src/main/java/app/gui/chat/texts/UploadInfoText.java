@@ -13,6 +13,7 @@ public class UploadInfoText {
     private final Text success;
     private final Text error;
     private final Text progress;
+    private final Text noReceiver;
     private Text currentInfo;
 
     public UploadInfoText(Drawable background) {
@@ -44,6 +45,13 @@ public class UploadInfoText {
                 background.getY() + 82,
                 "HBE24",
                 "darkYellow"
+        );
+        this.noReceiver = getDisplay().getDrawableFactory().makeText(
+                "Receiver not selected!",
+                background.getX() + 14,
+                background.getY() + 82,
+                "HBE24",
+                "red"
         );
         this.currentInfo = getDisplay().getDrawableFactory().makeText(
                 "",
@@ -77,6 +85,12 @@ public class UploadInfoText {
     public void setCurrentUploadInfoAsError() {
         getScene().removeObject(this.currentInfo);
         this.currentInfo = this.error;
+        getScene().addObjectHigherThan(this.currentInfo, background);
+    }
+
+    public void setCurrentUploadInfoAsNoReceiver() {
+        getScene().removeObject(this.currentInfo);
+        this.currentInfo = this.noReceiver;
         getScene().addObjectHigherThan(this.currentInfo, background);
     }
 

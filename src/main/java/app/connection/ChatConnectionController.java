@@ -54,7 +54,7 @@ public class ChatConnectionController {
     private void processConnectionMessage(byte[] content) {
         try {
             UserConnectionMessage userConnectionMessage = Serializer.deserialize(content);
-            getUserService().addReceiver(userConnectionMessage.getUserData().getId(), userConnectionMessage.getUserData().getUserName());
+            getUserService().addReceiver(userConnectionMessage.getUserData());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

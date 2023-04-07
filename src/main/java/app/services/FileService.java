@@ -1,10 +1,10 @@
 package app.services;
 
 import app.connection.ConnectionController;
-import app.gui.chat.textFields.ChatTextFieldController;
 import app.utils.TrimmedStringFactory;
 import common.Serializer;
 import common.transportObjects.FileData;
+import common.transportObjects.UserData;
 import lombok.Getter;
 
 import javax.swing.*;
@@ -15,12 +15,13 @@ import java.util.List;
 import java.util.Map;
 
 import static app.Constants.MAX_ATTACHMENT_FILE_NAME_LENGTH;
-import static app.Constants.MAX_RECEIVED_FILE_NAME_LENGTH;
+import static app.Constants.MAX_RECEIVED_MESSAGE_LENGTH;
 import static app.engine.input.InputBean.getInput;
 import static app.engine.scene.SceneBean.getScene;
 import static app.gui.chat.buttons.ChatButtonController.getChatButtonController;
 import static app.gui.chat.textFields.ChatTextFieldController.getChatTextFieldController;
 import static app.gui.chat.texts.ChatTextController.getChatTextController;
+import static app.services.UserService.getUserService;
 import static common.CipherConfig.CIPHER_BLOCK_SIZE;
 
 public class FileService {
@@ -31,6 +32,7 @@ public class FileService {
     private FileData attachedFile;
     private final List<FileData> receivedFiles;
     private final Map<Integer, byte[]> receivedFileFragments;
+    @Getter
     private int numberOfConfirmationsToReceive;
     private final Map<Integer, Boolean> receivedConfirmations;
 
@@ -94,26 +96,29 @@ public class FileService {
         }
     }
 
-    public void addReceivedFile(FileData fileData) {
+    public void addReceivedFile(Long senderId, FileData fileData) {
         this.receivedFiles.add(fileData);
-        String trimmedFileName = TrimmedStringFactory.trimString(fileData.getName(), MAX_RECEIVED_FILE_NAME_LENGTH);
-        String filenameWithExtension = trimmedFileName + " (" + fileData.getExtension() + ")";
-        getChatButtonController().addReceivedFile(filenameWithExtension, fileData.hashCode());
+        UserData senderUserData = getUserService().getReceiverUserDataById(senderId);
+        getChatButtonController().addReceivedFile(senderUserData, fileData);
     }
 
     public void sendFileOrText() {
-        if (getChatButtonController().getSelectedReceiverId() != null && getChatButtonController().getCipherType() != null) {
+        if (getChatButtonController().getSelectedReceiverId() != null) {
             Long receiverId = getChatButtonController().getSelectedReceiverId();
-            Long senderId = UserService.getUserService().getUserId();
+            Long senderId = getUserService().getUserId();
             if (this.attachedFile != null) {
                 List<byte[]> fragmentedFile = fragmentFile();
                 this.numberOfConfirmationsToReceive = fragmentedFile.size();
                 ConnectionController.getChatConnectionController().prepareAndSendFileMessage(senderId, fragmentedFile, receiverId);
             } else {
                 this.numberOfConfirmationsToReceive = 1;
-                String text = ChatTextFieldController.getChatTextFieldController().getMessageTextFieldContent();
-                ConnectionController.getChatConnectionController().prepareAndSendTextMessage(text, senderId, receiverId);
+                String text = getChatTextFieldController().getMessageTextFieldContent();
+                String trimmedText = TrimmedStringFactory.trimString(text, MAX_RECEIVED_MESSAGE_LENGTH);
+                getChatTextFieldController().clearMessageTextField();
+                ConnectionController.getChatConnectionController().prepareAndSendTextMessage(trimmedText, senderId, receiverId);
             }
+        } else {
+            getChatTextController().setCurrentUploadInfoAsNoReceiver();
         }
     }
 
@@ -125,6 +130,7 @@ public class FileService {
         this.receivedConfirmations.put(fragmentNumber, true);
         if (this.receivedConfirmations.size() == this.numberOfConfirmationsToReceive) {
             getChatTextController().setCurrentUploadInfoAsSuccess();
+            this.numberOfConfirmationsToReceive = 0;
         } else {
             getChatTextController().setCurrentUploadInfoAsProgress(100.0 * this.receivedConfirmations.size() / this.numberOfConfirmationsToReceive);
         }
@@ -132,7 +138,8 @@ public class FileService {
 
     public void receiveText(Long senderId, String text) {
         try {
-            getChatButtonController().addReceivedText(text);
+            UserData senderUserData = getUserService().getReceiverUserDataById(senderId);
+            getChatButtonController().addReceivedText(senderUserData, text);
             sendConfirmation(0, senderId);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -144,7 +151,7 @@ public class FileService {
         sendConfirmation(fileFragmentNumber, senderId);
         if (this.receivedFileFragments.size() == numberOfFileFragments) {
             FileData receivedFile = restoreFile(numberOfFileFragments);
-            addReceivedFile(receivedFile);
+            addReceivedFile(senderId, receivedFile);
         }
     }
 

@@ -7,6 +7,7 @@ import app.engine.button.radioButton.RadioButtonBundle;
 import app.engine.display.Drawable;
 import app.engine.display.DrawableComposition;
 import app.engine.input.inputCombination.InputCombination;
+import common.transportObjects.UserData;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +32,7 @@ public class ReceiversButton {
         this.background = background;
     }
 
-    public void addReceiver(Long receiverId, String receiverUserName) {
+    public void addReceiver(UserData userData) {
         int index = 0;
         for (int i = 0; i < MAX_CLIENTS - 1; i++) {
             if (this.receiversIds[i] == null) {
@@ -58,7 +59,7 @@ public class ReceiversButton {
                 "yellow"
         );
         Drawable userName = getDisplay().getDrawableFactory().makeText(
-                receiverUserName + " (" + receiverId + ")",
+                userData.getUserName() + " (" + userData.getId() + ")",
                 this.background.getX() + 5,
                 this.background.getY() + 5 + (30 * index),
                 "HBE24",
@@ -67,11 +68,11 @@ public class ReceiversButton {
         offDrawable = new DrawableComposition(offDrawable, userName);
         onDrawable = new DrawableComposition(onDrawable, userName);
         InputCombination activationCombination = getInput().getInputCombinationFactory().makeLmbCombination();
-        InitiateHandshakeCommand command = new InitiateHandshakeCommand(receiverId);
+        InitiateHandshakeCommand command = new InitiateHandshakeCommand(userData.getId());
         CommandRadioButton receiver = new CommandRadioButton(offDrawable, onDrawable, activationCombination, command);
         getScene().addOnHighest(receiver);
         this.receivers[index] = receiver;
-        this.receiversIds[index] = receiverId;
+        this.receiversIds[index] = userData.getId();
         buildBundle();
     }
 

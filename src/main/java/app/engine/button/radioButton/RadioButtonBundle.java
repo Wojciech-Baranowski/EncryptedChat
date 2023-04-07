@@ -30,6 +30,9 @@ public class RadioButtonBundle {
         for (RadioButton radioButton : radioButtons) {
             radioButton.setRadioButtonBundle(this);
         }
+        if (selectedRadioButtonIndex >= radioButtons.size()) {
+            selectedRadioButtonIndex = -1;
+        }
         if (selectedRadioButtonIndex != -1) {
             this.selectedRadioButton = radioButtons.get(selectedRadioButtonIndex);
         }

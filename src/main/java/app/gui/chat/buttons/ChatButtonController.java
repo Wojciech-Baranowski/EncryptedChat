@@ -1,6 +1,8 @@
 package app.gui.chat.buttons;
 
 import common.CipherConfig;
+import common.transportObjects.FileData;
+import common.transportObjects.UserData;
 
 import static app.gui.chat.backgrounds.ChatBackgroundController.getChatBackgroundController;
 
@@ -39,20 +41,20 @@ public class ChatButtonController {
         return this.receiversButton.getSelectedReceiverId();
     }
 
-    public void addReceiver(Long receiverId, String receiverUserName) {
-        this.receiversButton.addReceiver(receiverId, receiverUserName);
+    public void addReceiver(UserData userData) {
+        this.receiversButton.addReceiver(userData);
     }
 
     public void removeReceiver(Long receiverId) {
         this.receiversButton.removeReceiver(receiverId);
     }
 
-    public void addReceivedFile(String fileName, int fileHashCode) {
-        this.receivedFilesOrTextsButton.addReceivedFile(fileName, fileHashCode);
+    public void addReceivedFile(UserData senderUserData, FileData fileData) {
+        this.receivedFilesOrTextsButton.addReceivedFile(senderUserData, fileData);
     }
 
-    public void addReceivedText(String text) {
-        this.receivedFilesOrTextsButton.addReceivedText(text);
+    public void addReceivedText(UserData senderUserData, String text) {
+        this.receivedFilesOrTextsButton.addReceivedText(senderUserData, text);
     }
 
 }

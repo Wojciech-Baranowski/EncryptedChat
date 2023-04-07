@@ -73,8 +73,7 @@ public class ClientHandler implements Runnable {
                 receiver.writer.writeObject(encryptedMessage);
             }
         } catch (Exception e) {
-            disconnectUser();
-            closeSession();
+            //silenced
         }
     }
 
@@ -93,12 +92,15 @@ public class ClientHandler implements Runnable {
 
     private void closeSession() {
         try {
-            if (this.reader != null)
+            if (this.reader != null && this.socket != null && !this.socket.isClosed()) {
                 this.reader.close();
-            if (this.writer != null)
+            }
+            if (this.writer != null && this.socket != null && !this.socket.isClosed()) {
                 this.writer.close();
-            if (this.socket != null)
+            }
+            if (this.socket != null && !this.socket.isClosed()) {
                 this.socket.close();
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

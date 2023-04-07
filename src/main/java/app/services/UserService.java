@@ -6,22 +6,24 @@ import common.transportObjects.UserDataProcessResponseType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static app.engine.scene.SceneBean.getScene;
 import static app.gui.chat.buttons.ChatButtonController.getChatButtonController;
 import static app.gui.chat.texts.ChatTextController.getChatTextController;
 import static app.gui.login.textFields.LoginTextFieldController.getLoginTextFieldController;
 import static app.gui.login.texts.LoginTextController.getLoginTextController;
+import static app.services.FileService.getFileService;
 
 public class UserService {
 
     private static UserService userService;
 
     private UserData userData;
-    private final List<Long> receiverIds;
+    private final List<UserData> receiversData;
 
     private UserService() {
-        this.receiverIds = new ArrayList<>();
+        this.receiversData = new ArrayList<>();
     }
 
     public static UserService getUserService() {
@@ -60,18 +62,28 @@ public class UserService {
         }
     }
 
-    public void addReceiver(Long receiverId, String receiverUserName) {
-        this.receiverIds.add(receiverId);
-        getChatButtonController().addReceiver(receiverId, receiverUserName);
+    public void addReceiver(UserData userData) {
+        this.receiversData.add(userData);
+        getChatButtonController().addReceiver(userData);
     }
 
     public void removeReceiver(Long receiverId) {
+        if (Objects.equals(getChatButtonController().getSelectedReceiverId(), receiverId) && getFileService().getNumberOfConfirmationsToReceive() > 0) {
+            getChatTextController().setCurrentUploadInfoAsError();
+        }
         getChatButtonController().removeReceiver(receiverId);
-        this.receiverIds.remove(receiverId);
+        this.receiversData.remove(receiverId);
     }
 
     public Long getUserId() {
         return this.userData.getId();
+    }
+
+    public UserData getReceiverUserDataById(Long receiverId) {
+        return this.receiversData.stream().
+                filter(data -> data.getId().equals(receiverId))
+                .findAny()
+                .orElse(null);
     }
 
     private void setUserAndAskForAllUserConnections(UserData userData) {

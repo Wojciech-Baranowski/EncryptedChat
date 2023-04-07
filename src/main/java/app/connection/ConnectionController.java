@@ -52,7 +52,7 @@ public class ConnectionController {
     }
 
     private void receiveMessages(SynchronizedCollection<byte[]> messageBuffer) {
-        while (this.socket.isConnected()) {
+        while (this.socket.isConnected() && !this.socket.isClosed()) {
             try {
                 byte[] message = (byte[]) this.reader.readObject();
                 messageBuffer.put(message);
@@ -129,7 +129,7 @@ public class ConnectionController {
                 writer.writeObject(message);
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            //silenced
         }
     }
 
@@ -139,12 +139,15 @@ public class ConnectionController {
 
     private void closeSession() {
         try {
-            if (this.reader != null)
+            if (this.reader != null && this.socket != null && !this.socket.isClosed()) {
                 this.reader.close();
-            if (this.writer != null)
+            }
+            if (this.writer != null && this.socket != null && !this.socket.isClosed()) {
                 this.writer.close();
-            if (this.socket != null)
+            }
+            if (this.socket != null && !this.socket.isClosed()) {
                 this.socket.close();
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

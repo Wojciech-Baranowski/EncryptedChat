@@ -12,7 +12,7 @@ public class YourFilesText {
 
     public YourFilesText(Drawable background) {
         this.yourFiles = getDisplay().getDrawableFactory().makeText(
-                "Your files: ",
+                "Received files and messages: ",
                 background.getX() + 14,
                 background.getY() + 14,
                 "HBE24",

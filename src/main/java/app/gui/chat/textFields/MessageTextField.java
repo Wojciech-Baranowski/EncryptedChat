@@ -12,7 +12,7 @@ public class MessageTextField {
     private TextField textField;
 
     public MessageTextField(Drawable background) {
-        textField = new TextField(
+        this.textField = new TextField(
                 background.getX() + 10,
                 background.getY() + 10,
                 440,
@@ -24,11 +24,15 @@ public class MessageTextField {
                 "black",
                 false
         );
-        getScene().addOnHighest(textField);
+        getScene().addOnHighest(this.textField);
     }
 
     public String getTextFieldContent() {
-        return textField.getContent();
+        return this.textField.getContent();
+    }
+
+    public void clear() {
+        this.textField.clear();
     }
 
 }

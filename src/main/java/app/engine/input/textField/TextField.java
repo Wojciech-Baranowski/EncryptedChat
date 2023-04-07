@@ -85,7 +85,13 @@ public class TextField implements Visual, Interactive, InputObserver {
     }
 
     public String getContent() {
-        return this.content.replaceAll("\\s+", " ").trim();
+        return this.content.replaceAll("\n+", "").replaceAll("\\s+", " ").trim();
+    }
+
+    public void clear() {
+        this.content = "";
+        this.text.setText(this.content);
+        this.drawable.update(new DrawableComposition(this.background, this.text));
     }
 
     private void focus() {
