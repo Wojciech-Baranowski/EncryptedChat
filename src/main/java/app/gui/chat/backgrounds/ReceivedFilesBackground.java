@@ -12,7 +12,7 @@ public class ReceivedFilesBackground {
     private final Drawable receivedFilesBodyAll;
     private final Drawable[] receivedFilesBody;
 
-    public ReceivedFilesBackground(Drawable background) {
+    ReceivedFilesBackground(Drawable background) {
         this.receivedFilesHeader = getDisplay().getDrawableFactory().makeRectangle(
                 background.getX() + 20,
                 background.getY() + 330,

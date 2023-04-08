@@ -17,7 +17,7 @@ public class InfoText {
     private final Text givenPasswordsDoNotMatch;
     private Text currentInfo;
 
-    public InfoText(Drawable background) {
+    InfoText(Drawable background) {
         this.background = background;
         this.registrationSuccess = getDisplay().getDrawableFactory().makeText(
                 "Successful registration!",

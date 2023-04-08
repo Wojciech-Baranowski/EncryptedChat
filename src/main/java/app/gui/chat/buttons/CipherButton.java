@@ -21,7 +21,7 @@ public class CipherButton {
     private RadioButton cbc;
     private RadioButton ebc;
 
-    public CipherButton(Drawable background) {
+    CipherButton(Drawable background) {
         Drawable cbcOffDrawable = getDisplay().getDrawableFactory().makeFramedRectangle(
                 background.getX() + 10,
                 background.getY() + 156,

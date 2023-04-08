@@ -11,7 +11,7 @@ public class InfoBackground {
     @Getter
     private final Drawable infoBackground;
 
-    public InfoBackground(Drawable background) {
+    InfoBackground(Drawable background) {
         this.infoBackground = getDisplay().getDrawableFactory().makeFramedRectangle(
                 background.getX() + 30,
                 background.getY() + 560,

@@ -15,7 +15,7 @@ public class DetachFileButton {
 
     private final SimpleButton removeFile;
 
-    public DetachFileButton(Drawable background) {
+    DetachFileButton(Drawable background) {
         Drawable drawable = getDisplay().getDrawableFactory().makeFramedRectangle(
                 background.getX() + 360,
                 background.getY(),

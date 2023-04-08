@@ -10,7 +10,7 @@ public class FileToSendBackground {
     private final Drawable fileToSendHeader;
     private final Drawable fileToSendBody;
 
-    public FileToSendBackground(Drawable background) {
+    FileToSendBackground(Drawable background) {
         this.fileToSendHeader = getDisplay().getDrawableFactory().makeRectangle(
                 background.getX() + 320,
                 background.getY() + 20,

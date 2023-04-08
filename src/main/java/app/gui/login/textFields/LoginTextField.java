@@ -10,7 +10,7 @@ public class LoginTextField {
     private final TextField userName;
     private final TextField password;
 
-    public LoginTextField(Drawable background) {
+    LoginTextField(Drawable background) {
         this.userName = new TextField(
                 background.getX() + 20,
                 background.getY() + 130,

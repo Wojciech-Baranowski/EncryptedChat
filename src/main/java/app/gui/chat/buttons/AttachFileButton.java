@@ -15,7 +15,7 @@ public class AttachFileButton {
 
     private final SimpleButton addFile;
 
-    public AttachFileButton(Drawable background) {
+    AttachFileButton(Drawable background) {
         Drawable drawable = getDisplay().getDrawableFactory().makeFramedRectangle(
                 background.getX() + 410,
                 background.getY(),

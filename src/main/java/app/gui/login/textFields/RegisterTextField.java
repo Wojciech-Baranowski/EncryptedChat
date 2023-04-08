@@ -11,7 +11,7 @@ public class RegisterTextField {
     private final TextField password;
     private final TextField repeatedPassword;
 
-    public RegisterTextField(Drawable background) {
+    RegisterTextField(Drawable background) {
         this.userName = new TextField(
                 background.getX() + 20,
                 background.getY() + 130,

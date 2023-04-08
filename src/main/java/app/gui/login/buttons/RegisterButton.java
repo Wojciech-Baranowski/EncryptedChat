@@ -14,9 +14,9 @@ import static app.engine.scene.SceneBean.getScene;
 
 public class RegisterButton {
 
-    private SimpleButton register;
+    private final SimpleButton register;
 
-    public RegisterButton(Drawable background) {
+    RegisterButton(Drawable background) {
         Drawable drawable = getDisplay().getDrawableFactory().makeFramedRectangle(
                 background.getX() + 185,
                 background.getY() + 385,

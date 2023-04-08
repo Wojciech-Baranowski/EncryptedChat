@@ -15,7 +15,7 @@ public class SendFileButton {
 
     private final SimpleButton sendFile;
 
-    public SendFileButton(Drawable background) {
+    SendFileButton(Drawable background) {
         Drawable drawable = getDisplay().getDrawableFactory().makeFramedRectangle(
                 background.getX() + 300,
                 background.getY() + 156,

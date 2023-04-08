@@ -11,7 +11,7 @@ public class LoginBackground {
     @Getter
     private final Drawable loginBackground;
 
-    public LoginBackground(Drawable background) {
+    LoginBackground(Drawable background) {
         this.loginBackground = getDisplay().getDrawableFactory().makeFramedRectangle(
                 background.getX() + 30,
                 background.getY() + 30,

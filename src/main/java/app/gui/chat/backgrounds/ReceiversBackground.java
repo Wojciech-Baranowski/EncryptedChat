@@ -11,7 +11,7 @@ public class ReceiversBackground {
     private final Drawable receiversAll;
     private final Drawable[] receivers;
 
-    public ReceiversBackground(Drawable background) {
+    ReceiversBackground(Drawable background) {
         this.receiversAll = getDisplay().getDrawableFactory().makeFramedRectangle(
                 background.getX() + 20,
                 background.getY() + 70,

@@ -9,7 +9,7 @@ public class UserNameBackground {
 
     private final Drawable userName;
 
-    public UserNameBackground(Drawable background) {
+    UserNameBackground(Drawable background) {
         this.userName = getDisplay().getDrawableFactory().makeFramedRectangle(
                 background.getX() + 20,
                 background.getY() + 20,

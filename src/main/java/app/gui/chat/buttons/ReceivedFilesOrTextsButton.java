@@ -20,11 +20,11 @@ public class ReceivedFilesOrTextsButton {
     private final Drawable background;
     private int numberOfReceivedFiles;
 
-    public ReceivedFilesOrTextsButton(Drawable background) {
-        this.receivedFiles = new SimpleButton[MAX_FILES_PER_PAGE];
-        this.background = background;
-        this.numberOfReceivedFiles = 0;
-    }
+   ReceivedFilesOrTextsButton(Drawable background) {
+       this.receivedFiles = new SimpleButton[MAX_FILES_PER_PAGE];
+       this.background = background;
+       this.numberOfReceivedFiles = 0;
+   }
 
     public void addReceivedFile(UserData senderUserData, FileData fileData) {
         Drawable drawable = getDisplay().getDrawableFactory().makeFramedRectangle(

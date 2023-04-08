@@ -14,9 +14,9 @@ import static app.engine.scene.SceneBean.getScene;
 
 public class LoginButton {
 
-    private SimpleButton login;
+    private final SimpleButton login;
 
-    public LoginButton(Drawable background) {
+    LoginButton(Drawable background) {
         Drawable drawable = getDisplay().getDrawableFactory().makeFramedRectangle(
                 background.getX() + 185,
                 background.getY() + 295,

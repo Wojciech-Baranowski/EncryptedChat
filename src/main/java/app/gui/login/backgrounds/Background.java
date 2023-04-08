@@ -11,7 +11,7 @@ public class Background {
     @Getter
     private final Drawable background;
 
-    public Background() {
+    Background() {
         this.background = getDisplay().getDrawableFactory().makeFramedRectangle(
                 0,
                 0,

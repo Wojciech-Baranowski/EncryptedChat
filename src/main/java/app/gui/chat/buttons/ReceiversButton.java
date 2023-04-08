@@ -25,7 +25,7 @@ public class ReceiversButton {
     private final Long[] receiversIds;
     private final Drawable background;
 
-    public ReceiversButton(Drawable background) {
+    ReceiversButton(Drawable background) {
         this.receivers = new RadioButton[MAX_CLIENTS - 1];
         this.receiversIds = new Long[MAX_CLIENTS - 1];
         this.receiversBundle = new RadioButtonBundle(List.of(), true);

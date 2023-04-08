@@ -11,7 +11,7 @@ public class MessageTextField {
     @Getter
     private TextField textField;
 
-    public MessageTextField(Drawable background) {
+    MessageTextField(Drawable background) {
         this.textField = new TextField(
                 background.getX() + 10,
                 background.getY() + 10,

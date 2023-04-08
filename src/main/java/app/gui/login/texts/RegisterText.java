@@ -13,7 +13,7 @@ public class RegisterText {
     private final Text password;
     private final Text repeatedPassword;
 
-    public RegisterText(Drawable background) {
+    RegisterText(Drawable background) {
         this.register = getDisplay().getDrawableFactory().makeText(
                 "Register:",
                 background.getX() + 15,

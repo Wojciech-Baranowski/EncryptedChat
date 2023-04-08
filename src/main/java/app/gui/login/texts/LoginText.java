@@ -12,7 +12,7 @@ public class LoginText {
     private final Text userName;
     private final Text password;
 
-    public LoginText(Drawable background) {
+    LoginText(Drawable background) {
         this.login = getDisplay().getDrawableFactory().makeText(
                 "Log in:",
                 background.getX() + 15,
