@@ -12,4 +12,8 @@ public class TrimmedStringFactory {
         return string;
     }
 
+    private TrimmedStringFactory() {
+
+    }
+
 }

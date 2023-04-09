@@ -19,4 +19,8 @@ public class BitUtils {
         return (number1 & number2) ^ (number2 & number3) ^ (number3 & number1);
     }
 
+    private BitUtils() {
+
+    }
+
 }

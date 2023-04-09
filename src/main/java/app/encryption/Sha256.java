@@ -1,8 +1,9 @@
-package app.utils;
+package app.encryption;
 
+import app.utils.ArrayConverter;
+import app.utils.BitUtils;
 import common.Serializer;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class Sha256 {
     private List<byte[]> getPreprocessedDataFragments(Object object) {
         byte[] dataToHash = Serializer.serialize(object);
         byte[] paddedData = addPadding(dataToHash);
-        return fragmentData(paddedData);
+        return ArrayConverter.byteArrayToByteFragmentList(paddedData, FRAGMENT_SIZE);
     }
 
     private byte[] addPadding(byte[] data) {
@@ -63,16 +64,6 @@ public class Sha256 {
         Arrays.fill(paddedData, dataLength + 1, paddedDataLength - bytePaddedDataLength.length, (byte) 0);
         System.arraycopy(bytePaddedDataLength, 0, paddedData, paddedDataLength - bytePaddedDataLength.length, bytePaddedDataLength.length);
         return paddedData;
-    }
-
-    private List<byte[]> fragmentData(byte[] data) {
-        List<byte[]> fragmentedData = new ArrayList<>();
-        for (int i = 0; i < data.length / FRAGMENT_SIZE; i++) {
-            byte[] fragment = new byte[FRAGMENT_SIZE];
-            System.arraycopy(data, i * FRAGMENT_SIZE, fragment, 0, FRAGMENT_SIZE);
-            fragmentedData.add(fragment);
-        }
-        return fragmentedData;
     }
 
     private void processFragment(byte[] fragment) {
