@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.*;
 
-import static common.CipherConfig.CipherType.EBC;
+import static app.encryption.aesCipher.CipherType.ECB;
 import static common.ConnectionConfig.PORT;
 import static common.message.MessageType.AUTHORIZATION;
 import static common.message.MessageType.USER_CONNECTION;
@@ -71,7 +71,7 @@ public class ServerController {
             //encrypt
             byte[] encryptedMessageType = Serializer.serialize(messageType);
             byte[] encryptedContent = Serializer.serialize(content);
-            Message message = new Message(clientHandler.getClientId(), EBC, encryptedMessageType, encryptedContent);
+            Message message = new Message(clientHandler.getClientId(), ECB, encryptedMessageType, encryptedContent);
             clientHandler.sendMessageToClient(message);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -86,7 +86,7 @@ public class ServerController {
             for (int i = 0; i < this.clientHandlers.size(); i++) {
                 ClientHandler otherClientHandler = this.clientHandlers.get(i);
                 if (otherClientHandler != clientHandler && (!authorized || this.clientIdToUserIdMap.get(otherClientHandler.getClientId()) != null)) {
-                    Message message = new Message(otherClientHandler.getClientId(), EBC, encryptedMessageType, encryptedContent);
+                    Message message = new Message(otherClientHandler.getClientId(), ECB, encryptedMessageType, encryptedContent);
                     otherClientHandler.sendMessageToClient(message);
                 }
             }

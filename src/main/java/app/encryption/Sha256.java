@@ -22,39 +22,28 @@ public class Sha256 {
     private static final int FRAGMENT_SIZE = 64;
     private static final int NUMBER_OF_HASH_BLOCKS = 8;
 
-    private final int[] hashBlocks;
-    private final byte[] hash;
-
-    public Sha256(Object object) {
-        this.hashBlocks = getInitializedHashBlocks();
-        this.hash = hash(object);
+    public static byte[] hash(Object object) {
+        int[] hashBlocks = getInitializedHashBlocks();
+        List<byte[]> fragments = getPreprocessedDataFragments(object);
+        for (byte[] fragment : fragments) {
+            processFragment(hashBlocks, fragment);
+        }
+        return ArrayConverter.intArrayToByteArray(hashBlocks);
     }
 
-    public byte[] get() {
-        return this.hash;
-    }
-
-    private int[] getInitializedHashBlocks() {
+    private static int[] getInitializedHashBlocks() {
         int[] hashBlocks = new int[NUMBER_OF_HASH_BLOCKS];
         System.arraycopy(INITIAL_HASH_BLOCK_VALUES, 0, hashBlocks, 0, NUMBER_OF_HASH_BLOCKS);
         return hashBlocks;
     }
 
-    private byte[] hash(Object object) {
-        List<byte[]> fragments = getPreprocessedDataFragments(object);
-        for (byte[] fragment : fragments) {
-            processFragment(fragment);
-        }
-        return ArrayConverter.intArrayToByteArray(this.hashBlocks);
-    }
-
-    private List<byte[]> getPreprocessedDataFragments(Object object) {
+    private static List<byte[]> getPreprocessedDataFragments(Object object) {
         byte[] dataToHash = Serializer.serialize(object);
         byte[] paddedData = addPadding(dataToHash);
         return ArrayConverter.byteArrayToByteFragmentList(paddedData, FRAGMENT_SIZE);
     }
 
-    private byte[] addPadding(byte[] data) {
+    private static byte[] addPadding(byte[] data) {
         int dataLength = data.length;
         int paddedDataLength = dataLength - (dataLength % FRAGMENT_SIZE) + FRAGMENT_SIZE;
         byte[] bytePaddedDataLength = ArrayConverter.intToByteArray(paddedDataLength);
@@ -66,17 +55,17 @@ public class Sha256 {
         return paddedData;
     }
 
-    private void processFragment(byte[] fragment) {
+    private static void processFragment(int[] hashBlocks, byte[] fragment) {
         int[] words = getInitializedWords(fragment);
         int[] extendedWords = getExtendedWords(words);
-        int[] currentHashBlocks = Arrays.copyOf(this.hashBlocks, NUMBER_OF_HASH_BLOCKS);
+        int[] currentHashBlocks = Arrays.copyOf(hashBlocks, NUMBER_OF_HASH_BLOCKS);
         compressHashBlocks(currentHashBlocks, extendedWords);
         for (int i = 0; i < NUMBER_OF_HASH_BLOCKS; i++) {
-            this.hashBlocks[i] += currentHashBlocks[i];
+            hashBlocks[i] += currentHashBlocks[i];
         }
     }
 
-    private int[] getInitializedWords(byte[] fragment) {
+    private static int[] getInitializedWords(byte[] fragment) {
         int[] convertedFragment = ArrayConverter.byteArrayToIntArray(fragment);
         int[] words = new int[FRAGMENT_SIZE];
         System.arraycopy(convertedFragment, 0, words, 0, convertedFragment.length);
@@ -84,7 +73,7 @@ public class Sha256 {
         return words;
     }
 
-    private int[] getExtendedWords(int[] words) {
+    private static int[] getExtendedWords(int[] words) {
         for (int i = FRAGMENT_SIZE / Integer.BYTES; i < FRAGMENT_SIZE; i++) {
             int s0 = (BitUtils.rightRotate(words[i - 15], 7)) ^ (BitUtils.rightRotate(words[i - 15], 18)) ^ (BitUtils.rightShift(words[i - 15], 3));
             int s1 = (BitUtils.rightRotate(words[i - 2], 17)) ^ (BitUtils.rightRotate(words[i - 2], 19)) ^ (BitUtils.rightShift(words[i - 2], 10));
@@ -93,7 +82,7 @@ public class Sha256 {
         return words;
     }
 
-    private void compressHashBlocks(int[] hashBlocks, int[] words) {
+    private static void compressHashBlocks(int[] hashBlocks, int[] words) {
         for (int i = 0; i < FRAGMENT_SIZE; i++) {
             int s0 = BitUtils.rightRotate(hashBlocks[0], 2) ^ BitUtils.rightRotate(hashBlocks[0], 13) ^ BitUtils.rightRotate(hashBlocks[0], 22);
             int s1 = BitUtils.rightRotate(hashBlocks[4], 6) ^ BitUtils.rightRotate(hashBlocks[4], 11) ^ BitUtils.rightRotate(hashBlocks[4], 25);
@@ -109,4 +98,9 @@ public class Sha256 {
             hashBlocks[0] = temp1 + temp2;
         }
     }
+
+    private Sha256() {
+
+    }
+
 }

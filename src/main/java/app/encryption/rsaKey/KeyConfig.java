@@ -1,4 +1,4 @@
-package app.encryption.key;
+package app.encryption.rsaKey;
 
 public class KeyConfig {
 

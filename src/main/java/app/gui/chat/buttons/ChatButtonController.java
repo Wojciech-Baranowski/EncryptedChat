@@ -1,6 +1,6 @@
 package app.gui.chat.buttons;
 
-import common.CipherConfig;
+import app.encryption.aesCipher.CipherType;
 import common.transportObjects.FileData;
 import common.transportObjects.UserData;
 
@@ -33,7 +33,7 @@ public class ChatButtonController {
         return chatButtonController;
     }
 
-    public CipherConfig.CipherType getCipherType() {
+    public CipherType getCipherType() {
         return this.cipherButton.getCipherType();
     }
 

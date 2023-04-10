@@ -1,4 +1,4 @@
-package app.encryption.key;
+package app.encryption.rsaKey;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.file.Paths;
 
-import static app.encryption.key.KeyConfig.*;
-import static app.encryption.key.KeyType.PRIVATE;
+import static app.encryption.rsaKey.KeyConfig.*;
+import static app.encryption.rsaKey.KeyType.PRIVATE;
 
 
 public class Key {

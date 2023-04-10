@@ -16,8 +16,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import static app.encryption.aesCipher.CipherType.ECB;
 import static app.gui.chat.buttons.ChatButtonController.getChatButtonController;
-import static common.CipherConfig.CipherType.EBC;
 
 public class ConnectionController {
 
@@ -88,7 +88,7 @@ public class ConnectionController {
             byte[] encryptedContent = Serializer.serialize(content);
             Message message = Message.builder()
                     .receiverId(receiverId)
-                    .cipherType(receiverId == null ? EBC : getChatButtonController().getCipherType())
+                    .cipherType(receiverId == null ? ECB : getChatButtonController().getCipherType())
                     .messageType(encryptedMessageType)
                     .content(encryptedContent)
                     .build();
@@ -109,7 +109,7 @@ public class ConnectionController {
                 byte[] encryptedContent = Serializer.serialize(content);
                 Message message = Message.builder()
                         .receiverId(receiverId)
-                        .cipherType(receiverId == null ? EBC : getChatButtonController().getCipherType())
+                        .cipherType(receiverId == null ? ECB : getChatButtonController().getCipherType())
                         .messageType(encryptedMessageType)
                         .content(encryptedContent)
                         .build();

@@ -1,6 +1,6 @@
 package common.message;
 
-import common.CipherConfig;
+import app.encryption.aesCipher.CipherType;
 import lombok.*;
 
 import java.io.Serializable;
@@ -13,7 +13,7 @@ import java.io.Serializable;
 public class Message implements Serializable {
 
     private Long receiverId;
-    private CipherConfig.CipherType cipherType;
+    private CipherType cipherType;
     private byte[] messageType;
     private byte[] content;
 
