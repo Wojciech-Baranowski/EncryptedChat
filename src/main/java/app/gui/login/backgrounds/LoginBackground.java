@@ -14,9 +14,9 @@ public class LoginBackground {
     LoginBackground(Drawable background) {
         this.loginBackground = getDisplay().getDrawableFactory().makeFramedRectangle(
                 background.getX() + 30,
-                background.getY() + 30,
+                background.getY() + 93,
                 355,
-                500,
+                455,
                 2,
                 "gray",
                 "lighterBlue"

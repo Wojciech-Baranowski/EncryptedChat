@@ -28,21 +28,7 @@ public class TextField implements Visual, Interactive, InputObserver {
     private String content;
     private boolean shift;
 
-    public TextField(int x, int y, int w, int h, int textOffsetX, int textOffsetY,
-                     String backgroundColor, String font, String fontColor, boolean masked) {
-        this.background = getDisplay().getDrawableFactory().makeRectangle(x, y, w, h, backgroundColor);
-        this.text = getDisplay().getDrawableFactory().makeText("", x + textOffsetX, y + textOffsetY, font, fontColor);
-        this.drawable = new DrawableComposition(this.background, this.text);
-        this.textOffsetX = textOffsetX;
-        this.textOffsetY = textOffsetY;
-        this.content = "";
-        this.shift = false;
-        this.masked = masked;
-        this.limit = Integer.MAX_VALUE;
-    }
-
-    public TextField(int x, int y, int w, int h, int textOffsetX, int textOffsetY,
-                     String backgroundColor, String font, String fontColor, boolean masked, int limit) {
+    public TextField(int x, int y, int w, int h, int textOffsetX, int textOffsetY, String backgroundColor, String font, String fontColor, boolean masked, int limit) {
         this.background = getDisplay().getDrawableFactory().makeRectangle(x, y, w, h, backgroundColor);
         this.text = getDisplay().getDrawableFactory().makeText("", x + textOffsetX, y + textOffsetY, font, fontColor);
         this.drawable = new DrawableComposition(this.background, this.text);
@@ -52,6 +38,10 @@ public class TextField implements Visual, Interactive, InputObserver {
         this.shift = false;
         this.masked = masked;
         this.limit = limit;
+    }
+
+    public TextField(int x, int y, int w, int h, int textOffsetX, int textOffsetY, String backgroundColor, String font, String fontColor, boolean masked) {
+        this(x, y, w, h, textOffsetX, textOffsetY, backgroundColor, font, fontColor, masked, Integer.MAX_VALUE);
     }
 
     @Override

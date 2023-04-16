@@ -26,20 +26,9 @@ public class Rsa {
     private static Key privateKey;
     private static Key publicKey;
 
-    public static void Initialize() {
-        if (keysExists()) {
-            privateKey = new Key(PRIVATE);
-            publicKey = new Key(PUBLIC);
-        } else {
-            BigInteger prime1 = LargePrimeGenerator.generatePrime(KEY_BIT_SIZE / 2 - 1);
-            BigInteger prime2 = LargePrimeGenerator.generatePrime(KEY_BIT_SIZE / 2 - 1);
-            BigInteger modulo = prime1.multiply(prime2);
-            BigInteger eulerPhi = (prime1.subtract(BigInteger.ONE)).multiply(prime2.subtract(BigInteger.ONE));
-            BigInteger publicExponent = calculatePublicExponent(eulerPhi);
-            BigInteger privateExponent = calculatePrivateExponent(publicExponent, eulerPhi);
-            privateKey = new Key(privateExponent, modulo, PRIVATE);
-            publicKey = new Key(publicExponent, modulo, PUBLIC);
-        }
+    public static void Initialize(byte[] key) {
+        privateKey = new Key(PRIVATE, key);
+        publicKey = new Key(PUBLIC, key);
     }
 
     public static byte[] encryptMessage(byte[] message) {
@@ -69,6 +58,15 @@ public class Rsa {
             decryptedFragmentedMessage.add(unpaddedMessage);
         }
         return ArrayConverter.byteFragmentListToByteArray(decryptedFragmentedMessage);
+    }
+
+    public static boolean isKeyValid(byte[] key) {
+        try {
+            new Key(PRIVATE, key);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private static boolean keysExists() {
@@ -101,6 +99,20 @@ public class Rsa {
 
     private Rsa() {
 
+    }
+
+    public static void main(String[] args) {
+        if (!keysExists()) {
+            byte[] passwordHash = Sha256.hash(args[0]);
+            BigInteger prime1 = LargePrimeGenerator.generatePrime(KEY_BIT_SIZE / 2 - 1);
+            BigInteger prime2 = LargePrimeGenerator.generatePrime(KEY_BIT_SIZE / 2 - 1);
+            BigInteger modulo = prime1.multiply(prime2);
+            BigInteger eulerPhi = (prime1.subtract(BigInteger.ONE)).multiply(prime2.subtract(BigInteger.ONE));
+            BigInteger publicExponent = calculatePublicExponent(eulerPhi);
+            BigInteger privateExponent = calculatePrivateExponent(publicExponent, eulerPhi);
+            privateKey = new Key(privateExponent, modulo, PRIVATE, passwordHash);
+            publicKey = new Key(publicExponent, modulo, PUBLIC, passwordHash);
+        }
     }
 
 }

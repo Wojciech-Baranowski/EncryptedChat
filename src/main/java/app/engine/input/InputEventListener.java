@@ -7,7 +7,7 @@ import java.awt.event.*;
 public class InputEventListener implements KeyListener, MouseListener, MouseMotionListener {
 
     private static final long MOUSE_MOVE_INFO_INTERVAL = 50;
-    private long lastMouseMoveTimestamp;
+    public long lastMouseMoveTimestamp;
 
     private SynchronizedCollection<InputEvent> events;
 

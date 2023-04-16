@@ -6,6 +6,7 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.HashMap;
@@ -22,6 +23,11 @@ public class Aes {
     public static void sessionInitialize(Long sessionPartnerId) {
         sessionKeyMap.put(sessionPartnerId, generateKey());
         initialVectorMap.put(sessionPartnerId, generateInitialVector());
+    }
+
+    public static void sessionInitialize(Long sessionPartnerId, SecretKey sessionKey, IvParameterSpec initialVector) {
+        sessionKeyMap.put(sessionPartnerId, sessionKey);
+        initialVectorMap.put(sessionPartnerId, initialVector);
     }
 
     public static void sessionDestroy(Long sessionPartnerId) {
@@ -43,6 +49,18 @@ public class Aes {
         }
     }
 
+    public static byte[] encrypt(byte[] message, CipherType cipherType, SecretKey key) {
+        try {
+            Cipher cipher = Cipher.getInstance(cipherType.getCipherName());
+            if (cipherType == ECB) {
+                cipher.init(Cipher.ENCRYPT_MODE, key);
+            }
+            return cipher.doFinal(message);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static byte[] decrypt(Long sessionPartnerId, byte[] message, CipherType cipherType) {
         try {
             Cipher cipher = Cipher.getInstance(cipherType.getCipherName());
@@ -55,6 +73,30 @@ public class Aes {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static byte[] decrypt(byte[] message, CipherType cipherType, SecretKey key) {
+        try {
+            Cipher cipher = Cipher.getInstance(cipherType.getCipherName());
+            if (cipherType == ECB) {
+                cipher.init(Cipher.DECRYPT_MODE, key);
+            }
+            return cipher.doFinal(message);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public SecretKey getSessionKeyBySessionPartnerId(Long sessionPartnerId) {
+        return sessionKeyMap.get(sessionPartnerId);
+    }
+
+    public IvParameterSpec getInitialVectorBySessionPartnerId(Long sessionPartnerId) {
+        return initialVectorMap.get(sessionPartnerId);
+    }
+
+    public static SecretKey getKey(byte[] key) {
+        return new SecretKeySpec(key, "AES");
     }
 
     private static SecretKey generateKey() {

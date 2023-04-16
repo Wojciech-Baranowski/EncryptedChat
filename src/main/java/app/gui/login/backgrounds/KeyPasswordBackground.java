@@ -6,22 +6,22 @@ import lombok.Getter;
 import static app.engine.display.DisplayBean.getDisplay;
 import static app.engine.scene.SceneBean.getScene;
 
-public class RegisterBackground {
+public class KeyPasswordBackground {
 
     @Getter
-    private final Drawable registerBackground;
+    private final Drawable keyPasswordBackground;
 
-    RegisterBackground(Drawable background) {
-        this.registerBackground = getDisplay().getDrawableFactory().makeFramedRectangle(
+    KeyPasswordBackground(Drawable background) {
+        this.keyPasswordBackground = getDisplay().getDrawableFactory().makeFramedRectangle(
                 background.getX() + 415,
-                background.getY() + 93,
+                background.getY() + 21,
                 355,
-                455,
+                54,
                 2,
                 "gray",
                 "lighterBlue"
         );
-        getScene().addObjectHigherThan(this.registerBackground, background);
+        getScene().addObjectHigherThan(this.keyPasswordBackground, background);
     }
 
 }

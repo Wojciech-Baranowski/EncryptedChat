@@ -1,14 +1,18 @@
 package app.encryption.rsaKey;
 
+import app.encryption.Aes;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import common.Serializer;
 import lombok.Getter;
 
+import javax.crypto.SecretKey;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.file.Paths;
 
+import static app.encryption.aesCipher.CipherType.ECB;
 import static app.encryption.rsaKey.KeyConfig.*;
 import static app.encryption.rsaKey.KeyType.PRIVATE;
 
@@ -20,38 +24,44 @@ public class Key {
     @JsonIgnore
     private final ObjectMapper objectMapper;
     @Getter
-    private final BigInteger exponent;
+    private BigInteger exponent;
     @Getter
-    private final BigInteger modulo;
+    private BigInteger modulo;
 
     public Key() {
         this.file = null;
         this.objectMapper = null;
-        this.exponent = null;
-        this.modulo = null;
     }
 
-    public Key(KeyType keyType) {
+    public Key(KeyType keyType, byte[] encryptionByteKey) {
         try {
+            SecretKey encryptionKey = Aes.getKey(encryptionByteKey);
             this.file = Paths.get(keyType == PRIVATE ? PATH_TO_USER_PRIVATE_KEY : PATH_TO_USER_PUBLIC_KEY).toFile();
             this.objectMapper = new ObjectMapper();
-            Key fileKey = this.objectMapper.readValue(this.file, Key.class);
-            this.exponent = fileKey.getExponent();
-            this.modulo = fileKey.getModulo();
+            EncryptedKey encryptedKey = this.objectMapper.readValue(this.file, EncryptedKey.class);
+            byte[] byteExponent = Aes.decrypt(encryptedKey.getExponent(), ECB, encryptionKey);
+            byte[] byteModulo = Aes.decrypt(encryptedKey.getModulo(), ECB, encryptionKey);
+            this.exponent = Serializer.deserialize(byteExponent);
+            this.modulo = Serializer.deserialize(byteModulo);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public Key(BigInteger exponent, BigInteger modulo, KeyType keyType) {
+    public Key(BigInteger exponent, BigInteger modulo, KeyType keyType, byte[] encryptionByteKey) {
+        SecretKey encryptionKey = Aes.getKey(encryptionByteKey);
+        byte[] byteExponent = Serializer.serialize(exponent);
+        byte[] byteModulo = Serializer.serialize(modulo);
         this.file = Paths.get(keyType == PRIVATE ? PATH_TO_USER_PRIVATE_KEY : PATH_TO_USER_PUBLIC_KEY).toFile();
         this.objectMapper = new ObjectMapper();
-        this.exponent = exponent;
-        this.modulo = modulo;
+        EncryptedKey encryptedKey = EncryptedKey.builder()
+                .exponent(Aes.encrypt(byteExponent, ECB, encryptionKey))
+                .modulo(Aes.encrypt(byteModulo, ECB, encryptionKey))
+                .build();
         if (!this.file.exists()) {
             createDirectories(keyType);
         }
-        saveKey();
+        saveKey(encryptedKey);
     }
 
     private void createDirectories(KeyType keyType) {
@@ -70,9 +80,9 @@ public class Key {
         }
     }
 
-    private void saveKey() {
+    private void saveKey(EncryptedKey encryptedKey) {
         try {
-            this.objectMapper.writeValue(this.file, this);
+            this.objectMapper.writeValue(this.file, encryptedKey);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

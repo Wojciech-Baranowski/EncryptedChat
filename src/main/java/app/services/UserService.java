@@ -1,6 +1,8 @@
 package app.services;
 
 import app.connection.ConnectionController;
+import app.encryption.Rsa;
+import app.encryption.Sha256;
 import common.transportObjects.UserData;
 import common.transportObjects.UserDataProcessResponseType;
 
@@ -37,7 +39,8 @@ public class UserService {
         String userName = getLoginTextFieldController().getRegisterUserName();
         String password = getLoginTextFieldController().getRegisterPassword();
         String repeatedPassword = getLoginTextFieldController().getRegisterRepeatedPassword();
-        if (isRegistrationUserDataValid(userName, password, repeatedPassword)) {
+        String keyPassword = getLoginTextFieldController().getKeyPassword();
+        if (isRegistrationUserDataValid(userName, password, repeatedPassword, keyPassword)) {
             //hash
             ConnectionController.getLoginConnectionController().prepareAndSendRegisterRequestMessage(userName, password);
         }
@@ -46,7 +49,8 @@ public class UserService {
     public void loginUserRequest() {
         String userName = getLoginTextFieldController().getLoginUserName();
         String password = getLoginTextFieldController().getLoginPassword();
-        if (isLoginUserDataValid(userName)) {
+        String keyPassword = getLoginTextFieldController().getKeyPassword();
+        if (isLoginUserDataValid(userName, keyPassword)) {
             //hash
             ConnectionController.getLoginConnectionController().prepareAndSendLoginRequestMessage(userName, password);
         }
@@ -93,7 +97,7 @@ public class UserService {
         ConnectionController.getChatConnectionController().prepareAndSendAllUserConnectionRequestMessage();
     }
 
-    private boolean isRegistrationUserDataValid(String userName, String password, String repeatedPassword) {
+    private boolean isRegistrationUserDataValid(String userName, String password, String repeatedPassword, String keyPassword) {
         if (userName.equals("")) {
             getLoginTextController().setUserNameIsEmptyError();
             return false;
@@ -102,13 +106,20 @@ public class UserService {
             getLoginTextController().setGivenPasswordsDoNotMatchError();
             return false;
         }
+        if (!Rsa.isKeyValid(Sha256.hash(keyPassword))) {
+            getLoginTextController().setIncorrectKeyPasswordError();
+            return false;
+        }
         return true;
     }
 
-    private boolean isLoginUserDataValid(String userName) {
-
+    private boolean isLoginUserDataValid(String userName, String keyPassword) {
         if (userName.equals("")) {
             getLoginTextController().setUserNameIsEmptyError();
+            return false;
+        }
+        if (!Rsa.isKeyValid(Sha256.hash(keyPassword))) {
+            getLoginTextController().setIncorrectKeyPasswordError();
             return false;
         }
         return true;

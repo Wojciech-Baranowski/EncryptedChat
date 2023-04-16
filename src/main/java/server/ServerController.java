@@ -83,8 +83,7 @@ public class ServerController {
             //encrypt
             byte[] encryptedMessageType = Serializer.serialize(messageType);
             byte[] encryptedContent = Serializer.serialize(content);
-            for (int i = 0; i < this.clientHandlers.size(); i++) {
-                ClientHandler otherClientHandler = this.clientHandlers.get(i);
+            for (ClientHandler otherClientHandler : this.clientHandlers) {
                 if (otherClientHandler != clientHandler && (!authorized || this.clientIdToUserIdMap.get(otherClientHandler.getClientId()) != null)) {
                     Message message = new Message(otherClientHandler.getClientId(), ECB, encryptedMessageType, encryptedContent);
                     otherClientHandler.sendMessageToClient(message);
