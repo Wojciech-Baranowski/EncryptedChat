@@ -11,9 +11,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class SessionMessage implements Serializable {
+public class ServerSessionMessage implements Serializable {
 
-    private Long senderId;
     private SecretKey sessionKey;
     private InitialVector initialVector;
 

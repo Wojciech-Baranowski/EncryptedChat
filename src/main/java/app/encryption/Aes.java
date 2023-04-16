@@ -1,11 +1,11 @@
 package app.encryption;
 
 import app.encryption.aesCipher.CipherType;
+import app.encryption.aesCipher.InitialVector;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -18,14 +18,14 @@ public class Aes {
 
     private static final int KEY_SIZE = 256;
     public static final Map<Long, SecretKey> sessionKeyMap = new HashMap<>();
-    public static final Map<Long, IvParameterSpec> initialVectorMap = new HashMap<>();
+    public static final Map<Long, InitialVector> initialVectorMap = new HashMap<>();
 
     public static void sessionInitialize(Long sessionPartnerId) {
         sessionKeyMap.put(sessionPartnerId, generateKey());
         initialVectorMap.put(sessionPartnerId, generateInitialVector());
     }
 
-    public static void sessionInitialize(Long sessionPartnerId, SecretKey sessionKey, IvParameterSpec initialVector) {
+    public static void sessionInitialize(Long sessionPartnerId, SecretKey sessionKey, InitialVector initialVector) {
         sessionKeyMap.put(sessionPartnerId, sessionKey);
         initialVectorMap.put(sessionPartnerId, initialVector);
     }
@@ -41,7 +41,7 @@ public class Aes {
             if (cipherType == ECB) {
                 cipher.init(Cipher.ENCRYPT_MODE, sessionKeyMap.get(sessionPartnerId));
             } else {
-                cipher.init(Cipher.ENCRYPT_MODE, sessionKeyMap.get(sessionPartnerId), initialVectorMap.get(sessionPartnerId));
+                cipher.init(Cipher.ENCRYPT_MODE, sessionKeyMap.get(sessionPartnerId), initialVectorMap.get(sessionPartnerId).getInitialVector());
             }
             return cipher.doFinal(message);
         } catch (Exception e) {
@@ -67,7 +67,7 @@ public class Aes {
             if (cipherType == ECB) {
                 cipher.init(Cipher.DECRYPT_MODE, sessionKeyMap.get(sessionPartnerId));
             } else {
-                cipher.init(Cipher.DECRYPT_MODE, sessionKeyMap.get(sessionPartnerId), initialVectorMap.get(sessionPartnerId));
+                cipher.init(Cipher.DECRYPT_MODE, sessionKeyMap.get(sessionPartnerId), initialVectorMap.get(sessionPartnerId).getInitialVector());
             }
             return cipher.doFinal(message);
         } catch (Exception e) {
@@ -87,11 +87,11 @@ public class Aes {
         }
     }
 
-    public SecretKey getSessionKeyBySessionPartnerId(Long sessionPartnerId) {
+    public static SecretKey getSessionKeyBySessionPartnerId(Long sessionPartnerId) {
         return sessionKeyMap.get(sessionPartnerId);
     }
 
-    public IvParameterSpec getInitialVectorBySessionPartnerId(Long sessionPartnerId) {
+    public static InitialVector getInitialVectorBySessionPartnerId(Long sessionPartnerId) {
         return initialVectorMap.get(sessionPartnerId);
     }
 
@@ -109,10 +109,10 @@ public class Aes {
         }
     }
 
-    private static IvParameterSpec generateInitialVector() {
-        byte[] iv = new byte[16];
-        new SecureRandom().nextBytes(iv);
-        return new IvParameterSpec(iv);
+    private static InitialVector generateInitialVector() {
+        byte[] initialVector = new byte[16];
+        new SecureRandom().nextBytes(initialVector);
+        return new InitialVector(initialVector);
     }
 
     private Aes() {

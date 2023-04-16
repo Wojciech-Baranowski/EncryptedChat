@@ -1,12 +1,12 @@
 package app.services;
 
 import app.connection.ConnectionController;
-import app.encryption.Rsa;
 import app.encryption.Sha256;
 import common.transportObjects.UserData;
 import common.transportObjects.UserDataProcessResponseType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,20 +39,18 @@ public class UserService {
         String userName = getLoginTextFieldController().getRegisterUserName();
         String password = getLoginTextFieldController().getRegisterPassword();
         String repeatedPassword = getLoginTextFieldController().getRegisterRepeatedPassword();
-        String keyPassword = getLoginTextFieldController().getKeyPassword();
-        if (isRegistrationUserDataValid(userName, password, repeatedPassword, keyPassword)) {
-            //hash
-            ConnectionController.getLoginConnectionController().prepareAndSendRegisterRequestMessage(userName, password);
+        if (isRegistrationUserDataValid(userName, password, repeatedPassword)) {
+            String passwordHash = Arrays.toString(Sha256.hash(password));
+            ConnectionController.getLoginConnectionController().prepareAndSendRegisterRequestMessage(userName, passwordHash);
         }
     }
 
     public void loginUserRequest() {
         String userName = getLoginTextFieldController().getLoginUserName();
         String password = getLoginTextFieldController().getLoginPassword();
-        String keyPassword = getLoginTextFieldController().getKeyPassword();
-        if (isLoginUserDataValid(userName, keyPassword)) {
-            //hash
-            ConnectionController.getLoginConnectionController().prepareAndSendLoginRequestMessage(userName, password);
+        if (isLoginUserDataValid(userName)) {
+            String passwordHash = Arrays.toString(Sha256.hash(password));
+            ConnectionController.getLoginConnectionController().prepareAndSendLoginRequestMessage(userName, passwordHash);
         }
     }
 
@@ -97,7 +95,7 @@ public class UserService {
         ConnectionController.getChatConnectionController().prepareAndSendAllUserConnectionRequestMessage();
     }
 
-    private boolean isRegistrationUserDataValid(String userName, String password, String repeatedPassword, String keyPassword) {
+    private boolean isRegistrationUserDataValid(String userName, String password, String repeatedPassword) {
         if (userName.equals("")) {
             getLoginTextController().setUserNameIsEmptyError();
             return false;
@@ -106,20 +104,12 @@ public class UserService {
             getLoginTextController().setGivenPasswordsDoNotMatchError();
             return false;
         }
-        if (!Rsa.isKeyValid(Sha256.hash(keyPassword))) {
-            getLoginTextController().setIncorrectKeyPasswordError();
-            return false;
-        }
         return true;
     }
 
-    private boolean isLoginUserDataValid(String userName, String keyPassword) {
+    private boolean isLoginUserDataValid(String userName) {
         if (userName.equals("")) {
             getLoginTextController().setUserNameIsEmptyError();
-            return false;
-        }
-        if (!Rsa.isKeyValid(Sha256.hash(keyPassword))) {
-            getLoginTextController().setIncorrectKeyPasswordError();
             return false;
         }
         return true;

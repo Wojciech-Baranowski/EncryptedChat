@@ -1,5 +1,8 @@
 package server;
 
+import app.encryption.Aes;
+import app.encryption.Rsa;
+import app.encryption.Sha256;
 import common.Serializer;
 import common.message.*;
 import common.transportObjects.UserData;
@@ -12,8 +15,7 @@ import java.util.*;
 
 import static app.encryption.aesCipher.CipherType.ECB;
 import static common.ConnectionConfig.PORT;
-import static common.message.MessageType.AUTHORIZATION;
-import static common.message.MessageType.USER_CONNECTION;
+import static common.message.MessageType.*;
 import static common.transportObjects.UserDataProcessResponseType.*;
 
 public class ServerController {
@@ -27,39 +29,42 @@ public class ServerController {
     private final UserDataBase userDataBase;
 
     public static void main(String[] args) {
-        getServerController();
+        getServerController(args[0]);
     }
 
-    private ServerController() {
+    private ServerController(String keyPassword) {
         try {
             this.socket = new ServerSocket(PORT);
             this.clientIdToUserIdMap = new HashMap<>();
             this.userIdToCilentIdMap = new HashMap<>();
             this.clientHandlers = new ArrayList<>();
             this.userDataBase = new UserDataBase();
-            handleClients();
+            byte[] keyPasswordHash = Sha256.hash(keyPassword);
+            if (Rsa.isKeyValid(keyPasswordHash)) {
+                Rsa.initialize(keyPasswordHash);
+                handleClients();
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static ServerController getServerController() {
+    public static ServerController getServerController(String keyPassword) {
         if (serverController == null) {
-            serverController = new ServerController();
+            serverController = new ServerController(keyPassword);
         }
         return serverController;
     }
 
     public void handleMessage(ClientHandler clientHandler, Message message) {
         try {
-            //decrypt
-            byte[] decryptedMessageType = message.getMessageType();
-            byte[] decryptedContent = message.getContent();
-            MessageType messageType = Serializer.deserialize(decryptedMessageType);
+            MessageType messageType = Serializer.deserialize(message.getMessageType());
             switch (messageType) {
-                case REGISTRATION_REQUEST -> processRegistrationMessage(clientHandler, decryptedContent);
-                case LOGIN_REQUEST -> processLoginMessage(clientHandler, decryptedContent);
+                case REGISTRATION_REQUEST -> processRegistrationMessage(clientHandler, message.getContent());
+                case LOGIN_REQUEST -> processLoginMessage(clientHandler, message.getContent());
                 case ALL_USER_CONNECTION_REQUEST -> processAllUserConnectionMessage(clientHandler);
+                case SERVER_HANDSHAKE -> processHandshakeMessage(clientHandler, message.getContent());
+                case SERVER_SESSION -> processSessionMessage(clientHandler, message.getContent());
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -68,10 +73,9 @@ public class ServerController {
 
     public synchronized void sendMessageToClient(ClientHandler clientHandler, MessageType messageType, Object content) {
         try {
-            //encrypt
-            byte[] encryptedMessageType = Serializer.serialize(messageType);
-            byte[] encryptedContent = Serializer.serialize(content);
-            Message message = new Message(clientHandler.getClientId(), ECB, encryptedMessageType, encryptedContent);
+            byte[] byteMessageType = Serializer.serialize(messageType);
+            byte[] byteEncryptedContent = Serializer.serialize(content);
+            Message message = new Message(clientHandler.getClientId(), null, ECB, byteMessageType, byteEncryptedContent);
             clientHandler.sendMessageToClient(message);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -80,12 +84,11 @@ public class ServerController {
 
     public synchronized void broadcastMessage(ClientHandler clientHandler, MessageType messageType, Object content, boolean authorized) {
         try {
-            //encrypt
-            byte[] encryptedMessageType = Serializer.serialize(messageType);
-            byte[] encryptedContent = Serializer.serialize(content);
+            byte[] byteMessageType = Serializer.serialize(messageType);
+            byte[] byteContent = Serializer.serialize(content);
             for (ClientHandler otherClientHandler : this.clientHandlers) {
                 if (otherClientHandler != clientHandler && (!authorized || this.clientIdToUserIdMap.get(otherClientHandler.getClientId()) != null)) {
-                    Message message = new Message(otherClientHandler.getClientId(), ECB, encryptedMessageType, encryptedContent);
+                    Message message = new Message(otherClientHandler.getClientId(), null, ECB, byteMessageType, byteContent);
                     otherClientHandler.sendMessageToClient(message);
                 }
             }
@@ -144,6 +147,18 @@ public class ServerController {
                 }
             }
         }
+    }
+
+    public void processHandshakeMessage(ClientHandler clientHandler, byte[] content) {
+        ServerHandshakeMessage handshakeMessage = Serializer.deserialize(content);
+        Rsa.addPublicKeyBySessionPartnerId(clientHandler.getClientId(), handshakeMessage.getPublicKey());
+        ServerHandshakeMessage serverHandshakeMessage = new ServerHandshakeMessage(Rsa.getPublicKey());
+        sendMessageToClient(clientHandler, SERVER_HANDSHAKE, serverHandshakeMessage);
+    }
+
+    public void processSessionMessage(ClientHandler clientHandler, byte[] content) {
+        ServerSessionMessage sessionMessage = Serializer.deserialize(content);
+        Aes.sessionInitialize(clientHandler.getClientId(), sessionMessage.getSessionKey(), sessionMessage.getInitialVector());
     }
 
     public synchronized Long mapClientIdToUserId(Long clientId) {

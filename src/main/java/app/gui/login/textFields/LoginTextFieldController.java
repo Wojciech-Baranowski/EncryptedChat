@@ -8,12 +8,10 @@ public class LoginTextFieldController {
 
     private final LoginTextField loginTextField;
     private final RegisterTextField registerTextField;
-    private final KeyPasswordTextField keyPasswordTextField;
 
     private LoginTextFieldController() {
         this.loginTextField = new LoginTextField(getLoginBackgroundController().getLoginBackground());
         this.registerTextField = new RegisterTextField(getLoginBackgroundController().getRegisterBackground());
-        this.keyPasswordTextField = new KeyPasswordTextField(getLoginBackgroundController().getBackground());
     }
 
     public static LoginTextFieldController getLoginTextFieldController() {
@@ -41,10 +39,6 @@ public class LoginTextFieldController {
 
     public String getRegisterRepeatedPassword() {
         return this.registerTextField.getRepeatedPassword();
-    }
-
-    public String getKeyPassword() {
-        return this.keyPasswordTextField.getKeyPassword();
     }
 
 }

@@ -15,7 +15,6 @@ public class InfoText {
     private final Text userNameAlreadyExistsError;
     private final Text incorrectPasswordError;
     private final Text givenPasswordsDoNotMatch;
-    private final Text incorrectKeyPasswordError;
     private Text currentInfo;
 
     InfoText(Drawable background) {
@@ -50,13 +49,6 @@ public class InfoText {
         );
         this.incorrectPasswordError = getDisplay().getDrawableFactory().makeText(
                 "Incorrect password!",
-                background.getX() + 10,
-                background.getY() + 12,
-                "HBE32",
-                "red"
-        );
-        this.incorrectKeyPasswordError = getDisplay().getDrawableFactory().makeText(
-                "Incorrect key password!",
                 background.getX() + 10,
                 background.getY() + 12,
                 "HBE32",
@@ -112,12 +104,6 @@ public class InfoText {
     public void setGivenPasswordsDoNotMatchError() {
         getScene().removeObject(this.currentInfo);
         this.currentInfo = this.givenPasswordsDoNotMatch;
-        getScene().addObjectHigherThan(this.currentInfo, this.background);
-    }
-
-    public void setIncorrectKeyPasswordError() {
-        getScene().removeObject(this.currentInfo);
-        this.currentInfo = this.incorrectKeyPasswordError;
         getScene().addObjectHigherThan(this.currentInfo, this.background);
     }
 

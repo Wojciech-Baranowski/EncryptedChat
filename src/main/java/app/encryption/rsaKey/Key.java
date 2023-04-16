@@ -9,6 +9,7 @@ import lombok.Getter;
 import javax.crypto.SecretKey;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.nio.file.Paths;
 
@@ -17,7 +18,7 @@ import static app.encryption.rsaKey.KeyConfig.*;
 import static app.encryption.rsaKey.KeyType.PRIVATE;
 
 
-public class Key {
+public class Key implements Serializable {
 
     @JsonIgnore
     private final File file;

@@ -1,6 +1,8 @@
 package app;
 
 import app.connection.ConnectionController;
+import app.encryption.Rsa;
+import app.encryption.Sha256;
 import app.engine.assets.Assets;
 import app.engine.assets.font.Font;
 import app.engine.display.Display;
@@ -40,15 +42,19 @@ public class Initializer {
         return initializer;
     }
 
-    public void initialize() {
-        initializeColors();
-        initializeFonts();
-        initializeScenes();
-        initializeGlobalControllers();
-        initializeLoginControllers();
-        initializeGuiControllers();
-        this.scene.switchCollection("login");
-        this.scene.update();
+    public void initialize(String keyPassword) {
+        byte[] keyPasswordHash = Sha256.hash(keyPassword);
+        if (Rsa.isKeyValid(keyPasswordHash)) {
+            Rsa.initialize(keyPasswordHash);
+            initializeColors();
+            initializeFonts();
+            initializeScenes();
+            initializeGlobalControllers();
+            initializeLoginControllers();
+            initializeGuiControllers();
+            this.scene.switchCollection("login");
+            this.scene.update();
+        }
     }
 
     private void initializeColors() {
@@ -109,7 +115,7 @@ public class Initializer {
     }
 
     public static void main(String[] args) {
-        new Initializer().initialize();
+        new Initializer().initialize(args[0]);
     }
 
 }

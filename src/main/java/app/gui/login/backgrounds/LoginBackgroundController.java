@@ -10,14 +10,12 @@ public class LoginBackgroundController {
     private final LoginBackground loginBackground;
     private final RegisterBackground registerBackground;
     private final InfoBackground infoBackground;
-    private final KeyPasswordBackground keyPasswordBackground;
 
     private LoginBackgroundController() {
         this.background = new Background();
         this.loginBackground = new LoginBackground(getBackground());
         this.registerBackground = new RegisterBackground(getBackground());
         this.infoBackground = new InfoBackground(getBackground());
-        this.keyPasswordBackground = new KeyPasswordBackground(getBackground());
     }
 
     public static LoginBackgroundController getLoginBackgroundController() {

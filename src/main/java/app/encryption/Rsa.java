@@ -8,30 +8,30 @@ import lombok.Getter;
 import java.io.File;
 import java.math.BigInteger;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static app.encryption.rsaKey.KeyConfig.PATH_TO_USER_PRIVATE_KEY;
 import static app.encryption.rsaKey.KeyConfig.PATH_TO_USER_PUBLIC_KEY;
 import static app.encryption.rsaKey.KeyType.PRIVATE;
 import static app.encryption.rsaKey.KeyType.PUBLIC;
 
-@Getter
 public class Rsa {
 
     private static final int KEY_BIT_SIZE = 2048;
     private static final int ENCRYPTED_BLOCK_SIZE = 128;
 
+    private static Map<Long, Key> publicKeyMap;
     private static Key privateKey;
+    @Getter
     private static Key publicKey;
 
-    public static void Initialize(byte[] key) {
+    public static void initialize(byte[] key) {
         privateKey = new Key(PRIVATE, key);
         publicKey = new Key(PUBLIC, key);
+        publicKeyMap = new HashMap<>();
     }
 
-    public static byte[] encryptMessage(byte[] message) {
+    public static byte[] encryptMessage(byte[] message, Key publicKey) {
         List<byte[]> fragmentedMessage = ArrayConverter.byteArrayToByteFragmentList(message, ENCRYPTED_BLOCK_SIZE - 1);
         List<byte[]> encryptedFragmentedMessage = new ArrayList<>();
         for (byte[] fragment : fragmentedMessage) {
@@ -67,6 +67,14 @@ public class Rsa {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public static Key getPublicKeyBySessionPartnerId(Long sessionPartnerId) {
+        return publicKeyMap.get(sessionPartnerId);
+    }
+
+    public static Key addPublicKeyBySessionPartnerId(Long sessionPartnerId, Key key) {
+        return publicKeyMap.put(sessionPartnerId, key);
     }
 
     private static boolean keysExists() {

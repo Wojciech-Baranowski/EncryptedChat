@@ -1,5 +1,6 @@
 package server;
 
+import app.encryption.aesCipher.CipherType;
 import common.Serializer;
 import common.message.Message;
 import common.message.UserDisconnectionMessage;
@@ -15,6 +16,7 @@ import java.net.Socket;
 import java.util.List;
 import java.util.Objects;
 
+import static app.encryption.aesCipher.CipherType.ECB;
 import static common.message.MessageType.USER_DISCONNECTION;
 
 public class ClientHandler implements Runnable {
@@ -44,15 +46,15 @@ public class ClientHandler implements Runnable {
     private void routeMessages() {
         while (this.socket != null && this.socket.isConnected() && !this.socket.isClosed()) {
             try {
-                //decryptServ
-                byte[] message = (byte[]) this.reader.readObject();
-                Message decryptedMessage = Serializer.deserialize(message);
-                if (decryptedMessage.getReceiverId() == null) {
-                    this.serverController.handleMessage(this, decryptedMessage);
+                byte[] encryptedMessage = (byte[]) this.reader.readObject();
+                byte[] decryptedMessage = decryptMessage(this.clientId, encryptedMessage, ECB);
+                Message message = Serializer.deserialize(decryptedMessage);
+                if (message.getReceiverId() == null) {
+                    this.serverController.handleMessage(this, message);
                 } else {
-                    Long receiverClientId = this.serverController.mapUserIdToClientId(decryptedMessage.getReceiverId());
-                    decryptedMessage.setReceiverId(receiverClientId);
-                    sendMessageToClient(decryptedMessage);
+                    Long receiverClientId = this.serverController.mapUserIdToClientId(message.getReceiverId());
+                    message.setReceiverId(receiverClientId);
+                    sendMessageToClient(message);
                 }
             } catch (IOException | ClassNotFoundException e) {
                 disconnectUser();
@@ -68,13 +70,37 @@ public class ClientHandler implements Runnable {
                     .findFirst()
                     .orElse(null);
             if (receiver != null) {
-                //encryptServ
-                byte[] encryptedMessage = Serializer.serialize(message);
+                byte[] byteMessage = Serializer.serialize(message);
+                byte[] encryptedMessage = encryptMessage(receiver.getClientId(), byteMessage);
                 receiver.writer.writeObject(encryptedMessage);
             }
         } catch (Exception e) {
             //silenced
         }
+    }
+
+    private byte[] decryptMessage(Long senderId, byte[] encryptedMessage, CipherType cipherType) {
+        return encryptedMessage;
+        /*if(Aes.getSessionKeyBySessionPartnerId(senderId) != null) {
+            return Aes.decrypt(senderId, encryptedMessage, (cipherType != null) ? cipherType : ECB);
+        } else if(Rsa.getPublicKeyBySessionPartnerId(senderId) != null){
+            return Rsa.decryptMessage(encryptedMessage);
+        } else {
+            return encryptedMessage;
+        }*/
+    }
+
+    private byte[] encryptMessage(Long receiverId, byte[] message) {
+        return message;
+        /*if(Aes.getSessionKeyBySessionPartnerId(receiverId) != null) {
+            CipherType cipherType = receiverId == null ? ECB : getChatButtonController().getCipherType();
+            return Aes.encrypt(receiverId, message, cipherType);
+        } else if(Rsa.getPublicKeyBySessionPartnerId(receiverId) != null) {
+            Key publicKey = Rsa.getPublicKeyBySessionPartnerId(receiverId);
+            return Rsa.encryptMessage(message, publicKey);
+        } else {
+            return message;
+        }*/
     }
 
     private void disconnectUser() {

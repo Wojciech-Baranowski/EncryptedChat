@@ -10,9 +10,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class HandshakeMessage implements Serializable {
+public class ServerHandshakeMessage implements Serializable {
 
-    private Long senderId;
     private Key publicKey;
 
 }

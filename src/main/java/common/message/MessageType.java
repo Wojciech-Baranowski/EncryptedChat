@@ -18,7 +18,8 @@ public enum MessageType implements Serializable {
     USER_CONNECTION(true),
     ALL_USER_CONNECTION_REQUEST(true),
     USER_DISCONNECTION(true),
-    CLIENT_HANDSHAKE(true);
+    CLIENT_HANDSHAKE(true),
+    CLIENT_SESSION(true);
 
     @Getter
     private final boolean authorizedConnection;
