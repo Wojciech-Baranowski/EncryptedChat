@@ -27,8 +27,7 @@ public class LoginConnectionController {
         }
     }
 
-    public void prepareAndSendServerHandshakeMessage(Long receiverId) {
-        Key publicKey = Rsa.getPublicKey();
+    public void prepareAndSendServerHandshakeMessage(Long receiverId, Key publicKey) {
         ServerHandshakeMessage handshakeMessage = new ServerHandshakeMessage(publicKey);
         this.connectionController.sendMessage(SERVER_HANDSHAKE, handshakeMessage, receiverId);
     }

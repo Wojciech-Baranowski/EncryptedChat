@@ -1,8 +1,13 @@
 package app.connection;
 
+import app.encryption.Aes;
+import app.encryption.Rsa;
+import app.encryption.aesCipher.InitialVector;
+import app.encryption.rsaKey.Key;
 import common.Serializer;
 import common.message.*;
 
+import javax.crypto.SecretKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +30,8 @@ public class ChatConnectionController {
             case CONFIRMATION -> processConfirmationMessage(content);
             case TEXT -> processTextMessage(content);
             case FILE -> processFileMessage(content);
+            case CLIENT_HANDSHAKE -> processHandshakeMessage(content);
+            case CLIENT_SESSION -> processSessionMessage(content);
         }
     }
 
@@ -49,6 +56,16 @@ public class ChatConnectionController {
             fileMessageList.add(fileMessage);
         }
         this.connectionController.sendMessages(FILE, fileMessageList, receiverId);
+    }
+
+    public void prepareAndSendHandshakeMessage(Long senderId, Key publicKey, Long receiverId) {
+        HandshakeMessage handshakeMessage = new HandshakeMessage(senderId, publicKey);
+        this.connectionController.sendMessage(CLIENT_HANDSHAKE, handshakeMessage, receiverId);
+    }
+
+    public void prepareAndSendSessionMessage(Long senderId, SecretKey sessionKey, InitialVector initialVector, Long receiverId) {
+        SessionMessage sessionMessage = new SessionMessage(senderId, sessionKey, initialVector);
+        this.connectionController.sendMessage(CLIENT_SESSION, sessionMessage, receiverId);
     }
 
     private void processConnectionMessage(byte[] content) {
@@ -94,6 +111,21 @@ public class ChatConnectionController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void processHandshakeMessage(byte[] content) {
+        HandshakeMessage handshakeMessage = Serializer.deserialize(content);
+        Long senderId = handshakeMessage.getSenderId();
+        Rsa.addPublicKeyBySessionPartnerId(senderId, handshakeMessage.getPublicKey());
+        Aes.sessionInitialize(senderId);
+        SecretKey sessionKey = Aes.getSessionKeyBySessionPartnerId(senderId);
+        InitialVector initialVector = Aes.getInitialVectorBySessionPartnerId(senderId);
+        prepareAndSendSessionMessage(getUserService().getUserId(), sessionKey, initialVector, senderId);
+    }
+
+    private void processSessionMessage(byte[] content) {
+        SessionMessage sessionMessage = Serializer.deserialize(content);
+        Aes.sessionInitialize(sessionMessage.getSenderId(), sessionMessage.getSessionKey(), sessionMessage.getInitialVector());
     }
 
 }

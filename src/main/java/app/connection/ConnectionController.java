@@ -1,5 +1,6 @@
 package app.connection;
 
+import app.encryption.Rsa;
 import app.encryption.aesCipher.CipherType;
 import app.engine.listener.ParallelThread;
 import app.engine.listener.SynchronizedCollection;
@@ -49,7 +50,7 @@ public class ConnectionController {
             connectionController = new ConnectionController();
             loginConnectionController = new LoginConnectionController(connectionController);
             chatConnectionController = new ChatConnectionController(connectionController);
-            loginConnectionController.prepareAndSendServerHandshakeMessage(null);
+            loginConnectionController.prepareAndSendServerHandshakeMessage(null, Rsa.getPublicKey());
         }
         return connectionController;
     }
