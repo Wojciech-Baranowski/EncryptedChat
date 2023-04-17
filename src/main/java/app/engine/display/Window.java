@@ -48,7 +48,7 @@ public class Window {
     }
 
     private void createWindow() {
-        JFrame jFrame = new JFrame("Palinka <3");
+        JFrame jFrame = new JFrame("Chat");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrame.setLayout(new BorderLayout());
         jFrame.add(this.canvas, BorderLayout.CENTER);
