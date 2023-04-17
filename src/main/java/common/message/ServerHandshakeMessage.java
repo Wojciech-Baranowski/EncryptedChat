@@ -1,6 +1,6 @@
 package common.message;
 
-import app.encryption.rsaKey.Key;
+import common.encryption.rsaKey.Key;
 import lombok.*;
 
 import java.io.Serializable;

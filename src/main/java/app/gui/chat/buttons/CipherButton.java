@@ -1,19 +1,19 @@
 package app.gui.chat.buttons;
 
-import app.encryption.aesCipher.CipherType;
 import app.engine.button.radioButton.RadioButton;
 import app.engine.button.radioButton.RadioButtonBundle;
 import app.engine.display.Drawable;
 import app.engine.display.DrawableComposition;
 import app.engine.input.inputCombination.InputCombination;
+import common.encryption.aesCipher.CipherType;
 
 import java.util.List;
 
-import static app.encryption.aesCipher.CipherType.CBC;
-import static app.encryption.aesCipher.CipherType.ECB;
 import static app.engine.display.DisplayBean.getDisplay;
 import static app.engine.input.InputBean.getInput;
 import static app.engine.scene.SceneBean.getScene;
+import static common.encryption.aesCipher.CipherType.CBC;
+import static common.encryption.aesCipher.CipherType.ECB;
 
 public class CipherButton {
 

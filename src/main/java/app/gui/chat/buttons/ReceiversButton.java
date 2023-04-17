@@ -88,13 +88,23 @@ public class ReceiversButton {
             getScene().removeObject(this.receivers[index]);
             this.receivers[index] = null;
             this.receiversIds[index] = null;
-            buildBundle();
+            if (this.receiversBundle.getSelectedRadioButtonIndex() == index) {
+                this.receiversBundle.unset();
+            }
         }
     }
 
     public Long getSelectedReceiverId() {
-        if (this.receiversBundle.getSelectedRadioButtonIndex() >= 0) {
+        if (this.receiversBundle.getSelectedRadioButtonIndex() >= 0 && this.receiversIds[this.receiversBundle.getSelectedRadioButtonIndex()] != null) {
             return this.receiversIds[this.receiversBundle.getSelectedRadioButtonIndex()];
+        } else if (this.receiversBundle.getSelectedRadioButtonIndex() >= 0) {
+            for (int i = 0; i < MAX_CLIENTS; i++) {
+                if (this.receiversIds[i] != null) {
+                    this.receiversBundle.selectAnyRadioButton();
+                    this.receiversBundle.update(this.receiversBundle.getSelectedRadioButton());
+                    return this.receiversIds[i];
+                }
+            }
         }
         return null;
     }

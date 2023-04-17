@@ -1,8 +1,8 @@
-package app.encryption;
+package common.encryption;
 
-import app.encryption.rsaKey.Key;
 import app.utils.ArrayConverter;
 import app.utils.LargePrimeGenerator;
+import common.encryption.rsaKey.Key;
 import lombok.Getter;
 
 import java.io.File;
@@ -10,10 +10,10 @@ import java.math.BigInteger;
 import java.nio.file.Paths;
 import java.util.*;
 
-import static app.encryption.rsaKey.KeyConfig.PATH_TO_USER_PRIVATE_KEY;
-import static app.encryption.rsaKey.KeyConfig.PATH_TO_USER_PUBLIC_KEY;
-import static app.encryption.rsaKey.KeyType.PRIVATE;
-import static app.encryption.rsaKey.KeyType.PUBLIC;
+import static common.encryption.rsaKey.KeyConfig.PATH_TO_USER_PRIVATE_KEY;
+import static common.encryption.rsaKey.KeyConfig.PATH_TO_USER_PUBLIC_KEY;
+import static common.encryption.rsaKey.KeyType.PRIVATE;
+import static common.encryption.rsaKey.KeyType.PUBLIC;
 
 public class Rsa {
 
@@ -75,6 +75,10 @@ public class Rsa {
 
     public static Key addPublicKeyBySessionPartnerId(Long sessionPartnerId, Key key) {
         return publicKeyMap.put(sessionPartnerId, key);
+    }
+
+    public static void removePublicKeyBySessionPartnerId(Long sessionPartnerId) {
+        publicKeyMap.remove(sessionPartnerId);
     }
 
     private static boolean keysExists() {

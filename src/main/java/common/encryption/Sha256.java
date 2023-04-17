@@ -1,4 +1,4 @@
-package app.encryption;
+package common.encryption;
 
 import app.utils.ArrayConverter;
 import app.utils.BitUtils;

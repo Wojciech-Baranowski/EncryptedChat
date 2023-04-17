@@ -1,6 +1,6 @@
 package app.gui.chat.buttons;
 
-import app.encryption.aesCipher.CipherType;
+import common.encryption.aesCipher.CipherType;
 import common.transportObjects.FileData;
 import common.transportObjects.UserData;
 

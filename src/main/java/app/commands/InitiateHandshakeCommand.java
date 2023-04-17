@@ -1,9 +1,10 @@
 package app.commands;
 
 import app.connection.ConnectionController;
-import app.encryption.Rsa;
-import app.encryption.rsaKey.Key;
 import app.engine.common.Command;
+import common.encryption.Aes;
+import common.encryption.Rsa;
+import common.encryption.rsaKey.Key;
 
 import static app.services.UserService.getUserService;
 
@@ -18,8 +19,10 @@ public class InitiateHandshakeCommand implements Command {
     @Override
     public void execute() {
         Long senderId = getUserService().getUserId();
-        Key publicKey = Rsa.getPublicKey();
-        ConnectionController.getChatConnectionController().prepareAndSendHandshakeMessage(senderId, publicKey, receiverId);
+        if (Aes.getSessionKeyBySessionPartnerId(receiverId) == null) {
+            Key publicKey = Rsa.getPublicKey();
+            ConnectionController.getChatConnectionController().prepareAndSendHandshakeMessage(senderId, publicKey, receiverId, false);
+        }
     }
 
 }

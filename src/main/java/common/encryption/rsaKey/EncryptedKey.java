@@ -1,4 +1,4 @@
-package app.encryption.rsaKey;
+package common.encryption.rsaKey;
 
 import lombok.*;
 

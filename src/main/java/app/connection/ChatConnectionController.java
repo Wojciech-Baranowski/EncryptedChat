@@ -1,10 +1,10 @@
 package app.connection;
 
-import app.encryption.Aes;
-import app.encryption.Rsa;
-import app.encryption.aesCipher.InitialVector;
-import app.encryption.rsaKey.Key;
 import common.Serializer;
+import common.encryption.Aes;
+import common.encryption.Rsa;
+import common.encryption.aesCipher.InitialVector;
+import common.encryption.rsaKey.Key;
 import common.message.*;
 
 import javax.crypto.SecretKey;
@@ -13,6 +13,8 @@ import java.util.List;
 
 import static app.services.FileService.getFileService;
 import static app.services.UserService.getUserService;
+import static common.EncryptionType.NONE;
+import static common.EncryptionType.RSA;
 import static common.message.MessageType.*;
 
 public class ChatConnectionController {
@@ -58,14 +60,17 @@ public class ChatConnectionController {
         this.connectionController.sendMessages(FILE, fileMessageList, receiverId);
     }
 
-    public void prepareAndSendHandshakeMessage(Long senderId, Key publicKey, Long receiverId) {
-        HandshakeMessage handshakeMessage = new HandshakeMessage(senderId, publicKey);
-        this.connectionController.sendMessage(CLIENT_HANDSHAKE, handshakeMessage, receiverId);
+    public void prepareAndSendHandshakeMessage(Long senderId, Key publicKey, Long receiverId, boolean returning) {
+        HandshakeMessage handshakeMessage = new HandshakeMessage(senderId, publicKey, returning);
+        this.connectionController.sendMessage(CLIENT_HANDSHAKE, handshakeMessage, receiverId, NONE);
     }
 
-    public void prepareAndSendSessionMessage(Long senderId, SecretKey sessionKey, InitialVector initialVector, Long receiverId) {
+    public void prepareAndSendSessionMessage(Long senderId, Long receiverId) {
+        Aes.sessionInitialize(receiverId);
+        SecretKey sessionKey = Aes.getSessionKeyBySessionPartnerId(receiverId);
+        InitialVector initialVector = Aes.getInitialVectorBySessionPartnerId(receiverId);
         SessionMessage sessionMessage = new SessionMessage(senderId, sessionKey, initialVector);
-        this.connectionController.sendMessage(CLIENT_SESSION, sessionMessage, receiverId);
+        this.connectionController.sendMessage(CLIENT_SESSION, sessionMessage, receiverId, RSA);
     }
 
     private void processConnectionMessage(byte[] content) {
@@ -81,6 +86,8 @@ public class ChatConnectionController {
         try {
             UserDisconnectionMessage userDisconnectionMessage = Serializer.deserialize(content);
             getUserService().removeReceiver(userDisconnectionMessage.getUserData().getId());
+            Aes.sessionDestroy(userDisconnectionMessage.getUserData().getId());
+            Rsa.removePublicKeyBySessionPartnerId(userDisconnectionMessage.getUserData().getId());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -117,10 +124,11 @@ public class ChatConnectionController {
         HandshakeMessage handshakeMessage = Serializer.deserialize(content);
         Long senderId = handshakeMessage.getSenderId();
         Rsa.addPublicKeyBySessionPartnerId(senderId, handshakeMessage.getPublicKey());
-        Aes.sessionInitialize(senderId);
-        SecretKey sessionKey = Aes.getSessionKeyBySessionPartnerId(senderId);
-        InitialVector initialVector = Aes.getInitialVectorBySessionPartnerId(senderId);
-        prepareAndSendSessionMessage(getUserService().getUserId(), sessionKey, initialVector, senderId);
+        if (handshakeMessage.isReturning()) {
+            prepareAndSendSessionMessage(getUserService().getUserId(), senderId);
+        } else {
+            prepareAndSendHandshakeMessage(getUserService().getUserId(), Rsa.getPublicKey(), senderId, true);
+        }
     }
 
     private void processSessionMessage(byte[] content) {

@@ -52,37 +52,41 @@ public class RadioButtonBundle {
     }
 
     public void unset() {
-        if(selectedRadioButton != null) {
-            selectedRadioButton.setSelected(false);
-            selectedRadioButton = null;
+        if (this.selectedRadioButton != null) {
+            this.selectedRadioButton.setSelected(false);
+            this.selectedRadioButton = null;
         }
     }
 
     public List<Boolean> getBundleState() {
-        return radioButtons.stream()
+        return this.radioButtons.stream()
                 .map(RadioButton::isSelected)
                 .toList();
     }
 
     public int getSelectedRadioButtonIndex() {
-        for (int i = 0; i < radioButtons.size(); i++) {
-            if (radioButtons.get(i).equals(selectedRadioButton)) {
+        for (int i = 0; i < this.radioButtons.size(); i++) {
+            if (this.radioButtons.get(i).equals(this.selectedRadioButton)) {
                 return i;
             }
         }
         return -1;
     }
 
+    public void selectAnyRadioButton() {
+        this.selectedRadioButton = this.radioButtons.get(0);
+    }
+
     public void addRadioButton(RadioButton radioButton) {
-        if (radioButtons.contains(radioButton)) {
+        if (this.radioButtons.contains(radioButton)) {
             return;
         }
         radioButton.setRadioButtonBundle(this);
-        radioButtons.add(radioButton);
+        this.radioButtons.add(radioButton);
     }
 
     public void removeRadioButton(RadioButton radioButton) {
-        radioButtons.remove(radioButton);
+        this.radioButtons.remove(radioButton);
     }
 
 }

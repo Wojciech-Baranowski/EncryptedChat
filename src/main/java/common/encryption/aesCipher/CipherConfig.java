@@ -1,4 +1,4 @@
-package app.encryption.aesCipher;
+package common.encryption.aesCipher;
 
 public class CipherConfig {
 

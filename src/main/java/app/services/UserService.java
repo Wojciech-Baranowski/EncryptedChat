@@ -1,7 +1,7 @@
 package app.services;
 
 import app.connection.ConnectionController;
-import app.encryption.Sha256;
+import common.encryption.Sha256;
 import common.transportObjects.UserData;
 import common.transportObjects.UserDataProcessResponseType;
 

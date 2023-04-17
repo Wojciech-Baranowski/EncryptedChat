@@ -1,6 +1,6 @@
 package common.message;
 
-import app.encryption.aesCipher.InitialVector;
+import common.encryption.aesCipher.InitialVector;
 import lombok.*;
 
 import javax.crypto.SecretKey;

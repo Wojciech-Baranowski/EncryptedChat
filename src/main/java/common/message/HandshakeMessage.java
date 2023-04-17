@@ -1,6 +1,6 @@
 package common.message;
 
-import app.encryption.rsaKey.Key;
+import common.encryption.rsaKey.Key;
 import lombok.*;
 
 import java.io.Serializable;
@@ -14,5 +14,6 @@ public class HandshakeMessage implements Serializable {
 
     private Long senderId;
     private Key publicKey;
+    private boolean returning;
 
 }

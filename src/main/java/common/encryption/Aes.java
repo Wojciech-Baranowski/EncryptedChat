@@ -1,7 +1,7 @@
-package app.encryption;
+package common.encryption;
 
-import app.encryption.aesCipher.CipherType;
-import app.encryption.aesCipher.InitialVector;
+import common.encryption.aesCipher.CipherType;
+import common.encryption.aesCipher.InitialVector;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -11,8 +11,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
-
-import static app.encryption.aesCipher.CipherType.ECB;
 
 public class Aes {
 
@@ -38,7 +36,7 @@ public class Aes {
     public static byte[] encrypt(Long sessionPartnerId, byte[] message, CipherType cipherType) {
         try {
             Cipher cipher = Cipher.getInstance(cipherType.getCipherName());
-            if (cipherType == ECB) {
+            if (cipherType == CipherType.ECB) {
                 cipher.init(Cipher.ENCRYPT_MODE, sessionKeyMap.get(sessionPartnerId));
             } else {
                 cipher.init(Cipher.ENCRYPT_MODE, sessionKeyMap.get(sessionPartnerId), initialVectorMap.get(sessionPartnerId).getInitialVector());
@@ -52,7 +50,7 @@ public class Aes {
     public static byte[] encrypt(byte[] message, CipherType cipherType, SecretKey key) {
         try {
             Cipher cipher = Cipher.getInstance(cipherType.getCipherName());
-            if (cipherType == ECB) {
+            if (cipherType == CipherType.ECB) {
                 cipher.init(Cipher.ENCRYPT_MODE, key);
             }
             return cipher.doFinal(message);
@@ -64,7 +62,7 @@ public class Aes {
     public static byte[] decrypt(Long sessionPartnerId, byte[] message, CipherType cipherType) {
         try {
             Cipher cipher = Cipher.getInstance(cipherType.getCipherName());
-            if (cipherType == ECB) {
+            if (cipherType == CipherType.ECB) {
                 cipher.init(Cipher.DECRYPT_MODE, sessionKeyMap.get(sessionPartnerId));
             } else {
                 cipher.init(Cipher.DECRYPT_MODE, sessionKeyMap.get(sessionPartnerId), initialVectorMap.get(sessionPartnerId).getInitialVector());
@@ -78,7 +76,7 @@ public class Aes {
     public static byte[] decrypt(byte[] message, CipherType cipherType, SecretKey key) {
         try {
             Cipher cipher = Cipher.getInstance(cipherType.getCipherName());
-            if (cipherType == ECB) {
+            if (cipherType == CipherType.ECB) {
                 cipher.init(Cipher.DECRYPT_MODE, key);
             }
             return cipher.doFinal(message);

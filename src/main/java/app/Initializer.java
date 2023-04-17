@@ -1,8 +1,6 @@
 package app;
 
 import app.connection.ConnectionController;
-import app.encryption.Rsa;
-import app.encryption.Sha256;
 import app.engine.assets.Assets;
 import app.engine.assets.font.Font;
 import app.engine.display.Display;
@@ -17,6 +15,8 @@ import app.gui.login.textFields.LoginTextFieldController;
 import app.gui.login.texts.LoginTextController;
 import app.services.FileService;
 import app.services.UserService;
+import common.encryption.Rsa;
+import common.encryption.Sha256;
 
 import static app.engine.assets.AssetsBean.getAssets;
 import static app.engine.display.DisplayBean.getDisplay;

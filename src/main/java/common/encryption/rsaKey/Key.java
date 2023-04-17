@@ -1,9 +1,9 @@
-package app.encryption.rsaKey;
+package common.encryption.rsaKey;
 
-import app.encryption.Aes;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.Serializer;
+import common.encryption.Aes;
 import lombok.Getter;
 
 import javax.crypto.SecretKey;
@@ -13,17 +13,17 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.nio.file.Paths;
 
-import static app.encryption.aesCipher.CipherType.ECB;
-import static app.encryption.rsaKey.KeyConfig.*;
-import static app.encryption.rsaKey.KeyType.PRIVATE;
+import static common.encryption.aesCipher.CipherType.ECB;
+import static common.encryption.rsaKey.KeyConfig.*;
+import static common.encryption.rsaKey.KeyType.PRIVATE;
 
 
 public class Key implements Serializable {
 
     @JsonIgnore
-    private final File file;
+    private transient final File file;
     @JsonIgnore
-    private final ObjectMapper objectMapper;
+    private transient final ObjectMapper objectMapper;
     @Getter
     private BigInteger exponent;
     @Getter

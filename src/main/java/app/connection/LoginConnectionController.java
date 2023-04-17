@@ -1,15 +1,17 @@
 package app.connection;
 
-import app.encryption.Aes;
-import app.encryption.Rsa;
-import app.encryption.aesCipher.InitialVector;
-import app.encryption.rsaKey.Key;
 import common.Serializer;
+import common.encryption.Aes;
+import common.encryption.Rsa;
+import common.encryption.aesCipher.InitialVector;
+import common.encryption.rsaKey.Key;
 import common.message.*;
 
 import javax.crypto.SecretKey;
 
 import static app.services.UserService.getUserService;
+import static common.EncryptionType.NONE;
+import static common.EncryptionType.RSA;
 import static common.message.MessageType.*;
 
 public class LoginConnectionController {
@@ -27,19 +29,6 @@ public class LoginConnectionController {
         }
     }
 
-    public void prepareAndSendServerHandshakeMessage(Long receiverId, Key publicKey) {
-        ServerHandshakeMessage handshakeMessage = new ServerHandshakeMessage(publicKey);
-        this.connectionController.sendMessage(SERVER_HANDSHAKE, handshakeMessage, receiverId);
-    }
-
-    public void prepareAndSendSessionMessage(Long receiverId) {
-        Aes.sessionInitialize(receiverId);
-        SecretKey sessionKey = Aes.getSessionKeyBySessionPartnerId(receiverId);
-        InitialVector initialVector = Aes.getInitialVectorBySessionPartnerId(receiverId);
-        ServerSessionMessage sessionMessage = new ServerSessionMessage(sessionKey, initialVector);
-        this.connectionController.sendMessage(SERVER_SESSION, sessionMessage, receiverId);
-    }
-
     public void prepareAndSendRegisterRequestMessage(String userName, String passwordHash) {
         RegistrationMessage registrationMessage = new RegistrationMessage(userName, passwordHash);
         this.connectionController.sendMessage(REGISTRATION_REQUEST, registrationMessage, null);
@@ -50,11 +39,23 @@ public class LoginConnectionController {
         this.connectionController.sendMessage(LOGIN_REQUEST, loginMessage, null);
     }
 
+    public void prepareAndSendServerHandshakeMessage(Long receiverId, Key publicKey) {
+        ServerHandshakeMessage handshakeMessage = new ServerHandshakeMessage(publicKey);
+        this.connectionController.sendMessage(SERVER_HANDSHAKE, handshakeMessage, receiverId, NONE);
+    }
+
+    public void prepareAndSendSessionMessage(Long receiverId) {
+        Aes.sessionInitialize(receiverId);
+        SecretKey sessionKey = Aes.getSessionKeyBySessionPartnerId(receiverId);
+        InitialVector initialVector = Aes.getInitialVectorBySessionPartnerId(receiverId);
+        ServerSessionMessage sessionMessage = new ServerSessionMessage(sessionKey, initialVector);
+        this.connectionController.sendMessage(SERVER_SESSION, sessionMessage, receiverId, RSA);
+    }
+
     private void processAuthorizationMessage(byte[] content) {
         try {
             AuthorizationMessage authorizationMessage = Serializer.deserialize(content);
             getUserService().processResponse(authorizationMessage.getUserDataProcessResponseType(), authorizationMessage.getUserData());
-            prepareAndSendSessionMessage(null);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -63,6 +64,7 @@ public class LoginConnectionController {
     private void processServerHandshakeMessage(byte[] content) {
         ServerHandshakeMessage serverHandshakeMessage = Serializer.deserialize(content);
         Rsa.addPublicKeyBySessionPartnerId(null, serverHandshakeMessage.getPublicKey());
+        prepareAndSendSessionMessage(null);
     }
 
 }

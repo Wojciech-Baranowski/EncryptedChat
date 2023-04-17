@@ -1,6 +1,6 @@
 package common.message;
 
-import app.encryption.aesCipher.CipherType;
+import common.encryption.aesCipher.CipherType;
 import lombok.*;
 
 import java.io.Serializable;

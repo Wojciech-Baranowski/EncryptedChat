@@ -1,7 +1,11 @@
 package server;
 
-import app.encryption.aesCipher.CipherType;
+import common.EncryptionType;
 import common.Serializer;
+import common.encryption.Aes;
+import common.encryption.Rsa;
+import common.encryption.aesCipher.CipherType;
+import common.encryption.rsaKey.Key;
 import common.message.Message;
 import common.message.UserDisconnectionMessage;
 import common.transportObjects.UserData;
@@ -16,7 +20,9 @@ import java.net.Socket;
 import java.util.List;
 import java.util.Objects;
 
-import static app.encryption.aesCipher.CipherType.ECB;
+import static common.EncryptionType.AES;
+import static common.EncryptionType.RSA;
+import static common.encryption.aesCipher.CipherType.ECB;
 import static common.message.MessageType.USER_DISCONNECTION;
 
 public class ClientHandler implements Runnable {
@@ -54,7 +60,7 @@ public class ClientHandler implements Runnable {
                 } else {
                     Long receiverClientId = this.serverController.mapUserIdToClientId(message.getReceiverId());
                     message.setReceiverId(receiverClientId);
-                    sendMessageToClient(message);
+                    sendMessageToClient(message, AES);
                 }
             } catch (IOException | ClassNotFoundException e) {
                 disconnectUser();
@@ -63,7 +69,7 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    public void sendMessageToClient(Message message) {
+    public void sendMessageToClient(Message message, EncryptionType encryptionType) {
         try {
             ClientHandler receiver = getClientHandlers().stream()
                     .filter(c -> Objects.equals(c.getClientId(), message.getReceiverId()))
@@ -71,7 +77,7 @@ public class ClientHandler implements Runnable {
                     .orElse(null);
             if (receiver != null) {
                 byte[] byteMessage = Serializer.serialize(message);
-                byte[] encryptedMessage = encryptMessage(receiver.getClientId(), byteMessage);
+                byte[] encryptedMessage = encryptMessage(receiver.getClientId(), byteMessage, encryptionType);
                 receiver.writer.writeObject(encryptedMessage);
             }
         } catch (Exception e) {
@@ -80,27 +86,24 @@ public class ClientHandler implements Runnable {
     }
 
     private byte[] decryptMessage(Long senderId, byte[] encryptedMessage, CipherType cipherType) {
-        return encryptedMessage;
-        /*if(Aes.getSessionKeyBySessionPartnerId(senderId) != null) {
+        if (Aes.getSessionKeyBySessionPartnerId(senderId) != null) {
             return Aes.decrypt(senderId, encryptedMessage, (cipherType != null) ? cipherType : ECB);
-        } else if(Rsa.getPublicKeyBySessionPartnerId(senderId) != null){
+        } else if (Rsa.getPublicKeyBySessionPartnerId(senderId) != null) {
             return Rsa.decryptMessage(encryptedMessage);
         } else {
             return encryptedMessage;
-        }*/
+        }
     }
 
-    private byte[] encryptMessage(Long receiverId, byte[] message) {
-        return message;
-        /*if(Aes.getSessionKeyBySessionPartnerId(receiverId) != null) {
-            CipherType cipherType = receiverId == null ? ECB : getChatButtonController().getCipherType();
-            return Aes.encrypt(receiverId, message, cipherType);
-        } else if(Rsa.getPublicKeyBySessionPartnerId(receiverId) != null) {
+    private byte[] encryptMessage(Long receiverId, byte[] message, EncryptionType encryptionType) {
+        if (encryptionType == AES) {
+            return Aes.encrypt(receiverId, message, ECB);
+        } else if (encryptionType == RSA) {
             Key publicKey = Rsa.getPublicKeyBySessionPartnerId(receiverId);
             return Rsa.encryptMessage(message, publicKey);
         } else {
             return message;
-        }*/
+        }
     }
 
     private void disconnectUser() {
@@ -109,6 +112,8 @@ public class ClientHandler implements Runnable {
             Long userId = this.serverController.mapClientIdToUserId(this.clientId);
             this.serverController.removeClientIdFromMap(this.clientId);
             this.serverController.removeUserIdFromMap(userId);
+            Aes.sessionDestroy(this.clientId);
+            Rsa.removePublicKeyBySessionPartnerId(this.clientId);
             UserDataBaseRecord userDataBaseRecord = this.serverController.getUserDataBase().findUserDataBaseRecordByUserId(userId);
             UserData userData = new UserData(userDataBaseRecord.getId(), userDataBaseRecord.getUserName());
             UserDisconnectionMessage userDisconnectionMessage = new UserDisconnectionMessage(userData);

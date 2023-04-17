@@ -1,12 +1,15 @@
 package app.connection;
 
-import app.encryption.Rsa;
-import app.encryption.aesCipher.CipherType;
 import app.engine.listener.ParallelThread;
 import app.engine.listener.SynchronizedCollection;
 import app.engine.scene.SceneBean;
 import common.ConnectionConfig;
+import common.EncryptionType;
 import common.Serializer;
+import common.encryption.Aes;
+import common.encryption.Rsa;
+import common.encryption.aesCipher.CipherType;
+import common.encryption.rsaKey.Key;
 import common.message.Message;
 import common.message.MessageType;
 import lombok.Getter;
@@ -18,9 +21,11 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import static app.encryption.aesCipher.CipherType.ECB;
 import static app.gui.chat.buttons.ChatButtonController.getChatButtonController;
 import static app.services.UserService.getUserService;
+import static common.EncryptionType.AES;
+import static common.EncryptionType.RSA;
+import static common.encryption.aesCipher.CipherType.ECB;
 
 public class ConnectionController {
 
@@ -73,7 +78,7 @@ public class ConnectionController {
             Message message = Serializer.deserialize(decryptedMessage);
             byte[] byteMessageContent = message.getContent();
             byte[] byteMessageType = message.getMessageType();
-            if (message.getReceiverId() != null) {
+            if (message.getSenderId() != null) {
                 byteMessageContent = decryptMessage(message.getSenderId(), message.getContent(), message.getCipherType());
                 byteMessageType = decryptMessage(message.getSenderId(), message.getMessageType(), message.getCipherType());
             }
@@ -88,13 +93,13 @@ public class ConnectionController {
         }
     }
 
-    public void sendMessage(MessageType messageType, Object content, Long receiverId) {
+    public void sendMessage(MessageType messageType, Object content, Long receiverId, EncryptionType encryptionType) {
         try {
             byte[] byteMessageType = Serializer.serialize(messageType);
             byte[] byteContent = Serializer.serialize(content);
             if (receiverId != null) {
-                byteMessageType = encryptMessage(receiverId, byteMessageType);
-                byteContent = encryptMessage(receiverId, byteContent);
+                byteMessageType = encryptMessage(receiverId, byteMessageType, encryptionType);
+                byteContent = encryptMessage(receiverId, byteContent, encryptionType);
             }
             Message message = Message.builder()
                     .receiverId(receiverId)
@@ -104,21 +109,25 @@ public class ConnectionController {
                     .content(byteContent)
                     .build();
             byte[] byteMessage = Serializer.serialize(message);
-            byte[] encryptedMessage = encryptMessage(receiverId, byteMessage);
+            byte[] encryptedMessage = encryptMessage(null, byteMessage, (receiverId != null) ? AES : encryptionType);
             this.writer.writeObject(encryptedMessage);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void sendMessages(MessageType messageType, List<Object> contentList, Long receiverId) {
+    public void sendMessage(MessageType messageType, Object content, Long receiverId) {
+        sendMessage(messageType, content, receiverId, AES);
+    }
+
+    public void sendMessages(MessageType messageType, List<Object> contentList, Long receiverId, EncryptionType encryptionType) {
         try {
             List<byte[]> encryptedMessages = new ArrayList<>();
             for (Object content : contentList) {
                 byte[] byteMessageType = Serializer.serialize(messageType);
                 byte[] byteContent = Serializer.serialize(content);
-                byte[] encryptedMessageType = encryptMessage(receiverId, byteMessageType);
-                byte[] encryptedContent = encryptMessage(receiverId, byteContent);
+                byte[] encryptedMessageType = encryptMessage(receiverId, byteMessageType, encryptionType);
+                byte[] encryptedContent = encryptMessage(receiverId, byteContent, encryptionType);
                 Message message = Message.builder()
                         .receiverId(receiverId)
                         .senderId(getUserService().getUserId())
@@ -127,7 +136,7 @@ public class ConnectionController {
                         .content(encryptedContent)
                         .build();
                 byte[] byteMessage = Serializer.serialize(message);
-                byte[] encryptedMessage = encryptMessage(receiverId, byteMessage);
+                byte[] encryptedMessage = encryptMessage(null, byteMessage, (receiverId != null) ? AES : encryptionType);
                 encryptedMessages.add(encryptedMessage);
             }
             new Thread(() -> sendMessagesInParallel(encryptedMessages, this.writer)).start();
@@ -136,32 +145,34 @@ public class ConnectionController {
         }
     }
 
+    public void sendMessages(MessageType messageType, List<Object> contentList, Long receiverId) {
+        sendMessages(messageType, contentList, receiverId, AES);
+    }
+
     public void sendMessage(MessageType messageType, Long receiverId) {
-        sendMessage(messageType, new byte[0], receiverId);
+        sendMessage(messageType, new byte[0], receiverId, AES);
     }
 
     private byte[] decryptMessage(Long senderId, byte[] encryptedMessage, CipherType cipherType) {
-        return encryptedMessage;
-        /*if(Aes.getSessionKeyBySessionPartnerId(senderId) != null) {
+        if (Aes.getSessionKeyBySessionPartnerId(senderId) != null) {
             return Aes.decrypt(senderId, encryptedMessage, (cipherType != null) ? cipherType : ECB);
-        } else if(Rsa.getPublicKeyBySessionPartnerId(senderId) != null){
+        } else if (Rsa.getPublicKeyBySessionPartnerId(senderId) != null) {
             return Rsa.decryptMessage(encryptedMessage);
         } else {
             return encryptedMessage;
-        }*/
+        }
     }
 
-    private byte[] encryptMessage(Long receiverId, byte[] message) {
-        return message;
-        /*if(Aes.getSessionKeyBySessionPartnerId(receiverId) != null) {
+    private byte[] encryptMessage(Long receiverId, byte[] message, EncryptionType encryptionType) {
+        if (encryptionType == AES) {
             CipherType cipherType = receiverId == null ? ECB : getChatButtonController().getCipherType();
             return Aes.encrypt(receiverId, message, cipherType);
-        } else if(Rsa.getPublicKeyBySessionPartnerId(receiverId) != null) {
+        } else if (encryptionType == RSA) {
             Key publicKey = Rsa.getPublicKeyBySessionPartnerId(receiverId);
             return Rsa.encryptMessage(message, publicKey);
         } else {
             return message;
-        }*/
+        }
     }
 
     private void sendMessagesInParallel(List<byte[]> messages, ObjectOutputStream writer) {

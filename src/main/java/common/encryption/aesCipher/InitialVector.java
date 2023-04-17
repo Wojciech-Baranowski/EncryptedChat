@@ -1,4 +1,4 @@
-package app.encryption.aesCipher;
+package common.encryption.aesCipher;
 
 import javax.crypto.spec.IvParameterSpec;
 import java.io.Serializable;

@@ -16,13 +16,13 @@ import java.util.Map;
 
 import static app.Constants.MAX_ATTACHMENT_FILE_NAME_LENGTH;
 import static app.Constants.MAX_RECEIVED_MESSAGE_LENGTH;
-import static app.encryption.aesCipher.CipherConfig.CIPHER_BLOCK_SIZE;
 import static app.engine.input.InputBean.getInput;
 import static app.engine.scene.SceneBean.getScene;
 import static app.gui.chat.buttons.ChatButtonController.getChatButtonController;
 import static app.gui.chat.textFields.ChatTextFieldController.getChatTextFieldController;
 import static app.gui.chat.texts.ChatTextController.getChatTextController;
 import static app.services.UserService.getUserService;
+import static common.encryption.aesCipher.CipherConfig.CIPHER_BLOCK_SIZE;
 
 public class FileService {
 
